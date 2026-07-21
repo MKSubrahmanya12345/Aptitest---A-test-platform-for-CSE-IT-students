@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import pool from "./config/db.ts";
-import authRoutes from "./routes/auth.route.ts";
-import reviewRoutes from "./routes/review.route.ts";
-import testRoutes from "./routes/test.route.ts";
-import { testService } from "./services/test.service.ts";
+import pool from "./config/db";
+import authRoutes from "./routes/auth.route";
+import reviewRoutes from "./routes/review.route";
+import testRoutes from "./routes/test.route";
+import { testService } from "./services/test.service";
 
 
 const app = express();
