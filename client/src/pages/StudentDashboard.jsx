@@ -111,6 +111,9 @@ function StudentDashboard() {
   const [currentView, setCurrentView] = useState("dashboard");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  //states for hamburger menu for mobile css
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Checklist Modal State
   const [showChecklistModal, setShowChecklistModal] = useState(false);
@@ -607,12 +610,36 @@ function StudentDashboard() {
 
   return (
     <div className="student-dashboard-container">
+
+      <div className="mobile-header">
+        <button
+          className="hamburger"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          ☰
+        </button>
+        <h2>AptiTest Hub</h2>
+      </div>
+
+      {/* Sidebar Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar navigation */}
       {currentView !== "test_environment" && (
-        <div className="student-sidebar">
+        <div
+          className={`student-sidebar ${
+            sidebarOpen ? "open" : ""
+          }`}
+        >
           <div className="sidebar-header">
             <span>AptiTest Hub</span>
           </div>
+
 
           <div className="sidebar-user">
             <div className="user-avatar-circle">
@@ -626,19 +653,19 @@ function StudentDashboard() {
 
           <div className="sidebar-nav">
             <button
-              onClick={() => { setError(""); setCurrentView("dashboard"); }}
+              onClick={() => { setError(""); setCurrentView("dashboard"); setSidebarOpen(false); }}
               className={`nav-link ${currentView === "dashboard" ? "active" : ""}`}
             >
               🏠 Dashboard Home
             </button>
             <button
-              onClick={() => { setError(""); setCurrentView("history"); }}
+              onClick={() => { setError(""); setCurrentView("history"); setSidebarOpen(false); }}
               className={`nav-link ${currentView === "history" ? "active" : ""}`}
             >
               📅 Attempt History
             </button>
             <button
-              onClick={() => { setError(""); setCurrentView("leaderboard"); }}
+              onClick={() => { setError(""); setCurrentView("leaderboard"); setSidebarOpen(false); }}
               className={`nav-link ${currentView === "leaderboard" ? "active" : ""}`}
             >
               🏆 Rank Leaderboards

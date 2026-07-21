@@ -1727,3 +1727,37 @@
     gap: 10px;
   }
 }
+
+@media (max-width:768px){
+
+.mobile-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px;
+    background:white;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.hamburger{
+    display:block;
+    font-size:28px;
+    background:none;
+    border:none;
+    cursor:pointer;
+}
+
+.student-sidebar{
+    position:fixed;
+    top:0;
+    left:-280px;
+    width:280px;
+    height:100dvh;
+    z-index:1000;
+    transition:left .3s ease;
+}
+
+.student-sidebar.open{
+    left:0;
+}
+}
