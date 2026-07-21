@@ -12,7 +12,7 @@ export const login = async (email, password) => {
 };
 
 export const signup = async (name, email, password) => {
-  const res = await axios.post("http://localhost:5000/api/auth/signup", {
+  const res = await axios.post(`${API}/signup`, {
     name,
     email,
     password,
