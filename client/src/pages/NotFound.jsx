@@ -1,0 +1,13 @@
+import React, { useEffect, useState } from 'react';
+
+function NotFound(){
+    return(
+        <>
+        <div>
+            404 NOT FOUND
+        </div>
+        </>
+    )
+}
+
+export default NotFound;
