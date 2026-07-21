@@ -856,77 +856,55 @@ function StudentDashboard() {
               </div>
 
               {/* ??$$$ */}
-              {/* Strengths & Weaknesses (A for student) */}
+              {/* Strengths & Weaknesses */}
               {(() => {
                 const categoryAnalysis = computeCategoryAnalysis(historyList);
                 if (categoryAnalysis.length === 0) return null;
                 return (
-                  <div style={{ marginTop: '40px' }}>
-                    <h3 className="section-title">📊 Topic Performance Breakdown</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px', marginTop: '16px' }}>
+                  <div className="category-analysis-wrapper">
+                    <h3 className="section-title">Topic Performance Breakdown</h3>
+                    <div className="category-analysis-grid">
                       {categoryAnalysis.map((cat, idx) => {
-                        let statusText = "Developing";
-                        let badgeColor = "#3b82f6";
-                        let badgeBg = "#eff6ff";
-                        
-                        if (cat.status === "strength") {
-                          statusText = "Strength 🏆";
-                          badgeColor = "#10b981";
-                          badgeBg = "#ecfdf5";
-                        } else if (cat.status === "weakness") {
-                          statusText = "Weakness ⚠️";
-                          badgeColor = "#ef4444";
-                          badgeBg = "#fef2f2";
-                        }
-
+                        const statusText =
+                          cat.status === "strength"
+                            ? "Strength"
+                            : cat.status === "weakness"
+                            ? "Weakness"
+                            : "Developing";
                         return (
-                          <div 
-                            key={idx} 
-                            className="template-card" 
-                            style={{ 
-                              padding: '24px', 
-                              display: 'flex', 
-                              flexDirection: 'column', 
-                              justifyContent: 'space-between',
-                              borderLeft: `5px solid ${badgeColor}`
-                            }}
+                          <div
+                            key={idx}
+                            className={`category-card ${cat.status}`}
                           >
                             <div>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                                <h4 style={{ margin: 0, fontSize: '16.5px', fontWeight: '800', color: '#0f172a', fontFamily: 'var(--font-family-display)' }}>{cat.category}</h4>
-                                <span 
-                                  style={{ 
-                                    padding: '4px 8px', 
-                                    borderRadius: '6px', 
-                                    fontSize: '11px', 
-                                    fontWeight: '800', 
-                                    color: badgeColor, 
-                                    backgroundColor: badgeBg,
-                                    textTransform: 'uppercase'
-                                  }}
-                                >
+                              <div className="category-card-header">
+                                <h4 className="category-card-title">{cat.category}</h4>
+                                <span className={`category-status-badge ${cat.status}`}>
                                   {statusText}
                                 </span>
                               </div>
 
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#475569' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <div className="category-stats-list">
+                                <div className="category-stat-row">
                                   <span>Accuracy:</span>
-                                  <span style={{ fontWeight: '700', color: cat.status === 'strength' ? '#10b981' : (cat.status === 'weakness' ? '#ef4444' : '#3b82f6') }}>{cat.accuracy}%</span>
+                                  <strong>{cat.accuracy}%</strong>
                                 </div>
-                                
-                                <div style={{ width: '100%', height: '6px', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                                  <div style={{ width: `${cat.accuracy}%`, height: '100%', backgroundColor: badgeColor, borderRadius: '3px' }} />
+
+                                <div className="category-progress-track">
+                                  <div
+                                    className={`category-progress-fill ${cat.status}`}
+                                    style={{ width: `${cat.accuracy}%` }}
+                                  />
                                 </div>
-                                
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
+
+                                <div className="category-stat-row">
                                   <span>Avg Time per Question:</span>
-                                  <span style={{ fontWeight: '600', color: '#1e293b' }}>{cat.avgTimePerQ}s</span>
+                                  <strong>{cat.avgTimePerQ}s</strong>
                                 </div>
-                                
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+                                <div className="category-stat-row">
                                   <span>Attempts:</span>
-                                  <span style={{ fontWeight: '600', color: '#1e293b' }}>{cat.attempts} test{cat.attempts > 1 ? 's' : ''}</span>
+                                  <strong>{cat.attempts} test{cat.attempts > 1 ? 's' : ''}</strong>
                                 </div>
                               </div>
                             </div>
