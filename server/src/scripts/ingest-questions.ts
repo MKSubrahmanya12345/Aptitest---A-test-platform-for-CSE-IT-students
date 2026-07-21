@@ -491,12 +491,14 @@ function parseMarkdownFile(filePath: string, relativePath: string): ParsedQuesti
 
 // Find all README.md files recursively in the practice hub
 function findMarkdownFiles(dir: string, fileList: string[] = []): string[] {
+function findMarkdownFiles(dir: string, rootDir: string, fileList: string[] = []): string[] {
   const files = fs.readdirSync(dir);
   for (const file of files) {
     const filePath = path.join(dir, file);
     if (fs.statSync(filePath).isDirectory()) {
       if (file !== '.git' && file !== 'node_modules') {
         findMarkdownFiles(filePath, fileList);
+        findMarkdownFiles(filePath, rootDir, fileList);
       }
     } else if (file.toLowerCase() === 'readme.md' && dir !== path.resolve(dir, '..')) {
       // Exclude root README.md
@@ -522,6 +524,7 @@ async function ingestQuestions() {
     }
 
     const files = findMarkdownFiles(hubDir);
+    const files = findMarkdownFiles(hubDir, hubDir);
     console.log(`Found ${files.length} practice files to process.`);
 
     let totalParsed = 0;
@@ -580,8 +583,10 @@ async function ingestQuestions() {
       return;
     }
 
+    const valuesToInsert: any[] = [];
     let insertedCount = 0;
     let skippedCount = 0;
+
     for (const q of allQuestions) {
       const key = `${q.source_file}::${q.source_question_no}`;
       if (approvedQuestions.has(key)) {
@@ -593,7 +598,27 @@ async function ingestQuestions() {
       if (rejectedQuestions.has(key)) {
         status = 'rejected';
       }
+      valuesToInsert.push([
+        q.category,
+        q.subcategory,
+        q.difficulty,
+        q.detected_question_type,
+        q.question_text,
+        q.passage,
+        q.data_block,
+        q.options,
+        q.correct_answer,
+        q.grading_config,
+        q.solution,
+        q.source_file,
+        q.source_question_no,
+        q.parser_confidence,
+        JSON.stringify(q.warnings),
+        rejectedQuestions.has(key) ? 'rejected' : 'pending'
+      ]);
+    }
 
+    if (valuesToInsert.length > 0) {
       try {
         const query = `
           INSERT INTO review_pending_questions (
@@ -632,13 +657,31 @@ async function ingestQuestions() {
 
         await connection.query(query, values);
         insertedCount++;
+            INSERT INTO review_pending_questions (
+              category, subcategory, difficulty, detected_question_type,
+              question_text, passage, data_block, options,
+              correct_answer, grading_config, solution,
+              source_file, source_question_no, parser_confidence, warnings, status
+            ) VALUES ?
+            ON DUPLICATE KEY UPDATE
+              category=VALUES(category), subcategory=VALUES(subcategory), difficulty=VALUES(difficulty),
+              detected_question_type=VALUES(detected_question_type), question_text=VALUES(question_text),
+              passage=VALUES(passage), data_block=VALUES(data_block), options=VALUES(options),
+              correct_answer=VALUES(correct_answer), grading_config=VALUES(grading_config),
+              solution=VALUES(solution), parser_confidence=VALUES(parser_confidence), warnings=VALUES(warnings),
+              status=VALUES(status)
+          `;
+        const [result]: any = await connection.query(query, [valuesToInsert]);
+        insertedCount = result.affectedRows;
       } catch (dbErr) {
         console.error(`❌ DB Error inserting question ${q.source_question_no} from ${q.source_file}:`, dbErr);
+        console.error(`❌ DB Error during bulk insert:`, dbErr);
       }
     }
 
     console.log(`\n✅ Database insertion complete.`);
     console.log(`   - Inserted/Updated: ${insertedCount} questions.`);
+    console.log(`   - Inserted/Updated: ${insertedCount} questions (Note: ON DUPLICATE counts as 2).`);
     console.log(`   - Skipped (already approved): ${skippedCount} questions.`);
 
   } catch (error) {
