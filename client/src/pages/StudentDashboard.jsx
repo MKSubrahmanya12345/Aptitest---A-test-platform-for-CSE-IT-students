@@ -586,6 +586,7 @@ function StudentDashboard() {
 
   // Logout
   const handleLogout = () => {
+    setSidebarOpen(false);
     localStorage.clear();
     navigate("/login");
   };
@@ -653,19 +654,28 @@ function StudentDashboard() {
 
           <div className="sidebar-nav">
             <button
-              onClick={() => { setError(""); setCurrentView("dashboard"); setSidebarOpen(false); }}
+              onClick={() => {
+                setCurrentView("dashboard");
+                setSidebarOpen(false);
+              }}
               className={`nav-link ${currentView === "dashboard" ? "active" : ""}`}
             >
               🏠 Dashboard Home
             </button>
             <button
-              onClick={() => { setError(""); setCurrentView("history"); setSidebarOpen(false); }}
+              onClick={() => {
+                setCurrentView("history");
+                setSidebarOpen(false);
+              }}
               className={`nav-link ${currentView === "history" ? "active" : ""}`}
             >
               📅 Attempt History
             </button>
             <button
-              onClick={() => { setError(""); setCurrentView("leaderboard"); setSidebarOpen(false); }}
+              onClick={() => {
+                setCurrentView("leaderboard");
+                setSidebarOpen(false);
+              }}
               className={`nav-link ${currentView === "leaderboard" ? "active" : ""}`}
             >
               🏆 Rank Leaderboards
