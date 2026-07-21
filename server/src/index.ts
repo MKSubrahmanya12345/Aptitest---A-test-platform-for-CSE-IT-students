@@ -15,13 +15,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api", testRoutes);
 
-// Start the auto-submit safety net check every 30 seconds
-import { testService } from "./services/test.service";
-testService.autoSubmitExpiredSessions(); // check immediately on start
-setInterval(() => {
-  testService.autoSubmitExpiredSessions();
-}, 30000);
-
 app.get('/api/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
@@ -31,8 +24,4 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server on ${PORT}`);
-});
-
+export default app;

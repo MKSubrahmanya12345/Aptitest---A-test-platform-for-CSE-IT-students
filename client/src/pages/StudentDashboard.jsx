@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { testApiService } from "../services/test.service";
 import "../styles/student.css";
@@ -258,7 +258,7 @@ function StudentDashboard() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [currentView]);
 
-  // ??$$$
+
   // Mark current question as viewed when the student sees it
   useEffect(() => {
     if (currentView === "test_environment" && activeSession && activeSession.questions) {
@@ -310,7 +310,7 @@ function StudentDashboard() {
     });
   }
 
-  // ??$$$
+
   // Calculate category-wise analysis for strengths & weaknesses (A for student)
   function computeCategoryAnalysis(list) {
     const completed = list.filter(h => h.status === "completed" && h.category);
@@ -378,17 +378,7 @@ function StudentDashboard() {
     }
   }
 
-  /* old code
-  // Action: Open Checklist Modal for a test template
-  const handleLaunchChecklist = (template) => {
-    setSelectedTemplate(template);
-    // Reset checked categories to all checked
-    setCheckedCategories([...categoriesList]);
-    setShowChecklistModal(true);
-  };
-  */
 
-  // ??$$$
   // Action: Open Checklist Modal for a test template
   const handleLaunchChecklist = (template) => {
     if (user.status === "banned") {
@@ -569,19 +559,6 @@ function StudentDashboard() {
     }
   };
 
-  /* old code
-  // Reattempt Test (Stats no update because counts_for_stats will be false)
-  const handleReattempt = async (sessionId) => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await testApiService.reattempt(sessionId);
-      setActiveSession(data);
-      setCurrentQuestionIndex(0);
-      setAnswers({});
-  */
-
-  // ??$$$
   // Reattempt Test (Stats no update because counts_for_stats will be false)
   const handleReattempt = async (sessionId) => {
     if (user.status === "banned") {
@@ -689,17 +666,7 @@ function StudentDashboard() {
           </h1>
           {currentView === "test_environment" && activeSession && (
             <>
-              {/* old code
-              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <span style={{ fontSize: "14px", fontWeight: "700", color: "#64748b" }}>
-                  Session ID: #{activeSession.session_id}
-                </span>
-                {savingAnswer && (
-                  <span className="loader" style={{ width: "16px", height: "16px", borderWidth: "2px" }}></span>
-                )}
-              </div>
-              */}
-              {/* ??$$$ */}
+
               <div className="flex-align-center-gap-12">
                 <span className="session-id-text">
                   Session ID: #{activeSession.session_id}
@@ -716,20 +683,7 @@ function StudentDashboard() {
         <div className="student-content">
           {error && (
             <>
-              {/* old code
-              <div style={{
-                color: "#991b1b",
-                backgroundColor: "#fee2e2",
-                padding: "16px",
-                borderRadius: "12px",
-                marginBottom: "24px",
-                fontWeight: "600",
-                border: "1px solid #fca5a5"
-              }}>
-                {error}
-              </div>
-              */}
-              {/* ??$$$ */}
+
               <div className="alert-banner-error">
                 {error}
               </div>
@@ -749,27 +703,7 @@ function StudentDashboard() {
               {/* ??$$$ */}
               {user.status === 'banned' && (
                 <>
-                  {/* old code
-                  <div style={{
-                    color: "#991b1b",
-                    backgroundColor: "#fee2e2",
-                    padding: "16px 20px",
-                    borderRadius: "12px",
-                    marginBottom: "24px",
-                    border: "2px solid #ef4444",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
-                    boxShadow: "var(--shadow-sm)"
-                  }}>
-                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "700" }}>⚠️ Account Banned</h3>
-                    <p style={{ margin: 0, fontSize: "13.5px", lineHeight: "1.5", color: "#7f1d1d" }}>
-                      Your account has been banned. You cannot attempt new tests or reattempt past tests. 
-                      However, you can still access your previous test records, results detail, and the leaderboards.
-                    </p>
-                  </div>
-                  */}
-                  {/* ??$$$ */}
+
                   <div className="banned-banner">
                     <h3 className="banned-banner-title">⚠️ Account Banned</h3>
                     <p className="banned-banner-desc">
@@ -941,27 +875,6 @@ function StudentDashboard() {
                     Check the aptitude topics you want to practice. The session will randomly select questions only from the selected streams.
                   </p>
 
-                  {/* old code
-                  <div style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
-                    <button
-                      type="button"
-                      onClick={handleSelectAllCategories}
-                      className="btn-history-action view"
-                      style={{ padding: "6px 12px", fontSize: "12px" }}
-                    >
-                      Select All
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDeselectAllCategories}
-                      className="btn-history-action view"
-                      style={{ padding: "6px 12px", fontSize: "12px", backgroundColor: "#f1f5f9", color: "#475569", borderColor: "#cbd5e1" }}
-                    >
-                      Deselect All
-                    </button>
-                  </div>
-                  */}
-                  {/* ??$$$ */}
                   <div className="checklist-actions-header">
                     <button
                       type="button"
@@ -1022,38 +935,7 @@ function StudentDashboard() {
           {/* ??$$$ */}
           {showBannedModal && (
             <>
-              {/* old code
-              <div className="checklist-modal-overlay" style={{ zIndex: 9999 }}>
-                <div className="checklist-modal" style={{ maxWidth: "480px", borderTop: "4px solid #ef4444" }}>
-                  <div className="checklist-modal-header" style={{ paddingBottom: "12px" }}>
-                    <h3 style={{ color: "#ef4444", display: "flex", alignItems: "center", gap: "8px", margin: 0 }}>
-                      ⚠️ Account Banned
-                    </h3>
-                    <button onClick={() => setShowBannedModal(false)} className="checklist-close">
-                      &times;
-                    </button>
-                  </div>
-                  <div className="checklist-modal-body" style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "20px 24px" }}>
-                    <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "var(--text-main)" }}>
-                      Your account is currently banned. You are restricted from starting new tests or reattempting past tests.
-                    </p>
-                    <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "var(--text-muted)" }}>
-                      You may still browse your previous test histories, view details of completed sessions, and check rank leaderboards.
-                    </p>
-                    <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "8px" }}>
-                      <button
-                        onClick={() => setShowBannedModal(false)}
-                        className="btn-checklist-start"
-                        style={{ backgroundColor: "#ef4444" }}
-                      >
-                        Understood
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              */}
-              {/* ??$$$ */}
+
               <div className="checklist-modal-overlay z-index-high">
                 <div className="checklist-modal banned-modal-width">
                   <div className="checklist-modal-header border-bottom-none">
@@ -1128,17 +1010,6 @@ function StudentDashboard() {
                   })}
                 </div>
 
-                {/* old code
-                <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <div style={{ fontSize: "12px", color: "#64748b", lineHeight: "1.4" }}>
-                    🔒 Answers are secured and saved automatically to the server on input change or navigator shift.
-                  </div>
-                  <button onClick={handleSubmitTest} className="btn-submit-test" style={{ width: "100%" }}>
-                    Finish & Submit Test
-                  </button>
-                </div>
-                */}
-                {/* ??$$$ */}
                 <div className="test-sidebar-bottom-actions">
                   <div className="sidebar-hint-text">
                     🔒 Answers are secured and saved automatically to the server on input change or navigator shift.
@@ -1189,14 +1060,6 @@ function StudentDashboard() {
                           {q.question_text}
                         </div>
 
-                        {/* old code
-                        <div style={{ marginTop: "24px" }}>
-                          <strong style={{ fontSize: "14px", color: "#475569", display: "block", marginBottom: "12px" }}>
-                            Select or Enter Your Answer:
-                          </strong>
-                        </div>
-                        */}
-                        {/* ??$$$ */}
                         <div className="mt-24">
                           <strong className="input-title-label">
                             Select or Enter Your Answer:
@@ -1290,42 +1153,7 @@ function StudentDashboard() {
                           {/* NUMERIC & DATA INTERPRETATION & NUMERIC WITH UNIT */}
                           {(q.question_type === "numeric" || q.question_type === "numeric_with_unit" || q.question_type === "data_interpretation") && (
                             <>
-                              {/* old code
-                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                <input
-                                  type="number"
-                                  step="any"
-                                  className="student-input-text"
-                                  placeholder="Enter numeric value"
-                                  value={
-                                    q.question_type === "numeric_with_unit" 
-                                      ? (answers[q.id]?.value !== undefined ? answers[q.id].value : "")
-                                      : (answers[q.id] !== undefined ? answers[q.id] : "")
-                                  }
-                                  onChange={(e) => {
-                                    if (q.question_type === "numeric_with_unit") {
-                                      handleNumericWithUnitChange(q.id, "value", e.target.value);
-                                    } else {
-                                      handleTextChange(q.id, e.target.value);
-                                    }
-                                  }}
-                                  onBlur={() => handleSaveCurrentAnswer(q.id)}
-                                  style={{ maxWidth: "250px" }}
-                                />
-                                {q.question_type === "numeric_with_unit" && (
-                                  <input
-                                    type="text"
-                                    className="student-input-text"
-                                    placeholder="Unit (e.g. m)"
-                                    value={answers[q.id]?.unit !== undefined ? answers[q.id].unit : ""}
-                                    onChange={(e) => handleNumericWithUnitChange(q.id, "unit", e.target.value)}
-                                    onBlur={() => handleSaveCurrentAnswer(q.id)}
-                                    style={{ maxWidth: "120px" }}
-                                  />
-                                )}
-                              </div>
-                              */}
-                              {/* ??$$$ */}
+
                             <div className="flex-align-center-gap-12">
                               <input
                                 type="number"
@@ -1389,21 +1217,7 @@ function StudentDashboard() {
                           ⬅️ Previous
                         </button>
 
-                        {/* old code
-                        <button
-                          type="button"
-                          onClick={() => toggleFlagQuestion(q.id)}
-                          className="btn-nav-action"
-                          style={{
-                            backgroundColor: flaggedQuestions.has(q.id) ? "#fffbeb" : "",
-                            borderColor: flaggedQuestions.has(q.id) ? "#fde68a" : "",
-                            color: flaggedQuestions.has(q.id) ? "#b45309" : ""
-                          }}
-                        >
-                          🏳️ Flag for Review
-                        </button>
-                        */}
-                        {/* ??$$$ */}
+
                         <button
                           type="button"
                           onClick={() => toggleFlagQuestion(q.id)}
@@ -1456,22 +1270,6 @@ function StudentDashboard() {
                 </div>
               </div>
 
-              {/* Action row */}
-              {/* old code
-              <div style={{ display: "flex", gap: "16px", marginBottom: "32px" }}>
-                <button onClick={() => setCurrentView("dashboard")} className="btn-start-test" style={{ width: "auto", marginTop: 0 }}>
-                  Back to Dashboard Home
-                </button>
-                <button
-                  onClick={() => handleReattempt(resultsData.session.id)}
-                  className="btn-start-test"
-                  style={{ width: "auto", marginTop: 0, backgroundColor: "#10b981" }}
-                >
-                  🔄 Reattempt This Test (Stats won't update)
-                </button>
-              </div>
-              */}
-              {/* ??$$$ */}
               <div className="results-actions-row">
                 <button onClick={() => setCurrentView("dashboard")} className="btn-start-test btn-inline-neutral">
                   Back to Dashboard Home
@@ -1501,46 +1299,7 @@ function StudentDashboard() {
 
                   return (
                     <div key={q.id} className="review-question-card">
-                      {/* old code
-                      <div className="review-card-header">
-                        <h3 style={{ fontSize: "16px", fontWeight: "700" }}>Question {idx + 1}</h3>
-                        <span className={badgeClass}>{badgeText}</span>
-                      </div>
 
-                      {q.passage && (
-                        <div className="passage-section" style={{ marginBottom: "16px" }}>
-                          {q.passage}
-                        </div>
-                      )}
-
-                      {q.data_block && q.data_block.markdown && (
-                        <div style={{ marginBottom: "16px" }}>
-                          {renderMarkdownTable(q.data_block.markdown)}
-                        </div>
-                      )}
-
-                      <div className="question-text-display" style={{ fontSize: "16px", marginBottom: "16px" }}>
-                        {q.question_text}
-                      </div>
-
-                      {q.options && q.options.length > 0 && (
-                        <div className="options-grid" style={{ marginBottom: "16px" }}>
-                          {q.options.map((opt) => {
-                            let itemStyle = "option-item";
-                            if (q.user_answer === opt.key) {
-                              itemStyle += " option-btn-student selected";
-                            }
-                            return (
-                              <div key={opt.key} className={itemStyle} style={{ padding: "10px", display: "flex", gap: "8px" }}>
-                                <strong style={{ color: "#4f46e5" }}>{opt.key}:</strong>
-                                <span>{opt.text}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                      */}
-                      {/* ??$$$ */}
                       <div className="review-card-header">
                         <h3 className="review-card-title">Question {idx + 1}</h3>
                         <span className={badgeClass}>{badgeText}</span>
@@ -1579,26 +1338,7 @@ function StudentDashboard() {
                         </div>
                       )}
 
-                      {/* old code
-                      <div className="answer-comparison-box">
-                        <div>
-                          <strong>Your Submitted Answer:</strong> {renderUserAnswer(q)}
-                        </div>
-                        <div>
-                          <strong>Correct Answer:</strong> <span style={{ color: "#16a34a", fontWeight: "700" }}>{renderCorrectAnswer(q)}</span>
-                        </div>
-                      </div>
 
-                      {q.solution && (
-                        <div className="solution-box-student">
-                          <strong>Solution Explanation:</strong>
-                          <div style={{ whiteSpace: "pre-wrap", marginTop: "8px", color: "#1e293b", lineHeight: "1.6" }}>
-                            {q.solution}
-                          </div>
-                        </div>
-                      )}
-                      */}
-                      {/* ??$$$ */}
                       <div className="answer-comparison-box">
                         <div>
                           <strong>Your Submitted Answer:</strong> {renderUserAnswer(q)}
@@ -1628,12 +1368,7 @@ function StudentDashboard() {
             <div className="history-table-container">
               {historyList.length === 0 ? (
                 <>
-                  {/* old code
-                  <div style={{ padding: "48px", textAlignment: "center", color: "#64748b" }}>
-                    No past test attempts found. Choose a practice template on the Dashboard to get started!
-                  </div>
-                  */}
-                  {/* ??$$$ */}
+
                 <div className="history-empty-state">
                   No past test attempts found. Choose a practice template on the Dashboard to get started!
                 </div>
@@ -1656,23 +1391,11 @@ function StudentDashboard() {
                       <tr key={h.id}>
                         <td>#{h.id}</td>
                         <td>
-                          {/* old code
-                          <div style={{ fontWeight: "700" }}>{h.category || "Mixed streams"}</div>
-                          */}
-                          {/* ??$$$ */}
+
                           <div className="font-bold">{h.category || "Mixed streams"}</div>
                         </td>
                         <td>
-                          {/* old code
-                          {h.status === "completed" ? (
-                            <strong style={{ color: "#4f46e5", fontSize: "15px" }}>
-                              {h.score} / {h.total_marks}
-                            </strong>
-                          ) : (
-                            <span style={{ color: "#94a3b8" }}>--</span>
-                          )}
-                          */}
-                          {/* ??$$$ */}
+
                           {h.status === "completed" ? (
                             <strong className="score-value font-bold">
                               {h.score} / {h.total_marks}
@@ -1683,18 +1406,7 @@ function StudentDashboard() {
                         </td>
                         <td>{new Date(h.started_at).toLocaleDateString()}</td>
                         <td>
-                          {/* old code
-                          {h.is_reattempt ? (
-                            <span className="tag" style={{ backgroundColor: "#fef3c7", color: "#d97706", padding: "4px 8px", borderRadius: "6px", fontSize: "11px", fontWeight: "700" }}>
-                              Reattempt
-                            </span>
-                          ) : (
-                            <span className="tag" style={{ backgroundColor: "#ecfdf5", color: "#059669", padding: "4px 8px", borderRadius: "6px", fontSize: "11px", fontWeight: "700" }}>
-                              Fresh
-                            </span>
-                          )}
-                          */}
-                          {/* ??$$$ */}
+
                           {h.is_reattempt ? (
                             <span className="tag-reattempt">
                               Reattempt
@@ -1706,23 +1418,7 @@ function StudentDashboard() {
                           )}
                         </td>
                         <td>
-                          {/* old code
-                          <span
-                            className="tag"
-                            style={{
-                              backgroundColor: h.status === "completed" ? "#d1fae5" : "#fee2e2",
-                              color: h.status === "completed" ? "#065f46" : "#b91c1c",
-                              padding: "4px 8px",
-                              borderRadius: "6px",
-                              fontSize: "11px",
-                              fontWeight: "700",
-                              textTransform: "uppercase"
-                            }}
-                          >
-                            {h.status}
-                          </span>
-                          */}
-                          {/* ??$$$ */}
+ 
                           <span
                             className={h.status === "completed" ? "tag-status-completed" : "tag-status-pending"}
                           >
@@ -1730,17 +1426,7 @@ function StudentDashboard() {
                           </span>
                         </td>
                         <td>
-                          {/* old code
-                          <button
-                            onClick={() => handleViewResults(h.id)}
-                            className="btn-history-action view"
-                            disabled={h.status !== "completed"}
-                            style={{ opacity: h.status !== "completed" ? 0.5 : 1 }}
-                          >
-                            Review breakdown
-                          </button>
-                          */}
-                          {/* ??$$$ */}
+
                           <button
                             onClick={() => handleViewResults(h.id)}
                             className={`btn-history-action view ${h.status !== "completed" ? "opacity-50" : ""}`}
@@ -1798,99 +1484,14 @@ function StudentDashboard() {
               <div className="leaderboard-container">
                 {leaderboardList.length === 0 ? (
                   <>
-                    {/* old code
-                    <div style={{ padding: "40px", textAlignment: "center", color: "#64748b" }}>
-                      No ranked participants for this test template yet. Be the first to build a score!
-                    </div>
-                    */}
-                    {/* ??$$$ */}
+
                     <div className="leaderboard-empty-state">
                       No ranked participants for this test template yet. Be the first to build a score!
                     </div>
                   </>
                 ) : (
                   <>
-                    {/* old code
-                    <table className="leaderboard-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: "80px" }}>Rank</th>
-                          <th>Student Name</th>
-                          <th style={{ textAlign: "right" }}>Cumulative Score</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leaderboardList.map((row) => {
-                          const isSelf = row.user_id === user.id;
-                          let rankBadgeClass = "rank-badge rank-other";
-                          if (row.rank === 1) rankBadgeClass = "rank-badge rank-1";
-                          else if (row.rank === 2) rankBadgeClass = "rank-badge rank-2";
-                          else if (row.rank === 3) rankBadgeClass = "rank-badge rank-3";
 
-                          return (
-                            <tr key={row.user_id} className={isSelf ? "leaderboard-row-current-user" : ""}>
-                              <td>
-                                <span className={rankBadgeClass}>
-                                  {row.rank}
-                                </span>
-                              </td>
-                              <td>
-                                <span style={{ fontWeight: isSelf ? "700" : "500" }}>{row.name}</span>
-                                {isSelf && <span style={{ color: "#8b5cf6", fontSize: "12px", marginLeft: "8px", fontWeight: "700" }}>(You)</span>}
-                              </td>
-                              <td style={{ textAlign: "right", fontWeight: "800", color: "#1e293b" }}>
-                                {row.total_score}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                    */}
-
-                    {/* ??$$$ */}
-                    {/* old code
-                    <table className="leaderboard-table">
-                      <thead>
-                        <tr>
-                          <th style={{ width: "80px" }}>Rank</th>
-                          <th>Student Name</th>
-                          <th style={{ textAlign: "right" }}>Correct Answers</th>
-                          <th style={{ textAlign: "right" }}>Avg Time / Correct</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leaderboardList.map((row) => {
-                          const isSelf = row.user_id === user.id;
-                          let rankBadgeClass = "rank-badge rank-other";
-                          if (row.rank === 1) rankBadgeClass = "rank-badge rank-1";
-                          else if (row.rank === 2) rankBadgeClass = "rank-badge rank-2";
-                          else if (row.rank === 3) rankBadgeClass = "rank-badge rank-3";
-
-                          return (
-                            <tr key={row.user_id} className={isSelf ? "leaderboard-row-current-user" : ""}>
-                              <td>
-                                <span className={rankBadgeClass}>
-                                  {row.rank}
-                                </span>
-                              </td>
-                              <td>
-                                <span style={{ fontWeight: isSelf ? "700" : "500" }}>{row.name}</span>
-                                {isSelf && <span style={{ color: "#8b5cf6", fontSize: "12px", marginLeft: "8px", fontWeight: "700" }}>(You)</span>}
-                              </td>
-                              <td style={{ textAlign: "right", fontWeight: "700", color: "#1e293b" }}>
-                                {row.correct_count} / {row.total_questions}
-                              </td>
-                              <td style={{ textAlign: "right", fontWeight: "700", color: "#1e293b" }}>
-                                {formatTimePerCorrect(row.time_per_correct)}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                    */}
-                    {/* ??$$$ */}
                   <table className="leaderboard-table">
                     <thead>
                       <tr>
