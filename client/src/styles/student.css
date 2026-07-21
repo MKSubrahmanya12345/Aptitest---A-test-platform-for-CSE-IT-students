@@ -1795,3 +1795,7 @@ body.sidebar-open {
     overflow: hidden;
 }
 }
+
+.mobile-header {
+    display: none;
+}
