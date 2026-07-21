@@ -1,0 +1,212 @@
+/* =====================================================================
+   Auth pages — NTA-style sharp-edge redesign
+   White card on light grey bg, navy header strip, 0px radius
+   ===================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--nta-bg, #f4f6f8);
+  min-height: 100vh;
+  color: #111827;
+}
+
+.login-page,
+.signup-page {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, #0f2c5e 0%, #1a4ba0 60%, #1a4ba0 100%);
+  position: relative;
+}
+
+.login-page::before,
+.signup-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  pointer-events: none;
+}
+
+.login-card,
+.signup-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-top: 4px solid #fbbf24;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+  animation: fadeIn 0.25s ease-out forwards;
+  overflow: hidden;
+}
+
+.login-card h1,
+.signup-card h1 {
+  background: linear-gradient(180deg, #0f2c5e 0%, #1a4ba0 100%);
+  color: #ffffff;
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #0a1f44;
+}
+
+.login-card > p,
+.signup-card > p {
+  padding: 18px 24px 0;
+  margin: 0;
+  text-align: center;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.login-card form,
+.signup-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px 24px;
+}
+
+.login-card form p:last-child,
+.signup-card form p:last-child {
+  padding: 0;
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: #4b5563;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.login-card input,
+.signup-card input {
+  padding: 11px 14px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0;
+  font-size: 14px;
+  color: #111827;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.login-card input::placeholder,
+.signup-card input::placeholder {
+  color: #9ca3af;
+}
+
+.login-card input:focus,
+.signup-card input:focus {
+  border-color: #1a4ba0;
+  box-shadow: 0 0 0 2px rgba(26, 75, 160, 0.15);
+}
+
+.login-card button,
+.signup-card button {
+  padding: 12px 14px;
+  border: 1px solid #143b80;
+  background: #1a4ba0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.login-card button:hover,
+.signup-card button:hover {
+  background: #143b80;
+}
+
+.login-card button:active,
+.signup-card button:active {
+  background: #0f2c5e;
+}
+
+.login-card a,
+.signup-card a {
+  color: #1a4ba0;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.12s ease;
+}
+
+.login-card a:hover,
+.signup-card a:hover {
+  color: #143b80;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-page,
+  .signup-page {
+    padding: 16px;
+  }
+
+  .login-card,
+  .signup-card {
+    max-width: 100%;
+  }
+
+  .login-card h1,
+  .signup-card h1 {
+    font-size: 18px;
+    padding: 16px;
+  }
+
+  .login-card > p,
+  .signup-card > p {
+    padding: 14px 16px 0;
+    font-size: 11px;
+  }
+
+  .login-card form,
+  .signup-card form {
+    padding: 16px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
