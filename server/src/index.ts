@@ -12,9 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+// Student-specific routes should be checked before the more restrictive admin routes.
+app.use("/api/auth", authRoutes); // Auth routes have no protection.
+app.use("/api", testRoutes);      // Student test routes require authentication.
 app.use("/api", reviewRoutes);
-app.use("/api", testRoutes);
 
 // Start the auto-submit safety net check every minute.
 // A 60-second interval is a bit friendlier for a free hosting plan.

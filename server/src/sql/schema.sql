@@ -80,19 +80,7 @@ CREATE TABLE IF NOT EXISTS test_sessions (
   FOREIGN KEY (original_session_id) REFERENCES test_sessions(id)
 );
 
--- Snapshot of questions served for this session (order + which questions, immutable)
-/* old code
-CREATE TABLE IF NOT EXISTS test_session_questions (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  session_id INT NOT NULL,
-  question_id INT NOT NULL,
-  question_order INT NOT NULL,
-  marks DECIMAL(5,2) DEFAULT 1,
-  FOREIGN KEY (session_id) REFERENCES test_sessions(id) ON DELETE CASCADE,
-  FOREIGN KEY (question_id) REFERENCES questions(id)
-);
-*/
--- ??$$$
+
 CREATE TABLE IF NOT EXISTS test_session_questions (
   id INT PRIMARY KEY AUTO_INCREMENT,
   session_id INT NOT NULL,
@@ -104,23 +92,7 @@ CREATE TABLE IF NOT EXISTS test_session_questions (
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
--- User's answers per question per session
-/* old code
-CREATE TABLE IF NOT EXISTS test_session_answers (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  session_id INT NOT NULL,
-  question_id INT NOT NULL,
-  user_answer JSON NULL,
-  is_correct BOOLEAN NULL,
-  marks_awarded DECIMAL(5,2) DEFAULT 0,
-  time_taken_seconds INT NULL,
-  answered_at TIMESTAMP NULL,
-  UNIQUE KEY unique_session_question (session_id, question_id),
-  FOREIGN KEY (session_id) REFERENCES test_sessions(id) ON DELETE CASCADE,
-  FOREIGN KEY (question_id) REFERENCES questions(id)
-);
-*/
--- ??$$$
+
 CREATE TABLE IF NOT EXISTS test_session_answers (
   session_id INT NOT NULL,
   question_id INT NOT NULL,
