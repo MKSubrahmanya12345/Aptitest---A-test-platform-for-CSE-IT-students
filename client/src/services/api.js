@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://aptitest-5i2d.onrender.com/api',
 });
 
 api.interceptors.request.use(
@@ -17,20 +17,7 @@ api.interceptors.request.use(
   }
 );
 
-/* old code
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      localStorage.clear();
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
-*/
 
-// ??$$$
 api.interceptors.response.use(
   (response) => response,
   (error) => {
