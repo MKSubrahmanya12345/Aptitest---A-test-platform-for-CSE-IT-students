@@ -119,6 +119,48 @@ body {
   margin-top: 10px;
 }
 
+/* Tablet */
+@media (max-width: 768px) {
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 36px 28px;
+    border-radius: 20px;
+  }
+
+  .login-card h1 {
+    font-size: 28px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .login-page {
+    padding: 16px;
+  }
+
+  .login-card {
+    width: 100%;
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+
+  .login-card h1 {
+    font-size: 24px;
+    margin-bottom: -10px;
+  }
+
+  .login-card p {
+    font-size: 14px;
+  }
+
+  .login-card input,
+  .login-card button {
+    padding: 14px;
+    font-size: 16px; /* prevents iOS zoom */
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -129,3 +171,4 @@ body {
     transform: translateY(0);
   }
 }
+
