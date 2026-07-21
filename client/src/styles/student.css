@@ -1740,11 +1740,27 @@
 }
 
 .hamburger{
-    display:block;
-    font-size:28px;
-    background:none;
-    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    padding:0;
+    color:#0f172a;
+    background:transparent;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
     cursor:pointer;
+    transition:background-color .2s ease, border-color .2s ease;
+}
+
+.hamburger:hover{
+    background-color:#f1f5f9;
+    border-color:#cbd5e1;
+}
+
+.hamburger-icon{
+    display:block;
 }
 
 .student-sidebar{
@@ -1759,5 +1775,23 @@
 
 .student-sidebar.open{
     left:0;
+}
+
+.sidebar-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(15, 23, 42, 0.45);
+    z-index:999;
+}
+
+.mobile-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+body.sidebar-open {
+    overflow: hidden;
 }
 }

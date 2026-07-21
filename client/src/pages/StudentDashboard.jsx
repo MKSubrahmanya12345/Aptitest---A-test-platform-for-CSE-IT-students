@@ -114,6 +114,24 @@ function StudentDashboard() {
 
   //states for hamburger menu for mobile css
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (sidebarOpen) {
+      document.body.classList.add("sidebar-open");
+    } else {
+      document.body.classList.remove("sidebar-open");
+    }
+    return () => document.body.classList.remove("sidebar-open");
+  }, [sidebarOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   
   // Checklist Modal State
   const [showChecklistModal, setShowChecklistModal] = useState(false);
@@ -616,8 +634,34 @@ function StudentDashboard() {
         <button
           className="hamburger"
           onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+          aria-expanded={sidebarOpen}
         >
-          ☰
+          <svg
+            className="hamburger-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            {sidebarOpen ? (
+              <>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </>
+            ) : (
+              <>
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </>
+            )}
+          </svg>
         </button>
         <h2>AptiTest Hub</h2>
       </div>
