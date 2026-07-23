@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Write bug condition exploration test
+- [-] 1. Write bug condition exploration test
   - **Property 1: Bug Condition** - Harsh Styling, Broken Hamburger, and CSS Conflicts
   - **CRITICAL**: This test MUST FAIL on unfixed code — failure confirms the bugs exist
   - **DO NOT attempt to fix the test or the code when it fails**
@@ -39,7 +39,7 @@
   - Mark task complete when tests are written, run, and failures are documented
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+- [~] 2. Write preservation property tests (BEFORE implementing fix)
   - **Property 2: Preservation** - All Existing Behaviors Unchanged Across Desktop, Test Logic, Auth, and Admin
   - **IMPORTANT**: Follow observation-first methodology
   - **Observe behavior on UNFIXED code for non-buggy inputs, then write property tests**
@@ -71,7 +71,7 @@
 
 - [ ] 3. Fix for harsh styling, broken hamburger menu, and CSS conflicts
 
-  - [ ] 3.1 Update `client/src/styles/student.css` — add border-radius tokens and soft palette
+  - [~] 3.1 Update `client/src/styles/student.css` — add border-radius tokens and soft palette
     - Add border-radius CSS custom properties to `:root`:
       ```css
       --s-radius-sm: 6px;
@@ -118,7 +118,7 @@
     - _Preservation: student.css changes must not affect admin.css, AdminLayout.jsx, or any admin page — only student-facing selectors are touched_
     - _Requirements: 2.1, 2.2_
 
-  - [ ] 3.2 Update `client/src/pages/StudentDashboard.jsx` — fix mobile header for test_environment view
+  - [~] 3.2 Update `client/src/pages/StudentDashboard.jsx` — fix mobile header for test_environment view
     - Locate the `.mobile-header` JSX block (currently renders hamburger button unconditionally)
     - Replace the hamburger button with a conditional:
       - When `currentView !== "test_environment"`: render the hamburger `<button>` as-is (existing SVG, `onClick`, `aria-label`, `aria-expanded`)
@@ -132,7 +132,7 @@
     - _Preservation: Hamburger behavior for all non-test_environment views must be identical to before; sidebar open/close, overlay, Escape key, and body scroll lock logic must be untouched_
     - _Requirements: 2.3, 2.4_
 
-  - [ ] 3.3 Update `client/src/styles/auth.css` — soft indigo palette, unified card radius, remove gridline overlay
+  - [~] 3.3 Update `client/src/styles/auth.css` — soft indigo palette, unified card radius, remove gridline overlay
     - Replace page background gradient on `.login-page` and `.signup-page`:
       - From: `background: linear-gradient(180deg, #0f2c5e 0%, #1a4ba0 60%, #1a4ba0 100%)`
       - To: `background: linear-gradient(160deg, #eef2ff 0%, #e0e7ff 50%, #c7d2fe 100%)`
@@ -152,7 +152,7 @@
     - _Preservation: auth.css continues to be the shared stylesheet for both Login.jsx and Signup.jsx; body reset and font-family declarations remain; responsive breakpoints unchanged_
     - _Requirements: 2.5, 2.6_
 
-  - [ ] 3.4 Update `client/src/styles/login.css` — strip duplicate reset and body block
+  - [~] 3.4 Update `client/src/styles/login.css` — strip duplicate reset and body block
     - Remove the entire `* { margin: 0; padding: 0; box-sizing: border-box; }` block at the top
     - Remove the entire `body { font-family: …; background: …; min-height: … }` block
     - Remove all `.login-card` and `.login-page` rules that are already covered by `auth.css` (card layout, border, border-radius, box-shadow, flex-direction, gap, animation)
@@ -163,7 +163,7 @@
     - _Preservation: Login.jsx import of login.css may remain; no logic or JSX changes in Login.jsx_
     - _Requirements: 2.5, 2.6_
 
-  - [ ] 3.5 Update `client/src/styles/signup.css` — strip duplicate reset, body block, and competing border-radius
+  - [~] 3.5 Update `client/src/styles/signup.css` — strip duplicate reset, body block, and competing border-radius
     - Remove the entire `* { margin: 0; padding: 0; box-sizing: border-box; }` block
     - Remove the entire `body { font-family: …; background: … }` block
     - Remove `.signup-card { border-radius: 16px; … }` and all other `.signup-card` rules already present in `auth.css` (background, box-shadow, flex-direction, gap, padding, width)
@@ -174,7 +174,7 @@
     - _Preservation: Signup.jsx import of signup.css may remain; no logic or JSX changes in Signup.jsx_
     - _Requirements: 2.5, 2.6_
 
-  - [ ] 3.6 Verify bug condition exploration test now passes
+  - [~] 3.6 Verify bug condition exploration test now passes
     - **Property 1: Expected Behavior** - Soft Styling, Fixed Hamburger, No CSS Conflicts
     - **IMPORTANT**: Re-run the SAME tests from task 1 — do NOT write new tests
     - The tests from task 1 encode the expected behavior
@@ -185,7 +185,7 @@
     - **EXPECTED OUTCOME**: All tests PASS (confirms all three bugs are fixed)
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
 
-  - [ ] 3.7 Verify preservation tests still pass
+  - [~] 3.7 Verify preservation tests still pass
     - **Property 2: Preservation** - All Existing Behaviors Unchanged
     - **IMPORTANT**: Re-run the SAME tests from task 2 — do NOT write new tests
     - Run all Pres-1 through Pres-8 property tests
@@ -200,7 +200,7 @@
       - Sidebar overlay still closes drawer (Pres-6, req 3.7)
       - Escape key still closes sidebar (Pres-7, req 3.8)
 
-- [ ] 4. Checkpoint — Ensure all tests pass
+- [~] 4. Checkpoint — Ensure all tests pass
   - Run the full test suite (`vitest --run` or equivalent) and verify all tests are green
   - Confirm no TypeScript or ESLint errors in the five modified files:
     - `client/src/styles/student.css`

@@ -1,6 +1,6 @@
 /* =====================================================================
-   Auth pages — NTA-style sharp-edge redesign
-   White card on light grey bg, navy header strip, 0px radius
+   Auth pages — Matching Admin Dashboard Style
+   Glassmorphism card on gradient background, consistent with admin UI
    ===================================================================== */
 
 * {
@@ -11,9 +11,8 @@
 
 body {
   font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
-  background: var(--nta-bg, #f4f6f8);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%);
   min-height: 100vh;
-  color: #111827;
 }
 
 .login-page,
@@ -24,8 +23,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 24px;
-  background:
-    linear-gradient(180deg, #0f2c5e 0%, #1a4ba0 60%, #1a4ba0 100%);
   position: relative;
 }
 
@@ -50,123 +47,121 @@ body {
   position: relative;
   width: 100%;
   max-width: 420px;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
-  border-top: 4px solid #fbbf24;
+  padding: 40px 36px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  border-radius: 0;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
-  animation: fadeIn 0.25s ease-out forwards;
-  overflow: hidden;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .login-card h1,
 .signup-card h1 {
-  background: linear-gradient(180deg, #0f2c5e 0%, #1a4ba0 100%);
-  color: #ffffff;
-  padding: 20px;
-  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
   text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid #0a1f44;
+  background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 8px;
 }
 
 .login-card > p,
 .signup-card > p {
-  padding: 18px 24px 0;
-  margin: 0;
+  padding: 0;
+  margin: 0 0 24px;
   text-align: center;
-  color: #4b5563;
-  font-size: 13px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  color: #94a3b8;
+  font-size: 14px;
 }
 
 .login-card form,
 .signup-card form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 20px 24px 24px;
+  gap: 16px;
 }
 
 .login-card form p:last-child,
 .signup-card form p:last-child {
   padding: 0;
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   text-align: center;
-  font-size: 13px;
-  color: #4b5563;
-  text-transform: none;
-  letter-spacing: 0;
+  font-size: 14px;
+  color: #94a3b8;
 }
 
 .login-card input,
 .signup-card input {
-  padding: 11px 14px;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
-  border-radius: 0;
-  font-size: 14px;
-  color: #111827;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 15px;
+  color: #f8fafc;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .login-card input::placeholder,
 .signup-card input::placeholder {
-  color: #9ca3af;
+  color: #64748b;
 }
 
 .login-card input:focus,
 .signup-card input:focus {
-  border-color: #1a4ba0;
-  box-shadow: 0 0 0 2px rgba(26, 75, 160, 0.15);
+  border-color: #6366f1;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
 .login-card button,
 .signup-card button {
-  padding: 12px 14px;
-  border: 1px solid #143b80;
-  background: #1a4ba0;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   cursor: pointer;
-  border-radius: 0;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  margin-top: 8px;
 }
 
 .login-card button:hover,
 .signup-card button:hover {
-  background: #143b80;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  transform: translateY(-1px);
 }
 
 .login-card button:active,
 .signup-card button:active {
-  background: #0f2c5e;
+  transform: translateY(0);
 }
 
 .login-card a,
 .signup-card a {
-  color: #1a4ba0;
+  color: #818cf8;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.12s ease;
+  transition: color 0.2s ease;
 }
 
 .login-card a:hover,
 .signup-card a:hover {
-  color: #143b80;
+  color: #a5b4fc;
   text-decoration: underline;
 }
 
@@ -180,30 +175,39 @@ body {
   .login-card,
   .signup-card {
     max-width: 100%;
+    padding: 32px 24px;
+    border-radius: 12px;
   }
 
   .login-card h1,
   .signup-card h1 {
-    font-size: 18px;
-    padding: 16px;
+    font-size: 24px;
   }
 
   .login-card > p,
   .signup-card > p {
-    padding: 14px 16px 0;
-    font-size: 11px;
+    font-size: 13px;
+    margin-bottom: 20px;
   }
 
   .login-card form,
   .signup-card form {
-    padding: 16px;
+    gap: 14px;
+  }
+
+  .login-card input,
+  .signup-card input,
+  .login-card button,
+  .signup-card button {
+    padding: 12px 14px;
+    font-size: 16px;
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;

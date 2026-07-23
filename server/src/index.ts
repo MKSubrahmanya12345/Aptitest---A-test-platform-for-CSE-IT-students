@@ -9,7 +9,13 @@ import { testService } from "./services/test.service";
 
 
 const app = express();
-app.use(cors());
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+app.use(cors({
+  origin: isProduction ? false : ['http://localhost:5173', 'http://localhost:5000'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Student-specific routes should be checked before the more restrictive admin routes.

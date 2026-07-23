@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Use localhost in development, production URL in production
+const baseURL = import.meta.env.DEV 
+  ? 'http://localhost:5000/api' 
+  : 'https://aptitest-5i2d.onrender.com/api';
+
 const api = axios.create({
-  baseURL: 'https://aptitest-5i2d.onrender.com/api',
+  baseURL: baseURL,
 });
 
 api.interceptors.request.use(

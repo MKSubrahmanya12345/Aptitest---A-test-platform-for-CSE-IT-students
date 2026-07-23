@@ -15,26 +15,19 @@ function Login() {
     try {
         const data = await login(email, password);
 
-        console.log(data);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        if (data.user.role === "admin") {
+            navigate("/admin");
+        } else if (data.user.role === "student") {
+            navigate("/dashboard");
+        }
     } catch (err) {
         console.error(err);
+        alert("Login failed. Please check your credentials.");
     }
-
-    const data = await login(email, password);
-
-    console.log(data);
-
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    if (data.user.role === "admin") {
-    navigate("/admin");
-    } else if (data.user.role === "student") {
-    navigate("/dashboard");
-    }
-
-
-  };
+};
 
   return (
     <div className="login-page">

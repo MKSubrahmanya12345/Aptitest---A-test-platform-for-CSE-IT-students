@@ -1822,21 +1822,21 @@
 
 .mobile-header h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--s-text);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-.sidebar-overlay {
+.student-sidebar-overlay {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
   z-index: 999;
 }
 
-body.sidebar-open {
+body.student-sidebar-open {
   overflow: hidden;
 }
 
@@ -1859,12 +1859,16 @@ body.sidebar-open {
     left: -260px;
     width: 260px;
     height: 100dvh;
-    z-index: 1000;
+    z-index: 1100;
     transition: left 0.25s ease;
   }
 
   .student-sidebar.open {
     left: 0;
+  }
+
+  .student-sidebar-overlay {
+    z-index: 1050;
   }
 
   .mobile-header {

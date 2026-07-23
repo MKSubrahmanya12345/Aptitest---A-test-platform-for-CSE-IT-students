@@ -118,11 +118,11 @@ function StudentDashboard() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     if (sidebarOpen) {
-      document.body.classList.add("sidebar-open");
+      document.body.classList.add("student-sidebar-open");
     } else {
-      document.body.classList.remove("sidebar-open");
+      document.body.classList.remove("student-sidebar-open");
     }
-    return () => document.body.classList.remove("sidebar-open");
+    return () => document.body.classList.remove("student-sidebar-open");
   }, [sidebarOpen]);
 
   useEffect(() => {
@@ -663,13 +663,13 @@ function StudentDashboard() {
             )}
           </svg>
         </button>
-        <h2>AptiTest Hub</h2>
+        <h2>Student Hub</h2>
       </div>
 
       {/* Sidebar Overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="sidebar-overlay"
+          className="student-sidebar-overlay"
           onClick={() => setSidebarOpen(false)}
         />
       )}
