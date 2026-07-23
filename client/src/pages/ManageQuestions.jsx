@@ -1,1193 +1,792 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AdminLayout from '../components/admin/AdminLayout';
 import { reviewService } from '../services/review.service';
 import '../styles/admin.css';
 
-const safeJsonParse = (val) => {
-  if (typeof val !== 'string') return val;
-  try {
-    return JSON.parse(val);
-  } catch (e) {
-    return val;
+// Question type definitions with default structures
+const QUESTION_TYPES = [
+  {
+    id: 'mcq_single',
+    label: 'MCQ (Single Answer)',
+    defaultCorrectAnswer: { value: 'A' },
+    defaultGradingConfig: { type: 'mcq_single', marks: 1, negativeMarks: 0 },
+    defaultOptions: [
+      { key: 'A', text: 'Option A' },
+      { key: 'B', text: 'Option B' },
+      { key: 'C', text: 'Option C' },
+      { key: 'D', text: 'Option D' }
+    ]
+  },
+  {
+    id: 'mcq_multiple',
+    label: 'MCQ (Multiple Answers)',
+    defaultCorrectAnswer: { value: ['A', 'B'] },
+    defaultGradingConfig: { type: 'mcq_multiple', marks: 1, negativeMarks: 0 },
+    defaultOptions: [
+      { key: 'A', text: 'Option A' },
+      { key: 'B', text: 'Option B' },
+      { key: 'C', text: 'Option C' },
+      { key: 'D', text: 'Option D' }
+    ]
+  },
+  {
+    id: 'numeric_integer',
+    label: 'Numeric (Integer)',
+    defaultCorrectAnswer: { value: 0 },
+    defaultGradingConfig: { type: 'numeric_integer', marks: 1, negativeMarks: 0, tolerance: 0 },
+    defaultOptions: null
+  },
+  {
+    id: 'numeric_decimal',
+    label: 'Numeric (Decimal)',
+    defaultCorrectAnswer: { value: 0.0 },
+    defaultGradingConfig: { type: 'numeric_decimal', marks: 1, negativeMarks: 0, tolerance: 0.01 },
+    defaultOptions: null
+  },
+  {
+    id: 'numeric_with_unit',
+    label: 'Numeric with Unit',
+    defaultCorrectAnswer: { value: 0, unit: '' },
+    defaultGradingConfig: { type: 'numeric_with_unit', marks: 1, negativeMarks: 0, tolerance: 0.01 },
+    defaultOptions: null
+  },
+  {
+    id: 'matrix',
+    label: 'Matrix (Grid)',
+    defaultCorrectAnswer: { rows: 2, cols: 2, values: [[0, 0], [0, 0]] },
+    defaultGradingConfig: { type: 'matrix', marks: 1, negativeMarks: 0 },
+    defaultOptions: null
+  },
+  {
+    id: 'fill_in_blanks',
+    label: 'Fill in the Blanks',
+    defaultCorrectAnswer: { blanks: [{ id: 1, answer: '' }] },
+    defaultGradingConfig: { type: 'fill_in_blanks', marks: 1, negativeMarks: 0 },
+    defaultOptions: null
+  },
+  {
+    id: 'assertion_reason',
+    label: 'Assertion-Reason',
+    defaultCorrectAnswer: { assertion: true, reason: true, relation: true },
+    defaultGradingConfig: { type: 'assertion_reason', marks: 1, negativeMarks: 0 },
+    defaultOptions: null
+  },
+  {
+    id: 'comprehension',
+    label: 'Comprehension',
+    defaultCorrectAnswer: { value: 'A' },
+    defaultGradingConfig: { type: 'comprehension', marks: 1, negativeMarks: 0 },
+    defaultOptions: [
+      { key: 'A', text: 'Option A' },
+      { key: 'B', text: 'Option B' },
+      { key: 'C', text: 'Option C' },
+      { key: 'D', text: 'Option D' }
+    ]
   }
-};
+];
+
+// Default categories and subcategories - FIXED from actual database
+const CATEGORIES = [
+  {
+    id: 'Abstract Reasoning',
+    label: 'Abstract Reasoning',
+    subcategories: ['Analogy Questions', 'Matrix Pattern Questions', 'Number Sequence Questions', 'Odd One Out Questions', 'Shape Pattern Questions']
+  },
+  {
+    id: 'Data Interpretation and Analysis',
+    label: 'Data Interpretation and Analysis',
+    subcategories: ['Bar Graph-Based Questions', 'Caselet-Based Questions', 'Combination Chart-Based Questions', 'Line Graph-Based Questions', 'Multiple Table-Based Questions', 'Pie Chart with Secondary Data-Based Questions', 'Pie Chart-Based Questions', 'Stacked Bar Graph-Based Questions', 'Table-Based Questions']
+  },
+  {
+    id: 'Logical Reasoning',
+    label: 'Logical Reasoning',
+    subcategories: ['Additional Basic Questions', 'Analogies', 'Blood Relations', 'Coding-Decoding', 'Critical Reasoning', 'Data Sufficiency', 'Directions', 'Non-Verbal Reasoning', 'Puzzles', 'Series', 'Syllogisms']
+  },
+  {
+    id: 'Quantitative Aptitude',
+    label: 'Quantitative Aptitude',
+    subcategories: ['Averages', 'Miscellaneous', 'Number Systems', 'Percentages', 'Permutations and Combinations', 'Probability', 'Profit and Loss', 'Ratios and Proportions', 'Simple and Compound Interest', 'Simple Interest', 'Time and Distance', 'Time and Work']
+  },
+  {
+    id: 'Technical Aptitude',
+    label: 'Technical Aptitude',
+    subcategories: ['AI/ML Foundations', 'Algorithms', 'Computer Networks', 'Data Structures', 'Database Basics', 'Operating Systems', 'Programming Fundamentals']
+  },
+  {
+    id: 'Verbal Ability',
+    label: 'Verbal Ability',
+    subcategories: ['Antonyms', 'Cloze Test', 'Idioms/Phrases', 'Jumbled Sentences', 'Reading Comprehension', 'Sentence Completion', 'Sentence Correction', 'Spotting Errors', 'Synonyms', 'Verbal Analogies']
+  }
+];
+
+const DIFFICULTIES = ['Basic', 'Intermediate', 'Advanced'];
 
 function ManageQuestions() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'pending';
-  const [questions, setQuestions] = useState([]);
+  const currentTab = searchParams.get('tab') || 'pending';
+  
+  // State management
+  const [pendingQuestions, setPendingQuestions] = useState([]);
+  const [approvedQuestions, setApprovedQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  // Filters state
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [isAddMode, setIsAddMode] = useState(false); // Track if adding new question
+  
+  // Filter state
+  const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
-  // Collapsible guide panel state
-  const [guideExpanded, setGuideExpanded] = useState(() => {
-    const saved = localStorage.getItem('guideExpanded');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-
-  // Edit Modal state
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState(null);
-  const [modalError, setModalError] = useState('');
-
-  // Categories list and Types list for filter options
-  const categoriesList = [
-    "Quantitative Aptitude",
-    "Logical Reasoning",
-    "Verbal Ability",
-    "Data Interpretation and Analysis",
-    "Abstract Reasoning",
-    "Technical Aptitude"
-  ];
-
-  const typesList = [
-    "mcq_single",
-    "mcq_multiple",
-    "numeric",
-    "numeric_with_unit",
-    "fraction",
-    "ratio",
-    "boolean",
-    "ordering",
-    "sentence_correction",
-    "reading_comprehension",
-    "data_interpretation",
-    "code_output",
-    "short_text"
-  ];
-
+  // Fetch questions on mount and when tab changes
   useEffect(() => {
-    localStorage.setItem('guideExpanded', JSON.stringify(guideExpanded));
-  }, [guideExpanded]);
+    fetchQuestions();
+  }, [currentTab]);
 
-  // Fetch questions when active tab or filters change
-  useEffect(() => {
-    fetchData();
-  }, [activeTab, categoryFilter, typeFilter]);
-
-  async function fetchData() {
-    setLoading(true);
-    setError('');
+  const fetchQuestions = async () => {
     try {
-      const filters = {
-        category: categoryFilter || undefined,
-        type: typeFilter || undefined,
-      };
+      setLoading(true);
+      setError('');
       
-      let data = [];
-      if (activeTab === 'pending') {
-        data = await reviewService.getPending(filters);
-      } else {
-        data = await reviewService.getQuestions(filters);
+      if (currentTab === 'pending') {
+        const data = await reviewService.getPending();
+        // API returns array directly, not wrapped in object
+        setPendingQuestions(Array.isArray(data) ? data : data.questions || []);
+      } else if (currentTab === 'approved') {
+        const data = await reviewService.getQuestions();
+        // API returns array directly, not wrapped in object
+        setApprovedQuestions(Array.isArray(data) ? data : data.questions || []);
       }
-
-      // Local search filtering
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        data = data.filter(q => 
-          q.question_text.toLowerCase().includes(query) ||
-          (q.solution && q.solution.toLowerCase().includes(query)) ||
-          q.subcategory.toLowerCase().includes(query)
-        );
-      }
-
-      setQuestions(data);
     } catch (err) {
-      console.error(err);
-      setError('Failed to load questions database.');
+      console.error('Error fetching questions:', err);
+      setError('Failed to load questions. Please try again.');
     } finally {
       setLoading(false);
     }
-  }
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    fetchData();
   };
 
-  const handleTabChange = (tab) => {
-    setSearchParams({ tab });
-    // Reset filters when switching tabs
-    setCategoryFilter('');
-    setTypeFilter('');
-    setSearchQuery('');
+  // Get display type name
+  const getTypeName = (typeId) => {
+    const type = QUESTION_TYPES.find(t => t.id === typeId);
+    return type ? type.label : typeId;
   };
 
-  // Actions
-  const handleApprove = async (id) => {
-    try {
-      await reviewService.approve(id);
-      setQuestions(prev => prev.filter(q => q.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to approve question: ' + (err.response?.data?.message || err.message));
-    }
+  // Get question type config
+  const getTypeConfig = (typeId) => {
+    return QUESTION_TYPES.find(t => t.id === typeId);
   };
 
-  const handleReject = async (id) => {
-    if (!window.confirm('Are you sure you want to reject this question?')) return;
-    try {
-      await reviewService.reject(id);
-      setQuestions(prev => prev.filter(q => q.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to reject question.');
-    }
+  // Get default values for a type
+  const getDefaultsForType = (typeId) => {
+    const typeConfig = getTypeConfig(typeId);
+    if (!typeConfig) return null;
+    
+    return {
+      correct_answer: JSON.parse(JSON.stringify(typeConfig.defaultCorrectAnswer)),
+      grading_config: JSON.parse(JSON.stringify(typeConfig.defaultGradingConfig)),
+      options: typeConfig.defaultOptions ? JSON.parse(JSON.stringify(typeConfig.defaultOptions)) : null
+    };
   };
 
-  // Open Edit Modal
-  const openEditModal = (q) => {
+  // Handle edit button click
+  const handleEdit = (question) => {
+    // Map API field names to component field names
+    const questionType = question.final_question_type || question.detected_question_type || question.question_type || question.type;
+    
     setEditingQuestion({
-      ...q,
-      // Parse JSON strings to objects if they are strings
-      options: safeJsonParse(q.options),
-      correct_answer: safeJsonParse(q.correct_answer),
-      grading_config: safeJsonParse(q.grading_config),
-      data_block: safeJsonParse(q.data_block),
+      ...question,
+      type: questionType, // Normalize type field
+      original_type: questionType
     });
-    setModalError('');
-    setIsEditModalOpen(true);
+    setIsAddMode(false);
+    setShowEditModal(true);
   };
 
-  // Save Edits
-  const handleSaveEdits = async (approveAfter = false) => {
-    setModalError('');
+  // Handle add button click
+  const handleAddQuestion = () => {
+    const defaults = getDefaultsForType('mcq_single');
+    setEditingQuestion({
+      id: `temp_${Date.now()}`, // Temporary ID for new question
+      category: '',
+      subcategory: '',
+      difficulty: 'Basic',
+      type: 'mcq_single',
+      question_text: '',
+      passage: '',
+      data_block: '',
+      solution: '',
+      correct_answer: defaults.correct_answer,
+      grading_config: defaults.grading_config,
+      options: defaults.options
+    });
+    setIsAddMode(true);
+    setShowEditModal(true);
+  };
+
+  // Handle type change - auto-reset related fields
+  const handleTypeChange = (e) => {
+    const newType = e.target.value;
+    const defaults = getDefaultsForType(newType);
+    
+    setEditingQuestion(prev => ({
+      ...prev,
+      type: newType,
+      correct_answer: defaults.correct_answer,
+      grading_config: defaults.grading_config,
+      options: defaults.options || prev.options
+    }));
+  };
+
+  // Handle close edit modal
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+    setEditingQuestion(null);
+  };
+
+  // Handle save changes
+  const handleSaveChanges = async () => {
     try {
-      // Validate correct_answer and grading_config
-      if (!editingQuestion.correct_answer) {
-        setModalError('Correct Answer config cannot be empty.');
+      // Validation
+      if (!editingQuestion.question_text?.trim()) {
+        setError('Question text is required');
         return;
       }
-      if (!editingQuestion.grading_config) {
-        setModalError('Grading Config cannot be empty.');
+      if (!editingQuestion.category) {
+        setError('Category is required');
+        return;
+      }
+      if (!editingQuestion.type) {
+        setError('Question type is required');
         return;
       }
 
-      const payload = {
-        ...editingQuestion,
-        // Send stringified versions for database
-        options: editingQuestion.options ? JSON.stringify(editingQuestion.options) : null,
-        correct_answer: JSON.stringify(editingQuestion.correct_answer),
-        grading_config: JSON.stringify(editingQuestion.grading_config),
-        data_block: editingQuestion.data_block ? JSON.stringify(editingQuestion.data_block) : null,
+      // Prepare update data
+      const questionData = {
+        category: editingQuestion.category,
+        subcategory: editingQuestion.subcategory || '',
+        difficulty: editingQuestion.difficulty,
+        type: editingQuestion.type,
+        question_text: editingQuestion.question_text,
+        passage: editingQuestion.passage || null,
+        data_block: editingQuestion.data_block || null,
+        correct_answer: editingQuestion.correct_answer,
+        grading_config: editingQuestion.grading_config,
+        solution: editingQuestion.solution || '',
+        options: editingQuestion.options
       };
 
-      if (approveAfter) {
-        // Save and approve in one step
-        await reviewService.approve(editingQuestion.id, payload);
-        setIsEditModalOpen(false);
-        setQuestions(prev => prev.filter(q => q.id !== editingQuestion.id));
+      if (isAddMode) {
+        // Create new question
+        const response = await fetch('/api/questions/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(questionData)
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          setError(err.message || 'Failed to create question');
+          return;
+        }
+
+        const newQuestion = await response.json();
+        setPendingQuestions(prev => [newQuestion, ...prev]);
+        setError('');
       } else {
-        // Just save edits
-        await reviewService.updatePending(editingQuestion.id, payload);
-        setIsEditModalOpen(false);
-        // Refresh data
-        fetchData();
+        // Update existing question
+        if (!editingQuestion.id || editingQuestion.id.startsWith('temp_')) {
+          setError('Invalid question ID');
+          return;
+        }
+
+        await reviewService.updatePending(editingQuestion.id, questionData);
+        
+        // Update local state
+        if (currentTab === 'pending') {
+          setPendingQuestions(prev =>
+            prev.map(q => q.id === editingQuestion.id ? { ...editingQuestion, original_type: editingQuestion.type } : q)
+          );
+        }
+        setError('');
       }
+
+      handleCloseModal();
     } catch (err) {
-      console.error(err);
-      setModalError('Failed to save question details. Ensure format is correct.');
+      console.error('Error saving question:', err);
+      setError(err.message || 'Failed to save question. Please try again.');
     }
   };
 
-  // Helper to render parsed JSON correct_answer fields for user readability
-  const renderCorrectAnswer = (q) => {
-    let ans = q.correct_answer;
-    if (typeof ans === 'string') {
-      try { ans = JSON.parse(ans); } catch { return q.correct_answer; }
-    }
-    if (!ans) return 'N/A';
-
-    switch (q.detected_question_type || q.question_type) {
-      case 'mcq_single':
-        return `Option: ${ans.value || 'N/A'}`;
-      case 'numeric':
-        return `Value: ${ans.value}`;
-      case 'numeric_with_unit':
-        return `Value: ${ans.value} ${ans.unit || ''}`;
-      case 'fraction':
-        return `Fraction: ${ans.numerator}/${ans.denominator}`;
-      case 'ratio':
-        return `Ratio: ${ans.values ? ans.values.join(':') : 'N/A'}`;
-      case 'boolean':
-        return `Boolean: ${ans.value ? 'True' : 'False'}`;
-      case 'ordering':
-        return `Order: ${ans.order ? ans.order.join(' → ') : 'N/A'}`;
-      case 'sentence_correction':
-      case 'reading_comprehension':
-      case 'code_output':
-      case 'short_text':
-        return `Answer(s): ${ans.answers ? ans.answers.join(' | ') : ans.value || 'N/A'}`;
-      default:
-        return JSON.stringify(ans);
+  // Handle approve
+  const handleApprove = async (questionId) => {
+    try {
+      await reviewService.approve(questionId);
+      setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+      await fetchQuestions();
+    } catch (err) {
+      console.error('Error approving question:', err);
+      setError('Failed to approve question.');
     }
   };
 
-  /* old code */
-  const legacyRender = () => {
+  // Handle reject
+  const handleReject = async (questionId) => {
+    try {
+      await reviewService.reject(questionId);
+      setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+    } catch (err) {
+      console.error('Error rejecting question:', err);
+      setError('Failed to reject question.');
+    }
+  };
+
+  // Filter questions
+  const filterQuestions = (questions) => {
+    return questions.filter(q => {
+      // Map API field names to component field names for compatibility
+      const questionType = q.final_question_type || q.detected_question_type || q.question_type || q.type;
+      const matchesSearch = !searchTerm || 
+        q.question_text?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = !categoryFilter || q.category === categoryFilter;
+      const matchesType = !typeFilter || questionType === typeFilter;
+      return matchesSearch && matchesCategory && matchesType;
+    });
+  };
+
+  const displayQuestions = currentTab === 'pending' 
+    ? filterQuestions(pendingQuestions)
+    : filterQuestions(approvedQuestions);
+
+  if (loading) {
     return (
       <AdminLayout title="Manage Questions">
-        {/* Top Tabs */}
-      <div className="tabs-nav">
-        <button 
-          onClick={() => handleTabChange('pending')} 
-          className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
-        >
-          Review Pending
-        </button>
-        <button 
-          onClick={() => handleTabChange('approved')} 
-          className={`tab-btn ${activeTab === 'approved' ? 'active' : ''}`}
-        >
-          Approved Questions
-        </button>
-      </div>
-
-      {/* Guide Panel */}
-      <div className="guide-panel">
-        <div className="guide-header" onClick={() => setGuideExpanded(!guideExpanded)}>
-          <h3>📖 How to Review Each Question Type</h3>
-          <span className="guide-header-toggle">
-            {guideExpanded ? 'Collapse' : 'Expand'}
-          </span>
-        </div>
-        
-        {guideExpanded && (
-          <div className="guide-content">
-            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-              Verify that the automatically classified type matches the question structure, and that correct answer format is valid JSON.
-            </p>
-            <table className="guide-table">
-              <thead>
-                <tr>
-                  <th>Question Type</th>
-                  <th>Correct Answer Schema</th>
-                  <th>Grading Config</th>
-                  <th>Examples</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>mcq_single</code></td>
-                  <td><code>{"{ \"value\": \"B\" }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td>Multiple choice option key</td>
-                </tr>
-                <tr>
-                  <td><code>numeric</code></td>
-                  <td><code>{"{ \"value\": 15 }"}</code></td>
-                  <td><code>{"{ \"tolerance\": 0.01 }"}</code></td>
-                  <td>Plain number answer</td>
-                </tr>
-                <tr>
-                  <td><code>numeric_with_unit</code></td>
-                  <td><code>{"{ \"value\": 60, \"unit\": \"km/h\" }"}</code></td>
-                  <td><code>{"{ \"tolerance\": 0.01 }"}</code></td>
-                  <td>Numbers with symbols or text units</td>
-                </tr>
-                <tr>
-                  <td><code>fraction</code></td>
-                  <td><code>{"{ \"numerator\": 3, \"denominator\": 8 }"}</code></td>
-                  <td><code>{"{ \"allow_decimal\": true }"}</code></td>
-                  <td>Fractions like 3/8</td>
-                </tr>
-                <tr>
-                  <td><code>ratio</code></td>
-                  <td><code>{"{ \"values\": [8, 15] }"}</code></td>
-                  <td><code>{"{ \"allow_scaled\": true }"}</code></td>
-                  <td>Ratios like 8:15</td>
-                </tr>
-                <tr>
-                  <td><code>boolean</code></td>
-                  <td><code>{"{ \"value\": true }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td>Yes/No or True/False</td>
-                </tr>
-                <tr>
-                  <td><code>ordering</code></td>
-                  <td><code>{"{ \"order\": [\"C\", \"D\", \"A\", \"B\"] }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td>Rearranging sentences or items</td>
-                </tr>
-                <tr>
-                  <td><code>sentence_correction</code></td>
-                  <td><code>{"{ \"answers\": [\"She sings beautifully.\"] }"}</code></td>
-                  <td><code>{"{ \"ignore_punctuation\": true }"}</code></td>
-                  <td>Grammatical correction tasks</td>
-                </tr>
-                <tr>
-                  <td><code>code_output</code></td>
-                  <td><code>{"{ \"answers\": [\"10\"] }"}</code></td>
-                  <td><code>{"{ \"case_sensitive\": true }"}</code></td>
-                  <td>Output logs or compiler prints</td>
-                </tr>
-                <tr>
-                  <td><code>short_text</code></td>
-                  <td><code>{"{ \"answers\": [\"Utensils\"] }"}</code></td>
-                  <td><code>{"{ \"case_sensitive\": false }"}</code></td>
-                  <td>Fill-in-the-blanks, vocabulary, etc.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Filter Controls */}
-      <form onSubmit={handleSearchSubmit} className="filter-bar">
-        <input 
-          type="text" 
-          placeholder="Search questions, solutions, subcategories..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        
-        <select 
-          value={categoryFilter} 
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="filter-select"
-        >
-          <option value="">All Categories</option>
-          {categoriesList.map((cat, i) => (
-            <option key={i} value={cat}>{cat}</option>
-          ))}
-        </select>
-
-        <select 
-          value={typeFilter} 
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className="filter-select"
-        >
-          <option value="">All Types</option>
-          {typesList.map((t, i) => (
-            <option key={i} value={t}>{t}</option>
-          ))}
-        </select>
-
-        <button type="submit" className="btn btn-approve">
-          Apply Search
-        </button>
-      </form>
-
-      {/* Error Message */}
-      {error && <div style={{ color: 'var(--error-color)', marginBottom: '20px', fontWeight: '600' }}>{error}</div>}
-
-      {/* Main List */}
-      {loading ? (
         <div className="loader-container">
           <div className="loader"></div>
         </div>
-      ) : questions.length === 0 ? (
-        <div className="empty-state">
-          <h3>No Questions Found</h3>
-          <p>No questions matched your current filters or search term.</p>
-        </div>
-      ) : (
-        <div className="questions-list">
-          {questions.map((q) => {
-            const warnings = safeJsonParse(q.warnings);
-            const options = safeJsonParse(q.options);
-            const db = safeJsonParse(q.data_block);
+      </AdminLayout>
+    );
+  }
 
-            return (
-              <div key={q.id} className="question-card">
-                <div className="card-header">
-                  <div className="meta-tags">
-                    <span className="tag tag-category">{q.category}</span>
-                    <span className="tag tag-category" style={{ backgroundColor: '#f1f5f9', color: '#475569' }}>
-                      {q.subcategory}
-                    </span>
-                    <span className={`tag tag-difficulty ${q.difficulty}`}>
-                      {q.difficulty}
-                    </span>
-                    <span className="tag tag-type">
-                      {q.detected_question_type || q.question_type}
-                    </span>
-                  </div>
-                  
-                  {activeTab === 'pending' && q.parser_confidence !== undefined && (
-                    <div className="confidence-badge">
-                      <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Parser Confidence:</span>
-                      <span className={`confidence-score ${q.parser_confidence >= 0.9 ? 'score-high' : q.parser_confidence >= 0.7 ? 'score-medium' : 'score-low'}`}>
-                        {Math.round(q.parser_confidence * 100)}%
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="card-body">
-                  {/* Passage */}
-                  {q.passage && (
-                    <div className="passage-box">
-                      <strong>Passage / Context:</strong><br />
-                      {q.passage}
-                    </div>
-                  )}
-
-                  {/* Data block (Tables/Graphs) */}
-                  {db && db.markdown && (
-                    <div className="data-block-box">
-                      <strong>Dataset Matrix:</strong>
-                      <pre style={{ margin: '8px 0 0 0', whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
-                        {db.markdown}
-                      </pre>
-                    </div>
-                  )}
-
-                  {/* Question Text */}
-                  <div className="question-text">
-                    {q.source_question_no}. {q.question_text}
-                  </div>
-
-                  {/* MCQ Options */}
-                  {options && options.length > 0 && (
-                    <div className="options-grid">
-                      {options.map((opt, i) => (
-                        <div key={i} className="option-item">
-                          <span className="option-key">{opt.key}:</span>
-                          <span>{opt.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Correct Answer */}
-                  <div className="answer-box">
-                    <span className="answer-label">Correct Answer:</span>
-                    <span>{renderCorrectAnswer(q)}</span>
-                  </div>
-
-                  {/* Solution */}
-                  {q.solution && (
-                    <div className="solution-box">
-                      <div className="solution-label">Solution Breakdown:</div>
-                      <div style={{ whiteSpace: 'pre-wrap' }}>{q.solution}</div>
-                    </div>
-                  )}
-
-                  {/* Warnings (Admin Pending only) */}
-                  {activeTab === 'pending' && warnings && warnings.length > 0 && (
-                    <div className="warnings-box">
-                      <div style={{ fontWeight: '700', marginBottom: '4px' }}>⚠️ Ingestion Warnings:</div>
-                      {warnings.map((warn, i) => (
-                        <div key={i} className="warning-item">• {warn}</div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {activeTab === 'pending' && (
-                  <div className="card-actions">
-                    <button onClick={() => openEditModal(q)} className="btn btn-edit">
-                      Edit Question
-                    </button>
-                    <button onClick={() => handleReject(q.id)} className="btn btn-reject">
-                      Reject
-                    </button>
-                    <button onClick={() => handleApprove(q.id)} className="btn btn-approve">
-                      Approve & Make Live
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {isEditModalOpen && editingQuestion && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <div className="modal-header">
-              <h2>Edit Pending Question (ID: {editingQuestion.id})</h2>
-              <button onClick={() => setIsEditModalOpen(false)} className="modal-close">
-                &times;
-              </button>
-            </div>
-            
-            <div className="modal-body">
-              {modalError && (
-                <div style={{ color: 'var(--error-color)', padding: '10px', backgroundColor: '#fee2e2', borderRadius: '8px', fontWeight: '600' }}>
-                  {modalError}
-                </div>
-              )}
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Category</label>
-                  <select 
-                    value={editingQuestion.category || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, category: e.target.value })}
-                    className="form-select"
-                  >
-                    {categoriesList.map((cat, i) => (
-                      <option key={i} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Subcategory</label>
-                  <input 
-                    type="text" 
-                    value={editingQuestion.subcategory || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, subcategory: e.target.value })}
-                    className="form-input"
-                  />
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Difficulty</label>
-                  <select 
-                    value={editingQuestion.difficulty || 'basic'} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, difficulty: e.target.value })}
-                    className="form-select"
-                  >
-                    <option value="basic">Basic</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Question Type</label>
-                  <select 
-                    value={editingQuestion.detected_question_type || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, detected_question_type: e.target.value })}
-                    className="form-select"
-                  >
-                    {typesList.map((t, i) => (
-                      <option key={i} value={t}>{t}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Passage / Context (Optional)</label>
-                <textarea 
-                  value={editingQuestion.passage || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, passage: e.target.value || null })}
-                  className="form-textarea"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Dataset Table (Optional Markdown)</label>
-                <textarea 
-                  value={editingQuestion.data_block?.markdown || ''} 
-                  onChange={(e) => setEditingQuestion({ 
-                    ...editingQuestion, 
-                    data_block: e.target.value ? { type: 'table', markdown: e.target.value } : null 
-                  })}
-                  className="form-textarea"
-                  placeholder="| Header 1 | Header 2 |"
-                  style={{ fontFamily: 'monospace' }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Question Text</label>
-                <textarea 
-                  value={editingQuestion.question_text || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
-                  className="form-textarea"
-                  rows={3}
-                />
-              </div>
-
-              {/* MCQ Options Editor */}
-              {editingQuestion.detected_question_type === 'mcq_single' && (
-                <div className="form-group">
-                  <label className="form-label">MCQ Options</label>
-                  <div className="options-editor">
-                    {['A', 'B', 'C', 'D'].map((key) => {
-                      const opt = editingQuestion.options?.find(o => o.key === key) || { key, text: '' };
-                      return (
-                        <div key={key} className="option-edit-row">
-                          <span className="option-label">{key}</span>
-                          <input 
-                            type="text" 
-                            value={opt.text}
-                            onChange={(e) => {
-                              const newOpts = [...(editingQuestion.options || [])];
-                              const idx = newOpts.findIndex(o => o.key === key);
-                              if (idx !== -1) {
-                                newOpts[idx] = { key, text: e.target.value };
-                              } else {
-                                newOpts.push({ key, text: e.target.value });
-                              }
-                              setEditingQuestion({ ...editingQuestion, options: newOpts });
-                            }}
-                            className="form-input"
-                            placeholder={`Option ${key}`}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Correct Answer (JSON Format)</label>
-                  <textarea 
-                    value={JSON.stringify(editingQuestion.correct_answer, null, 2) || ''} 
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingQuestion({ ...editingQuestion, correct_answer: parsed });
-                        setModalError('');
-                      } catch {
-                        // Keep text as-is, display validation error when saving
-                        setModalError('Correct Answer is not valid JSON.');
-                      }
-                    }}
-                    className="form-textarea"
-                    rows={3}
-                    style={{ fontFamily: 'monospace' }}
-                  />
-                  <small style={{ color: '#64748b' }}>
-                    Verify type compatibility. E.g. {"{ \"value\": \"B\" }"} for mcq_single.
-                  </small>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Grading Config (JSON Format)</label>
-                  <textarea 
-                    value={JSON.stringify(editingQuestion.grading_config, null, 2) || ''} 
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingQuestion({ ...editingQuestion, grading_config: parsed });
-                        setModalError('');
-                      } catch {
-                        setModalError('Grading Config is not valid JSON.');
-                      }
-                    }}
-                    className="form-textarea"
-                    rows={3}
-                    style={{ fontFamily: 'monospace' }}
-                  />
-                  <small style={{ color: '#64748b' }}>
-                    E.g. {"{}"} or {"{ \"tolerance\": 0.01 }"}.
-                  </small>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Solution Breakdown</label>
-                <textarea 
-                  value={editingQuestion.solution || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, solution: e.target.value })}
-                  className="form-textarea"
-                  rows={3}
-                />
-              </div>
-            </div>
-            
-            <div className="modal-footer">
-              <button onClick={() => setIsEditModalOpen(false)} className="btn btn-reject">
-                Cancel
-              </button>
-              <button onClick={() => handleSaveEdits(false)} className="btn btn-edit">
-                Save Changes Only
-              </button>
-              <button onClick={() => handleSaveEdits(true)} className="btn btn-approve">
-                Save & Approve Live
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </AdminLayout>
-  );
-  };
-
-  // ??$$$
   return (
     <AdminLayout title="Manage Questions">
-      {/* Top Tabs */}
+      {error && <div className="error-banner">{error}</div>}
+
+      {/* Tabs */}
       <div className="tabs-nav">
-        <button 
-          onClick={() => handleTabChange('pending')} 
-          className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
+        <button
+          className={`tab-btn ${currentTab === 'pending' ? 'active' : ''}`}
+          onClick={() => setSearchParams({ tab: 'pending' })}
         >
-          Review Pending
+          Pending Review ({pendingQuestions.length})
         </button>
-        <button 
-          onClick={() => handleTabChange('approved')} 
-          className={`tab-btn ${activeTab === 'approved' ? 'active' : ''}`}
+        <button
+          className={`tab-btn ${currentTab === 'approved' ? 'active' : ''}`}
+          onClick={() => setSearchParams({ tab: 'approved' })}
         >
-          Approved Questions
+          Approved Questions ({approvedQuestions.length})
+        </button>
+        <button
+          className="btn btn-approve"
+          style={{ marginLeft: 'auto' }}
+          onClick={handleAddQuestion}
+        >
+          + Add New Question
         </button>
       </div>
 
-      {/* Guide Panel */}
-      <div className="guide-panel">
-        <div className="guide-header" onClick={() => setGuideExpanded(!guideExpanded)}>
-          <h3>📖 How to Review Each Question Type</h3>
-          <span className="guide-header-toggle">
-            {guideExpanded ? 'Collapse' : 'Expand'}
-          </span>
-        </div>
-        
-        {guideExpanded && (
-          <div className="guide-content">
-            <p className="guide-instruction">
-              Verify that the automatically classified type matches the question structure, and that correct answer format is valid JSON.
-            </p>
-            <table className="guide-table">
-              <thead>
-                <tr className="table-header-row">
-                  <th className="bold-header">Question Type</th>
-                  <th className="bold-header">Correct Answer Schema</th>
-                  <th className="bold-header">Grading Config</th>
-                  <th className="bold-header">Examples</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>mcq_single</code></td>
-                  <td><code>{"{ \"value\": \"B\" }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td className="cell-muted">Multiple choice option key</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>numeric</code></td>
-                  <td><code>{"{ \"value\": 15 }"}</code></td>
-                  <td><code>{"{ \"tolerance\": 0.01 }"}</code></td>
-                  <td className="cell-muted">Plain number answer</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>numeric_with_unit</code></td>
-                  <td><code>{"{ \"value\": 60, \"unit\": \"km/h\" }"}</code></td>
-                  <td><code>{"{ \"tolerance\": 0.01 }"}</code></td>
-                  <td className="cell-muted">Numbers with symbols or text units</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>fraction</code></td>
-                  <td><code>{"{ \"numerator\": 3, \"denominator\": 8 }"}</code></td>
-                  <td><code>{"{ \"allow_decimal\": true }"}</code></td>
-                  <td className="cell-muted">Fractions like 3/8</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>ratio</code></td>
-                  <td><code>{"{ \"values\": [8, 15] }"}</code></td>
-                  <td><code>{"{ \"allow_scaled\": true }"}</code></td>
-                  <td className="cell-muted">Ratios like 8:15</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>boolean</code></td>
-                  <td><code>{"{ \"value\": true }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td className="cell-muted">Yes/No or True/False</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>ordering</code></td>
-                  <td><code>{"{ \"order\": [\"C\", \"D\", \"A\", \"B\"] }"}</code></td>
-                  <td><code>{"{}"}</code></td>
-                  <td className="cell-muted">Rearranging sentences or items</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>sentence_correction</code></td>
-                  <td><code>{"{ \"answers\": [\"She sings beautifully.\"] }"}</code></td>
-                  <td><code>{"{ \"ignore_punctuation\": true }"}</code></td>
-                  <td className="cell-muted">Grammatical correction tasks</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>code_output</code></td>
-                  <td><code>{"{ \"answers\": [\"10\"] }"}</code></td>
-                  <td><code>{"{ \"case_sensitive\": true }"}</code></td>
-                  <td className="cell-muted">Output logs or compiler prints</td>
-                </tr>
-                <tr className="table-body-row">
-                  <td className="cell-main-bold"><code>short_text</code></td>
-                  <td><code>{"{ \"answers\": [\"Utensils\"] }"}</code></td>
-                  <td><code>{"{ \"case_sensitive\": false }"}</code></td>
-                  <td className="cell-muted">Fill-in-the-blanks, vocabulary, etc.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Filter Controls */}
-      <form onSubmit={handleSearchSubmit} className="filter-bar">
-        <input 
-          type="text" 
-          placeholder="Search questions, solutions, subcategories..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+      {/* Filter Bar */}
+      <div className="filter-bar">
+        <input
+          type="text"
           className="search-input"
+          placeholder="Search questions..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        
-        <select 
-          value={categoryFilter} 
-          onChange={(e) => setCategoryFilter(e.target.value)}
+        <select
           className="filter-select"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
         >
           <option value="">All Categories</option>
-          {categoriesList.map((cat, i) => (
-            <option key={i} value={cat}>{cat}</option>
+          {CATEGORIES.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.label}</option>
           ))}
         </select>
-
-        <select 
-          value={typeFilter} 
-          onChange={(e) => setTypeFilter(e.target.value)}
+        <select
           className="filter-select"
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
         >
           <option value="">All Types</option>
-          {typesList.map((t, i) => (
-            <option key={i} value={t}>{t}</option>
+          {QUESTION_TYPES.map(type => (
+            <option key={type.id} value={type.id}>{type.label}</option>
           ))}
         </select>
+      </div>
 
-        <button type="submit" className="btn btn-approve">
-          Apply Search
-        </button>
-      </form>
-
-      {/* Error Message */}
-      {error && <div className="error-message">{error}</div>}
-
-      {/* Main List */}
-      {loading ? (
-        <div className="loader-container">
-          <div className="loader"></div>
-        </div>
-      ) : questions.length === 0 ? (
+      {/* Questions List */}
+      {displayQuestions.length === 0 ? (
         <div className="empty-state">
           <h3>No Questions Found</h3>
-          <p>No questions matched your current filters or search term.</p>
+          <p>
+            {currentTab === 'pending'
+              ? 'No questions pending review at this time.'
+              : 'No approved questions found.'}
+          </p>
         </div>
       ) : (
         <div className="questions-list">
-          {questions.map((q) => {
-            const warnings = safeJsonParse(q.warnings);
-            const options = safeJsonParse(q.options);
-            const db = safeJsonParse(q.data_block);
-
+          {displayQuestions.map(question => {
+            // Map API field names for compatibility
+            const questionType = question.final_question_type || question.detected_question_type || question.question_type || question.type;
+            
             return (
-              <div key={q.id} className="question-card">
-                <div className="card-header">
-                  <div className="meta-tags">
-                    <span className="tag tag-category">{q.category}</span>
-                    <span className="tag tag-category tag-gray-bg">
-                      {q.subcategory}
-                    </span>
-                    <span className={`tag tag-difficulty ${q.difficulty}`}>
-                      {q.difficulty}
-                    </span>
-                    <span className="tag tag-type">
-                      {q.detected_question_type || q.question_type}
-                    </span>
-                  </div>
-                  
-                  {activeTab === 'pending' && q.parser_confidence !== undefined && (
-                    <div className="confidence-badge">
-                      <span className="confidence-label">Parser Confidence:</span>
-                      <span className={`confidence-score ${q.parser_confidence >= 0.9 ? 'score-high' : q.parser_confidence >= 0.7 ? 'score-medium' : 'score-low'}`}>
-                        {Math.round(q.parser_confidence * 100)}%
-                      </span>
-                    </div>
-                  )}
+            <div key={question.id} className="question-card">
+              <div className="card-header">
+                <div className="meta-tags">
+                  <span className="tag tag-category">{question.category}</span>
+                  <span className="tag tag-type">{getTypeName(questionType)}</span>
+                  <span className={`tag tag-difficulty ${question.difficulty?.toLowerCase()}`}>
+                    {question.difficulty}
+                  </span>
                 </div>
+                {currentTab === 'pending' && (
+                  <span className="status-pill pending">Pending Review</span>
+                )}
+              </div>
 
-                <div className="card-body">
-                  {/* Passage */}
-                  {q.passage && (
-                    <div className="passage-box">
-                      <strong>Passage / Context:</strong><br />
-                      {q.passage}
-                    </div>
-                  )}
-
-                  {/* Data block (Tables/Graphs) */}
-                  {db && db.markdown && (
-                    <div className="data-block-box">
-                      <strong>Dataset Matrix:</strong>
-                      <pre className="matrix-block">
-                        {db.markdown}
-                      </pre>
-                    </div>
-                  )}
-
-                  {/* Question Text */}
-                  <div className="question-text">
-                    {q.source_question_no}. {q.question_text}
+              <div className="card-body">
+                {/* Passage */}
+                {question.passage && (
+                  <div className="passage-box">
+                    <strong>Passage:</strong>
+                    <div style={{ marginTop: '8px' }}>{question.passage}</div>
                   </div>
+                )}
 
-                  {/* MCQ Options */}
-                  {options && options.length > 0 && (
-                    <div className="options-grid">
-                      {options.map((opt, i) => (
-                        <div key={i} className="option-item">
-                          <span className="option-key">{opt.key}:</span>
-                          <span>{opt.text}</span>
-                        </div>
-                      ))}
+                {/* Data Block */}
+                {question.data_block && (
+                  <div className="data-block-box">
+                    <strong>Data Block:</strong>
+                    <div className="matrix-block">
+                      {typeof question.data_block === 'string' 
+                        ? question.data_block 
+                        : question.data_block.markdown || JSON.stringify(question.data_block)}
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Correct Answer */}
+                {/* Question Text */}
+                <div className="question-text">{question.question_text}</div>
+
+                {/* Options for MCQ types */}
+                {['mcq_single', 'mcq_multiple', 'comprehension'].includes(questionType) && question.options && (
+                  <div className="options-grid">
+                    {(typeof question.options === 'string' ? JSON.parse(question.options) : question.options).map((opt, idx) => (
+                      <div key={idx} className="option-item">
+                        <span className="option-key">{opt.key}.</span>
+                        <span>{opt.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Correct Answer */}
+                {question.correct_answer && (
                   <div className="answer-box">
                     <span className="answer-label">Correct Answer:</span>
-                    <span>{renderCorrectAnswer(q)}</span>
+                    <span>
+                      {typeof question.correct_answer === 'string' 
+                        ? JSON.parse(question.correct_answer).value || JSON.parse(question.correct_answer)
+                        : question.correct_answer.value || JSON.stringify(question.correct_answer)}
+                      {question.correct_answer.unit && ` ${question.correct_answer.unit}`}
+                    </span>
                   </div>
+                )}
 
-                  {/* Solution */}
-                  {q.solution && (
-                    <div className="solution-box">
-                      <div className="solution-label">Solution Breakdown:</div>
-                      <div className="solution-body">{q.solution}</div>
-                    </div>
-                  )}
-
-                  {/* Warnings (Admin Pending only) */}
-                  {activeTab === 'pending' && warnings && warnings.length > 0 && (
-                    <div className="warnings-box">
-                      <div className="warning-title">⚠️ Ingestion Warnings:</div>
-                      {warnings.map((warn, i) => (
-                        <div key={i} className="warning-item">• {warn}</div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {activeTab === 'pending' && (
-                  <div className="card-actions">
-                    <button onClick={() => openEditModal(q)} className="btn btn-edit">
-                      Edit Question
-                    </button>
-                    <button onClick={() => handleReject(q.id)} className="btn btn-reject">
-                      Reject
-                    </button>
-                    <button onClick={() => handleApprove(q.id)} className="btn btn-approve">
-                      Approve & Make Live
-                    </button>
+                {/* Solution */}
+                {question.solution && (
+                  <div className="solution-box">
+                    <div className="solution-label">Solution:</div>
+                    <div className="solution-body">{question.solution}</div>
                   </div>
                 )}
               </div>
+
+              {/* Actions */}
+              <div className="card-actions">
+                <button
+                  className="btn btn-edit"
+                  onClick={() => handleEdit(question)}
+                >
+                  Edit
+                </button>
+                {currentTab === 'pending' && (
+                  <>
+                    <button
+                      className="btn btn-approve"
+                      onClick={() => handleApprove(question.id)}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="btn btn-reject"
+                      onClick={() => handleReject(question.id)}
+                    >
+                      Reject
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
             );
           })}
         </div>
       )}
 
       {/* Edit Modal */}
-      {isEditModalOpen && editingQuestion && (
-        <div className="modal-overlay">
-          <div className="modal-container">
+      {showEditModal && editingQuestion && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Edit Pending Question (ID: {editingQuestion.id})</h2>
-              <button onClick={() => setIsEditModalOpen(false)} className="modal-close">
-                &times;
-              </button>
+              <h2>{isAddMode ? 'Create New Question' : 'Edit Question'}</h2>
+              <button className="modal-close" onClick={handleCloseModal}>×</button>
             </div>
-            
-            <div className="modal-body">
-              {modalError && (
-                <div className="error-banner">
-                  {modalError}
-                </div>
-              )}
 
+            <div className="modal-body">
+              {/* Category Row */}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Category</label>
-                  <select 
-                    value={editingQuestion.category || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, category: e.target.value })}
+                  <select
                     className="form-select"
+                    value={editingQuestion.category || ''}
+                    onChange={(e) => setEditingQuestion(prev => ({ ...prev, category: e.target.value }))}
                   >
-                    {categoriesList.map((cat, i) => (
-                      <option key={i} value={cat}>{cat}</option>
+                    <option value="">Select Category</option>
+                    {CATEGORIES.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.label}</option>
                     ))}
                   </select>
                 </div>
-
                 <div className="form-group">
                   <label className="form-label">Subcategory</label>
-                  <input 
-                    type="text" 
-                    value={editingQuestion.subcategory || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, subcategory: e.target.value })}
-                    className="form-input"
-                  />
+                  <select
+                    className="form-select"
+                    value={editingQuestion.subcategory || ''}
+                    onChange={(e) => setEditingQuestion(prev => ({ ...prev, subcategory: e.target.value }))}
+                  >
+                    <option value="">Select Subcategory</option>
+                    {editingQuestion.category && CATEGORIES.find(c => c.id === editingQuestion.category)?.subcategories.map(sub => (
+                      <option key={sub} value={sub}>{sub}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
+              {/* Difficulty Row */}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Difficulty</label>
-                  <select 
-                    value={editingQuestion.difficulty || 'basic'} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, difficulty: e.target.value })}
+                  <select
                     className="form-select"
+                    value={editingQuestion.difficulty || ''}
+                    onChange={(e) => setEditingQuestion(prev => ({ ...prev, difficulty: e.target.value }))}
                   >
-                    <option value="basic">Basic</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
+                    <option value="">Select Difficulty</option>
+                    {DIFFICULTIES.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
                   </select>
                 </div>
-
                 <div className="form-group">
                   <label className="form-label">Question Type</label>
-                  <select 
-                    value={editingQuestion.detected_question_type || ''} 
-                    onChange={(e) => setEditingQuestion({ ...editingQuestion, detected_question_type: e.target.value })}
+                  <select
                     className="form-select"
+                    value={editingQuestion.type || ''}
+                    onChange={handleTypeChange}
                   >
-                    {typesList.map((t, i) => (
-                      <option key={i} value={t}>{t}</option>
+                    <option value="">Select Type</option>
+                    {QUESTION_TYPES.map(type => (
+                      <option key={type.id} value={type.id}>{type.label}</option>
                     ))}
                   </select>
                 </div>
               </div>
 
+              {/* Passage */}
               <div className="form-group">
-                <label className="form-label">Passage / Context (Optional)</label>
-                <textarea 
-                  value={editingQuestion.passage || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, passage: e.target.value || null })}
+                <label className="form-label">Passage (Optional)</label>
+                <textarea
                   className="form-textarea"
+                  value={editingQuestion.passage || ''}
+                  onChange={(e) => setEditingQuestion(prev => ({ ...prev, passage: e.target.value }))}
+                  placeholder="Enter passage text if applicable..."
                 />
               </div>
 
+              {/* Data Block */}
               <div className="form-group">
-                <label className="form-label">Dataset Table (Optional Markdown)</label>
-                <textarea 
-                  value={editingQuestion.data_block?.markdown || ''} 
-                  onChange={(e) => setEditingQuestion({ 
-                    ...editingQuestion, 
-                    data_block: e.target.value ? { type: 'table', markdown: e.target.value } : null 
-                  })}
+                <label className="form-label">Data Block (Optional)</label>
+                <textarea
                   className="form-textarea monospace-field"
-                  placeholder="| Header 1 | Header 2 |"
+                  value={editingQuestion.data_block || ''}
+                  onChange={(e) => setEditingQuestion(prev => ({ ...prev, data_block: e.target.value }))}
+                  placeholder="Enter data block (table, matrix, etc)..."
                 />
               </div>
 
+              {/* Question Text */}
               <div className="form-group">
-                <label className="form-label">Question Text</label>
-                <textarea 
-                  value={editingQuestion.question_text || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
+                <label className="form-label">Question Text *</label>
+                <textarea
                   className="form-textarea"
-                  rows={3}
+                  value={editingQuestion.question_text || ''}
+                  onChange={(e) => setEditingQuestion(prev => ({ ...prev, question_text: e.target.value }))}
+                  placeholder="Enter the question..."
+                  required
                 />
               </div>
 
-              {/* MCQ Options Editor */}
-              {editingQuestion.detected_question_type === 'mcq_single' && (
+              {/* Options Editor - Only for MCQ single */}
+              {editingQuestion.type === 'mcq_single' && editingQuestion.options && (
                 <div className="form-group">
                   <label className="form-label">MCQ Options</label>
                   <div className="options-editor">
-                    {['A', 'B', 'C', 'D'].map((key) => {
-                      const opt = editingQuestion.options?.find(o => o.key === key) || { key, text: '' };
-                      return (
-                        <div key={key} className="option-edit-row">
-                          <span className="option-label">{key}</span>
-                          <input 
-                            type="text" 
-                            value={opt.text}
-                            onChange={(e) => {
-                              const newOpts = [...(editingQuestion.options || [])];
-                              const idx = newOpts.findIndex(o => o.key === key);
-                              if (idx !== -1) {
-                                newOpts[idx] = { key, text: e.target.value };
-                              } else {
-                                newOpts.push({ key, text: e.target.value });
-                              }
-                              setEditingQuestion({ ...editingQuestion, options: newOpts });
-                            }}
-                            className="form-input"
-                            placeholder={`Option ${key}`}
-                          />
-                        </div>
-                      );
-                    })}
+                    {editingQuestion.options.map((opt, idx) => (
+                      <div key={idx} className="option-edit-row">
+                        <span className="option-label">{opt.key}.</span>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={opt.text || ''}
+                          onChange={(e) => {
+                            const newOptions = [...editingQuestion.options];
+                            newOptions[idx].text = e.target.value;
+                            setEditingQuestion(prev => ({ ...prev, options: newOptions }));
+                          }}
+                          placeholder={`Option ${opt.key} text`}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
-              <div className="form-row">
+              {/* Correct Answer - Numeric Integer */}
+              {editingQuestion.type === 'numeric_integer' && (
                 <div className="form-group">
-                  <label className="form-label">Correct Answer (JSON Format)</label>
-                  <textarea 
-                    value={JSON.stringify(editingQuestion.correct_answer, null, 2) || ''} 
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingQuestion({ ...editingQuestion, correct_answer: parsed });
-                        setModalError('');
-                      } catch {
-                        // Keep text as-is, display validation error when saving
-                        setModalError('Correct Answer is not valid JSON.');
-                      }
-                    }}
-                    className="form-textarea monospace-field"
-                    rows={3}
+                  <label className="form-label">Correct Answer *</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={editingQuestion.correct_answer?.value || 0}
+                    onChange={(e) => setEditingQuestion(prev => ({
+                      ...prev,
+                      correct_answer: { ...prev.correct_answer, value: parseInt(e.target.value) }
+                    }))}
                   />
-                  <small className="text-muted-small">
-                    Verify type compatibility. E.g. {"{ \"value\": \"B\" }"} for mcq_single.
-                  </small>
                 </div>
+              )}
 
+              {/* Correct Answer - Numeric Decimal */}
+              {editingQuestion.type === 'numeric_decimal' && (
                 <div className="form-group">
-                  <label className="form-label">Grading Config (JSON Format)</label>
-                  <textarea 
-                    value={JSON.stringify(editingQuestion.grading_config, null, 2) || ''} 
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingQuestion({ ...editingQuestion, grading_config: parsed });
-                        setModalError('');
-                      } catch {
-                        setModalError('Grading Config is not valid JSON.');
-                      }
-                    }}
-                    className="form-textarea monospace-field"
-                    rows={3}
+                  <label className="form-label">Correct Answer *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    className="form-input"
+                    value={editingQuestion.correct_answer?.value || 0.0}
+                    onChange={(e) => setEditingQuestion(prev => ({
+                      ...prev,
+                      correct_answer: { ...prev.correct_answer, value: parseFloat(e.target.value) }
+                    }))}
                   />
-                  <small className="text-muted-small">
-                    E.g. {"{}"} or {"{ \"tolerance\": 0.01 }"}.
-                  </small>
                 </div>
-              </div>
+              )}
 
+              {/* Correct Answer - Numeric with Unit */}
+              {editingQuestion.type === 'numeric_with_unit' && (
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">Value *</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.value || 0}
+                      onChange={(e) => setEditingQuestion(prev => ({
+                        ...prev,
+                        correct_answer: { ...prev.correct_answer, value: parseFloat(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Unit *</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.unit || ''}
+                      onChange={(e) => setEditingQuestion(prev => ({
+                        ...prev,
+                        correct_answer: { ...prev.correct_answer, unit: e.target.value }
+                      }))}
+                      placeholder="e.g., m, kg, s"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Correct Answer - MCQ Single */}
+              {editingQuestion.type === 'mcq_single' && (
+                <div className="form-group">
+                  <label className="form-label">Correct Answer *</label>
+                  <select
+                    className="form-select"
+                    value={editingQuestion.correct_answer?.value || 'A'}
+                    onChange={(e) => setEditingQuestion(prev => ({
+                      ...prev,
+                      correct_answer: { ...prev.correct_answer, value: e.target.value }
+                    }))}
+                  >
+                    {editingQuestion.options?.map((opt, idx) => (
+                      <option key={idx} value={opt.key}>{opt.key}. {opt.text}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Solution */}
               <div className="form-group">
-                <label className="form-label">Solution Breakdown</label>
-                <textarea 
-                  value={editingQuestion.solution || ''} 
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, solution: e.target.value })}
+                <label className="form-label">Solution (Optional)</label>
+                <textarea
                   className="form-textarea"
-                  rows={3}
+                  value={editingQuestion.solution || ''}
+                  onChange={(e) => setEditingQuestion(prev => ({ ...prev, solution: e.target.value }))}
+                  placeholder="Enter solution/explanation..."
                 />
               </div>
             </div>
-            
+
             <div className="modal-footer">
-              <button onClick={() => setIsEditModalOpen(false)} className="btn btn-reject">
+              <button
+                className="btn btn-reject"
+                onClick={handleCloseModal}
+              >
                 Cancel
               </button>
-              <button onClick={() => handleSaveEdits(false)} className="btn btn-edit">
-                Save Changes Only
-              </button>
-              <button onClick={() => handleSaveEdits(true)} className="btn btn-approve">
-                Save & Approve Live
+              <button
+                className="btn btn-approve"
+                onClick={handleSaveChanges}
+              >
+                {isAddMode ? 'Create Question' : 'Save Changes'}
               </button>
             </div>
           </div>

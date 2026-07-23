@@ -260,6 +260,75 @@ export const reviewController = {
 
 
 
+  // POST /api/questions/create - Admin creates new question directly (goes to pending for review)
+  async createQuestion(req: AuthenticatedRequest, res: Response) {
+    try {
+      const {
+        category,
+        subcategory,
+        difficulty,
+        type,
+        question_text,
+        passage,
+        data_block,
+        options,
+        correct_answer,
+        grading_config,
+        solution
+      } = req.body;
+
+      // Validation
+      if (!question_text || !category || !type) {
+        return res.status(400).json({ message: "question_text, category, and type are required" });
+      }
+
+      // Insert into review_pending_questions (marked as admin-created)
+      const insertQuery = `
+        INSERT INTO review_pending_questions (
+          category, subcategory, difficulty, detected_question_type, final_question_type,
+          question_text, passage, data_block, options, correct_answer, grading_config,
+          solution, status, parser_confidence, source_file, source_question_no, warnings,
+          created_by_admin
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      const values = [
+        category,
+        subcategory || null,
+        difficulty || 'Basic',
+        type,
+        type,
+        question_text,
+        passage || null,
+        typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block || null,
+        typeof options === 'object' && options !== null ? JSON.stringify(options) : options || null,
+        typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
+        typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+        solution || null,
+        'pending', // Start in pending (admin can then approve their own)
+        1.0, // High confidence since admin created it
+        'admin-created', // Mark source as admin
+        null,
+        JSON.stringify([]), // No warnings for admin-created
+        true // Mark as created by admin
+      ];
+
+      const [result]: any = await pool.query(insertQuery, values);
+
+      return res.status(201).json({
+        id: result.insertId,
+        ...req.body,
+        status: 'pending',
+        created_by_admin: true,
+        message: 'Question created successfully and sent to review'
+      });
+    } catch (error: any) {
+      console.error("Error in createQuestion:", error);
+      return res.status(500).json({ message: error.message || "Failed to create question" });
+    }
+  },
+
+
   async getStats(req: AuthenticatedRequest, res: Response) {
     try {
       // 1. Get counts

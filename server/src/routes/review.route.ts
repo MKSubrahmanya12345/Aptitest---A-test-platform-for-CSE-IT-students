@@ -19,6 +19,7 @@ router.get('/review-pending', reviewController.getPending);
 router.put('/review-pending/:id', reviewController.updatePending);
 router.post('/review-pending/:id/approve', reviewController.approvePending);
 router.post('/review-pending/:id/reject', reviewController.rejectPending);
+router.post('/questions/create', reviewController.createQuestion);
 router.get('/questions', reviewController.getQuestions);
 router.get('/stats', reviewController.getStats);
 
