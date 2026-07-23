@@ -12,10 +12,13 @@ const app = express();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-app.use(cors({
-  origin: isProduction ? false : ['http://localhost:5173', 'http://localhost:5000'],
-  credentials: true
-}));
+app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(req.method, req.url, req.headers.origin);
+  next();
+});
+
 app.use(express.json());
 
 // Student-specific routes should be checked before the more restrictive admin routes.
@@ -39,6 +42,8 @@ app.get('/api/health', async (req, res) => {
     res.status(500).json({ status: 'error', db: 'disconnected', error: err.message });
   }
 });
+
+
 
 // Render provides the PORT environment variable
 const PORT = process.env.PORT || 5000;

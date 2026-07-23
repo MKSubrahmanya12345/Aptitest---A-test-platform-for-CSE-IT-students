@@ -1,22 +1,20 @@
-import axios from "axios";
-
-const API = "https://aptitest-5i2d.onrender.com/api/auth";
+import api from "./api";
 
 export const login = async (email, password) => {
-  const response = await axios.post(`${API}/login`, {
+  const { data } = await api.post("/auth/login", {
     email,
     password,
   });
 
-  return response.data;
+  return data;
 };
 
 export const signup = async (name, email, password) => {
-  const res = await axios.post(`${API}/signup`, {
+  const { data } = await api.post("/auth/signup", {
     name,
     email,
     password,
   });
 
-  return res.data;
+  return data;
 };
