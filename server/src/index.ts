@@ -4,6 +4,7 @@ import 'dotenv/config';
 import pool from "./config/db";
 import authRoutes from "./routes/auth.route";
 import reviewRoutes from "./routes/review.route";
+import paymentRoutes from "./routes/payment.route";
 import testRoutes from "./routes/test.route";
 import { testService } from "./services/test.service";
 
@@ -24,6 +25,7 @@ app.use(express.json());
 // Student-specific routes should be checked before the more restrictive admin routes.
 app.use("/api/auth", authRoutes); // Auth routes have no protection.
 app.use("/api", testRoutes);      // Student test routes require authentication.
+app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
 
 // Start the auto-submit safety net check every minute.

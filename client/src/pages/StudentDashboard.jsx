@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { testApiService } from "../services/test.service";
+import { paymentService } from "../services/payment.service";
+import PaymentModal from "../components/common/PaymentModal";
 import "../styles/student.css";
+import "../styles/payment.css";
 
 
 // Helper to render markdown table into HTML table
@@ -135,7 +138,9 @@ function StudentDashboard() {
   
   // Checklist Modal State
   const [showChecklistModal, setShowChecklistModal] = useState(false);
-  const [showBannedModal, setShowBannedModal] = useState(false); // ??$$$
+  const [showBannedModal, setShowBannedModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [hasPaidHard60, setHasPaidHard60] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null); // { name, difficulty, count, duration }
   const [categoriesList] = useState([
     "Quantitative Aptitude",
@@ -217,6 +222,7 @@ function StudentDashboard() {
       navigate("/login");
     } else {
       fetchHistoryDataSilently();
+      fetchPaymentStatusSilently();
       if (user.status === "banned") {
         setShowBannedModal(true);
       }
@@ -301,6 +307,15 @@ function StudentDashboard() {
       computeStatsSummary(data);
     } catch (err) {
       console.error("Silent stats fetch failed:", err);
+    }
+  }
+
+  async function fetchPaymentStatusSilently() {
+    try {
+      const data = await paymentService.checkStatus();
+      setHasPaidHard60(data.hasPaid);
+    } catch (err) {
+      console.error("Payment status fetch failed:", err);
     }
   }
 
@@ -406,8 +421,11 @@ function StudentDashboard() {
       setShowBannedModal(true);
       return;
     }
+    if (template.id === "hard_60" && !hasPaidHard60) {
+      setShowPaymentModal(true);
+      return;
+    }
     setSelectedTemplate(template);
-    // Reset checked categories to all checked
     setCheckedCategories([...categoriesList]);
     setShowChecklistModal(true);
   };
@@ -832,6 +850,11 @@ function StudentDashboard() {
                       <span className={`template-badge ${template.difficulty}`}>
                         {template.difficulty}
                       </span>
+                      {template.id === "hard_60" && (
+                        <span style={{ marginLeft: 8, fontSize: '11px', fontWeight: 700, color: hasPaidHard60 ? '#22c55e' : '#f87171', letterSpacing: '0.5px' }}>
+                          {hasPaidHard60 ? '✓ UNLOCKED' : '🔒 PREMIUM'}
+                        </span>
+                      )}
                       <h4 className="template-title">{template.name}</h4>
                       <p className="template-desc">{template.desc}</p>
                       
@@ -847,9 +870,17 @@ function StudentDashboard() {
 
                     <button
                       onClick={() => handleLaunchChecklist(template)}
-                      className="btn-launch-template"
+                      className={`btn-launch-template${
+                        template.id === 'hard_60'
+                          ? hasPaidHard60
+                            ? ' unlocked'
+                            : ' locked'
+                          : ''
+                      }`}
                     >
-                      Select Topics & Launch Test
+                      {template.id === 'hard_60' && !hasPaidHard60
+                        ? '🔒 Pay ₹50 to Unlock'
+                        : 'Select Topics & Launch Test'}
                     </button>
                   </div>
                 ))}
@@ -1597,6 +1628,15 @@ function StudentDashboard() {
           )}
         </div>
       </div>
+      {showPaymentModal && (
+        <PaymentModal
+          onClose={() => setShowPaymentModal(false)}
+          onPaymentSuccess={() => {
+            setHasPaidHard60(true);
+            setShowPaymentModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }
