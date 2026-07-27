@@ -122,11 +122,11 @@ export const authService = {
     // Save token to user record
     await userModel.setPasswordResetToken(email, resetToken);
 
-    // Send reset email
+    // Send reset email via Resend API
     try {
       await emailService.sendPasswordResetEmail(email, resetToken, user.name);
     } catch (err: any) {
-      console.error('Failed to send password reset email:', err);
+      console.error('Failed to send password reset email:', err.message);
       // Still return success message but log the actual error
       // This prevents 500 errors when email service fails
     }

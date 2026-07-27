@@ -1,4 +1,9 @@
-import nodemailer from 'nodemailer';
+// Email service using Resend API (HTTP-based, works on Render)
+// Sign up at https://resend.com, get API key, verify your domain
+// For testing without domain, use 'onboarding@resend.dev' as sender
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
 interface EmailConfig {
   to: string;
@@ -7,63 +12,34 @@ interface EmailConfig {
   text?: string;
 }
 
-// Create reusable transporter
-const createTransporter = () => {
-  // Use Gmail for sending emails
-  // Note: For Gmail, you need to use an App Password (not your regular password)
-  // Generate one at: https://myaccount.google.com/apppasswords
-  if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-    return nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
-    });
+// Send email via Resend HTTP API
+const sendViaResend = async (config: EmailConfig): Promise<void> => {
+  if (!RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY not configured');
   }
 
-  // Fallback: Ethereal Email for local testing (creates a test account automatically)
-  return null;
-};
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: `AptiTest <${RESEND_FROM_EMAIL}>`,
+      to: config.to,
+      subject: config.subject,
+      html: config.html,
+      text: config.text,
+    }),
+  });
 
-let transporter: nodemailer.Transporter | null = null;
-
-const getTransporter = async (): Promise<nodemailer.Transporter | null> => {
-  if (!transporter) {
-    transporter = createTransporter();
-
-    // If no Gmail config, create ethereal test account (only in development)
-    if (!transporter) {
-      // Skip test account creation in production (Render, etc.)
-      // as it requires network access that may be blocked
-      if (process.env.NODE_ENV === 'production') {
-        console.log('No GMAIL_USER or GMAIL_APP_PASSWORD configured');
-        console.log('GMAIL_USER present:', !!process.env.GMAIL_USER);
-        console.log('GMAIL_APP_PASSWORD present:', !!process.env.GMAIL_APP_PASSWORD);
-        return null;
-      }
-
-      try {
-        const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransport({
-          host: 'smtp.ethereal.email',
-          port: 587,
-          secure: false,
-          auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-          },
-        });
-        console.log('Ethereal test account created:', testAccount.web);
-      } catch (err) {
-        console.error('Failed to create email transporter:', err);
-        return null;
-      }
-    } else {
-      console.log('Gmail transporter created for:', process.env.GMAIL_USER);
-    }
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Resend API error: ${JSON.stringify(error)}`);
   }
-  return transporter;
+
+  const data = await response.json();
+  console.log('Email sent via Resend:', data.id);
 };
 
 // Base email template
@@ -164,20 +140,10 @@ const getEmailTemplate = (content: string, title: string): string => {
 export const emailService = {
   // Send password reset email
   async sendPasswordResetEmail(email: string, resetToken: string, name: string): Promise<void> {
-    console.log('Attempting to send password reset email to:', email);
-    const transport = await getTransporter();
-    if (!transport) {
-      console.error('Email transporter not available - password reset email not sent');
-      console.error('Make sure GMAIL_USER and GMAIL_APP_PASSWORD env vars are set');
-      // Log the token for manual testing
-      console.log('Password reset token for', email, ':', resetToken);
-      // Don't throw error - just return so the request doesn't fail
-      return;
-    }
-    console.log('Transporter ready, sending email...');
+    console.log('Sending password reset email to:', email);
 
     const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
-    
+
     const content = `
       <h2>Hello ${name || 'there'},</h2>
       <p>You recently requested to reset your password for your AptiTest account. Click the button below to reset it:</p>
@@ -199,33 +165,28 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYou requested to reset your password. Visit this link: ${resetUrl}\n\nThis link expires in 1 hour.`,
     };
 
-    try {
-      const info = await transport.sendMail(mailOptions);
-      console.log('Password reset email sent successfully:', info.messageId);
-      console.log('Accepted recipients:', info.accepted);
-      console.log('Rejected recipients:', info.rejected);
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY not configured. Cannot send email.');
+      console.log('Password reset token for', email, ':', resetToken);
+      console.log('Reset URL:', resetUrl);
+      return;
+    }
 
-      // For Ethereal test accounts, log the preview URL
-      if (info.ethereal) {
-        console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
-      }
-    } catch (sendErr: any) {
-      console.error('Failed to send email via transport:', sendErr);
-      throw sendErr;
+    try {
+      await sendViaResend(mailOptions);
+      console.log('Password reset email sent successfully via Resend');
+    } catch (err: any) {
+      console.error('Failed to send password reset email:', err.message);
+      // Log token so admin can manually provide it
+      console.log('Password reset token for', email, ':', resetToken);
+      throw err;
     }
   },
 
   // Send email verification email
   async sendVerificationEmail(email: string, verificationToken: string, name: string): Promise<void> {
-    const transport = await getTransporter();
-    if (!transport) {
-      console.error('Email transporter not available');
-      console.log('Email verification token for', email, ':', verificationToken);
-      return;
-    }
-
     const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/verify-email?token=${verificationToken}`;
-    
+
     const content = `
       <h2>Welcome to AptiTest, ${name || 'there'}! 👋</h2>
       <p>Thanks for signing up! Please verify your email address to complete your registration and start taking aptitude tests.</p>
@@ -247,22 +208,24 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}!\n\nPlease verify your email by visiting: ${verifyUrl}\n\nThis link expires in 24 hours.`,
     };
 
-    const info = await transport.sendMail(mailOptions);
-    console.log('Verification email sent:', info.messageId);
-    
-    if (info.ethereal) {
-      console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+    if (!RESEND_API_KEY) {
+      console.error('RESEND_API_KEY not configured. Cannot send email.');
+      console.log('Email verification token for', email, ':', verificationToken);
+      console.log('Verify URL:', verifyUrl);
+      return;
+    }
+
+    try {
+      await sendViaResend(mailOptions);
+      console.log('Verification email sent successfully');
+    } catch (err: any) {
+      console.error('Failed to send verification email:', err.message);
+      throw err;
     }
   },
 
   // Send welcome email after verification
   async sendWelcomeEmail(email: string, name: string): Promise<void> {
-    const transport = await getTransporter();
-    if (!transport) {
-      console.log('Welcome email would be sent to:', email);
-      return;
-    }
-
     const content = `
       <h2>Welcome aboard, ${name || 'there'}! 🎉</h2>
       <p>Your email has been successfully verified and your AptiTest account is now active!</p>
@@ -286,18 +249,21 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}! Your account is now verified. Visit ${process.env.CLIENT_URL || 'http://localhost:5173'}/dashboard to start testing.`,
     };
 
-    const info = await transport.sendMail(mailOptions);
-    console.log('Welcome email sent:', info.messageId);
+    if (!RESEND_API_KEY) {
+      console.log('RESEND_API_KEY not configured. Welcome email would be sent to:', email);
+      return;
+    }
+
+    try {
+      await sendViaResend(mailOptions);
+      console.log('Welcome email sent successfully');
+    } catch (err: any) {
+      console.error('Failed to send welcome email:', err.message);
+    }
   },
 
   // Send password changed confirmation
   async sendPasswordChangedEmail(email: string, name: string): Promise<void> {
-    const transport = await getTransporter();
-    if (!transport) {
-      console.log('Password changed email would be sent to:', email);
-      return;
-    }
-
     const content = `
       <h2>Password Changed Successfully 🔒</h2>
       <p>Hello ${name || 'there'},</p>
@@ -316,7 +282,16 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYour AptiTest password has been changed. If you didn't make this change, please contact support.`,
     };
 
-    const info = await transport.sendMail(mailOptions);
-    console.log('Password changed email sent:', info.messageId);
+    if (!RESEND_API_KEY) {
+      console.log('RESEND_API_KEY not configured. Password changed email would be sent to:', email);
+      return;
+    }
+
+    try {
+      await sendViaResend(mailOptions);
+      console.log('Password changed email sent successfully');
+    } catch (err: any) {
+      console.error('Failed to send password changed email:', err.message);
+    }
   },
 };
