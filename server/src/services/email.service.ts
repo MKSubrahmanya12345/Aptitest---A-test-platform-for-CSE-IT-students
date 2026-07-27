@@ -13,7 +13,7 @@ const createTransporter = () => {
   // Note: For Gmail, you need to use an App Password (not your regular password)
   // Generate one at: https://myaccount.google.com/apppasswords
   if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.GMAIL_USER,
@@ -45,7 +45,7 @@ const getTransporter = async (): Promise<nodemailer.Transporter | null> => {
 
       try {
         const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransporter({
+        transporter = nodemailer.createTransport({
           host: 'smtp.ethereal.email',
           port: 587,
           secure: false,
