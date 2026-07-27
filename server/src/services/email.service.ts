@@ -32,12 +32,14 @@ const getTransporter = async (): Promise<nodemailer.Transporter | null> => {
   if (!transporter) {
     transporter = createTransporter();
 
-    // If no SMTP config, create ethereal test account (only in development)
+    // If no Gmail config, create ethereal test account (only in development)
     if (!transporter) {
       // Skip test account creation in production (Render, etc.)
       // as it requires network access that may be blocked
       if (process.env.NODE_ENV === 'production') {
-        console.log('No SMTP configuration found. Email sending is disabled in production.');
+        console.log('No GMAIL_USER or GMAIL_APP_PASSWORD configured');
+        console.log('GMAIL_USER present:', !!process.env.GMAIL_USER);
+        console.log('GMAIL_APP_PASSWORD present:', !!process.env.GMAIL_APP_PASSWORD);
         return null;
       }
 
@@ -57,6 +59,8 @@ const getTransporter = async (): Promise<nodemailer.Transporter | null> => {
         console.error('Failed to create email transporter:', err);
         return null;
       }
+    } else {
+      console.log('Gmail transporter created for:', process.env.GMAIL_USER);
     }
   }
   return transporter;
@@ -160,14 +164,17 @@ const getEmailTemplate = (content: string, title: string): string => {
 export const emailService = {
   // Send password reset email
   async sendPasswordResetEmail(email: string, resetToken: string, name: string): Promise<void> {
+    console.log('Attempting to send password reset email to:', email);
     const transport = await getTransporter();
     if (!transport) {
       console.error('Email transporter not available - password reset email not sent');
-      // Log the token for development purposes (in production, configure SMTP)
+      console.error('Make sure GMAIL_USER and GMAIL_APP_PASSWORD env vars are set');
+      // Log the token for manual testing
       console.log('Password reset token for', email, ':', resetToken);
       // Don't throw error - just return so the request doesn't fail
       return;
     }
+    console.log('Transporter ready, sending email...');
 
     const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
     
@@ -192,12 +199,19 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYou requested to reset your password. Visit this link: ${resetUrl}\n\nThis link expires in 1 hour.`,
     };
 
-    const info = await transport.sendMail(mailOptions);
-    console.log('Password reset email sent:', info.messageId);
-    
-    // For Ethereal test accounts, log the preview URL
-    if (info.ethereal) {
-      console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+    try {
+      const info = await transport.sendMail(mailOptions);
+      console.log('Password reset email sent successfully:', info.messageId);
+      console.log('Accepted recipients:', info.accepted);
+      console.log('Rejected recipients:', info.rejected);
+
+      // For Ethereal test accounts, log the preview URL
+      if (info.ethereal) {
+        console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+      }
+    } catch (sendErr: any) {
+      console.error('Failed to send email via transport:', sendErr);
+      throw sendErr;
     }
   },
 
