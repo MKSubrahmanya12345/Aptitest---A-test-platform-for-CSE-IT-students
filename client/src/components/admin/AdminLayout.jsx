@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../../styles/admin.css';
+import ThemeToggle from '../common/ThemeToggle';
 
 function AdminLayout({ children, title = "Admin Dashboard" }) {
   const navigate = useNavigate();
@@ -133,6 +134,7 @@ function AdminLayout({ children, title = "Admin Dashboard" }) {
             <h1>{title}</h1>
           </div>
           <div className="header-user">
+            <ThemeToggle />
             <span>
               Welcome, {user.name || 'Admin'}
             </span>

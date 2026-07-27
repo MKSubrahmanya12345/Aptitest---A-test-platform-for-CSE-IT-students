@@ -6,11 +6,17 @@ import "../styles/auth.css"
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showResendLink, setShowResendLink] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    setShowResendLink(false);
 
     try {
         const data = await login(email, password);
@@ -25,7 +31,15 @@ function Login() {
         }
     } catch (err) {
         console.error(err);
-        alert("Login failed. Please check your credentials.");
+        const errorMsg = err.response?.data?.message || "Login failed. Please check your credentials.";
+        setError(errorMsg);
+        
+        // Show resend link for unverified email
+        if (errorMsg.toLowerCase().includes("verify your email")) {
+          setShowResendLink(true);
+        }
+    } finally {
+        setLoading(false);
     }
 };
 
@@ -35,12 +49,26 @@ function Login() {
             <h1>AptiTest</h1>
             <p>Sign in to continue</p>
 
+            {error && (
+              <div className="error-message" style={{ marginBottom: '16px' }}>
+                {error}
+                {showResendLink && (
+                  <div style={{ marginTop: '8px' }}>
+                    <Link to="/resend-verification" style={{ color: '#818cf8', textDecoration: 'underline', fontSize: '13px' }}>
+                      Resend verification email →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+
             <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
             />
 
             <input
@@ -49,9 +77,16 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
             />
 
-            <button type="submit">Login</button>
+            <div className="forgot-password-link">
+              <Link to="/forgot-password">Forgot password?</Link>
+            </div>
+
+            <button type="submit" disabled={loading}>
+              {loading ? 'Signing in...' : 'Login'}
+            </button>
 
             <p>
               Don't have an account?

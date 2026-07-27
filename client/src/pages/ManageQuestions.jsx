@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AdminLayout from '../components/admin/AdminLayout';
 import { reviewService } from '../services/review.service';
+import { useToast } from '../contexts/ToastContext';
 import '../styles/admin.css';
 
 // Question type definitions with default structures
@@ -123,6 +124,7 @@ const CATEGORIES = [
 const DIFFICULTIES = ['Basic', 'Intermediate', 'Advanced'];
 
 function ManageQuestions() {
+  const toast = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentTab = searchParams.get('tab') || 'pending';
   
@@ -327,10 +329,11 @@ function ManageQuestions() {
     try {
       await reviewService.approve(questionId);
       setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+      toast.success('Question approved successfully!');
       await fetchQuestions();
     } catch (err) {
       console.error('Error approving question:', err);
-      setError('Failed to approve question.');
+      toast.error('Failed to approve question.');
     }
   };
 
@@ -339,9 +342,10 @@ function ManageQuestions() {
     try {
       await reviewService.reject(questionId);
       setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+      toast.success('Question rejected.');
     } catch (err) {
       console.error('Error rejecting question:', err);
-      setError('Failed to reject question.');
+      toast.error('Failed to reject question.');
     }
   };
 

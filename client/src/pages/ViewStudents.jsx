@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/admin/AdminLayout';
 import { reviewService } from '../services/review.service';
+import { useToast } from '../contexts/ToastContext';
 import StudentStatsModal from '../components/admin/StudentStatsModal';
 import '../styles/admin.css';
 
 function ViewStudents() {
+  const toast = useToast();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -43,9 +45,11 @@ function ViewStudents() {
           student.id === studentId ? { ...student, status: newStatus } : student
         )
       );
+      
+      toast.success(`Student ${actionLabel}ned successfully!`);
     } catch (err) {
       console.error(err);
-      setError(`Failed to update status for student ID ${studentId}.`);
+      toast.error(`Failed to ${actionLabel} student.`);
     }
   };
 
