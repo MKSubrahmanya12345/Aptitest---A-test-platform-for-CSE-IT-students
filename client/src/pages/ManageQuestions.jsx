@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AdminLayout from '../components/admin/AdminLayout';
+import Pagination from '../components/common/Pagination';
 import { reviewService } from '../services/review.service';
 import { useToast } from '../contexts/ToastContext';
 import '../styles/admin.css';
@@ -136,36 +137,51 @@ function ManageQuestions() {
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isAddMode, setIsAddMode] = useState(false); // Track if adding new question
-  
+
   // Filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
 
-  // Fetch questions on mount and when tab changes
+  // Pagination state
+  const [pendingPage, setPendingPage] = useState(1);
+  const [approvedPage, setApprovedPage] = useState(1);
+  const [pendingPagination, setPendingPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
+  const [approvedPagination, setApprovedPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
+  const limit = 10;
+
+  // Fetch questions on mount, when tab or pagination changes
   useEffect(() => {
     fetchQuestions();
-  }, [currentTab]);
+  }, [currentTab, pendingPage, approvedPage]);
 
   const fetchQuestions = async () => {
     try {
       setLoading(true);
       setError('');
-      
+
       if (currentTab === 'pending') {
-        const data = await reviewService.getPending();
-        // API returns array directly, not wrapped in object
-        setPendingQuestions(Array.isArray(data) ? data : data.questions || []);
+        const data = await reviewService.getPending(pendingPage, limit);
+        setPendingQuestions(data.pending || []);
+        setPendingPagination(data.pagination || { page: 1, limit, total: 0, totalPages: 1 });
       } else if (currentTab === 'approved') {
-        const data = await reviewService.getQuestions();
-        // API returns array directly, not wrapped in object
-        setApprovedQuestions(Array.isArray(data) ? data : data.questions || []);
+        const data = await reviewService.getQuestions(approvedPage, limit);
+        setApprovedQuestions(data.questions || []);
+        setApprovedPagination(data.pagination || { page: 1, limit, total: 0, totalPages: 1 });
       }
     } catch (err) {
       console.error('Error fetching questions:', err);
       setError('Failed to load questions. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (currentTab === 'pending') {
+      setPendingPage(page);
+    } else {
+      setApprovedPage(page);
     }
   };
 
@@ -552,6 +568,17 @@ function ManageQuestions() {
             );
           })}
         </div>
+      )}
+
+      {/* Pagination */}
+      {(currentTab === 'pending' ? pendingPagination : approvedPagination).totalPages > 1 && (
+        <Pagination
+          currentPage={currentTab === 'pending' ? pendingPage : approvedPage}
+          totalPages={(currentTab === 'pending' ? pendingPagination : approvedPagination).totalPages}
+          totalItems={(currentTab === 'pending' ? pendingPagination : approvedPagination).total}
+          itemsPerPage={limit}
+          onPageChange={handlePageChange}
+        />
       )}
 
       {/* Edit Modal */}

@@ -6,22 +6,43 @@ export const reviewController = {
   // GET /api/review-pending
   async getPending(req: AuthenticatedRequest, res: Response) {
     try {
-      const { category, type } = req.query;
-      let query = "SELECT * FROM review_pending_questions WHERE status = 'pending'";
+      const { category, type, page = 1, limit = 10 } = req.query;
+      const pageNum = parseInt(page as string) || 1;
+      const limitNum = Math.min(parseInt(limit as string) || 10, 50); // Max 50 per page
+      const offset = (pageNum - 1) * limitNum;
+      
+      let whereClause = "WHERE status = 'pending'";
       const params: any[] = [];
 
       if (category) {
-        query += " AND category = ?";
+        whereClause += " AND category = ?";
         params.push(category);
       }
       if (type) {
-        query += " AND (detected_question_type = ? OR final_question_type = ?)";
+        whereClause += " AND (detected_question_type = ? OR final_question_type = ?)";
         params.push(type, type);
       }
 
-      query += " ORDER BY id ASC";
-      const [rows] = await pool.query(query, params);
-      return res.json(rows);
+      // Get total count
+      const [countResult]: any = await pool.query(
+        `SELECT COUNT(*) as total FROM review_pending_questions ${whereClause}`,
+        params
+      );
+      const total = countResult[0].total;
+
+      // Get paginated results
+      const query = `SELECT * FROM review_pending_questions ${whereClause} ORDER BY id ASC LIMIT ? OFFSET ?`;
+      const [rows] = await pool.query(query, [...params, limitNum, offset]);
+      
+      return res.json({
+        questions: rows,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages: Math.ceil(total / limitNum),
+        }
+      });
     } catch (error: any) {
       console.error("Error in getPending:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch pending questions" });
@@ -236,22 +257,43 @@ export const reviewController = {
   // GET /api/questions
   async getQuestions(req: AuthenticatedRequest, res: Response) {
     try {
-      const { category, type } = req.query;
-      let query = "SELECT * FROM questions WHERE status = 'active'";
+      const { category, type, page = 1, limit = 10 } = req.query;
+      const pageNum = parseInt(page as string) || 1;
+      const limitNum = Math.min(parseInt(limit as string) || 10, 50);
+      const offset = (pageNum - 1) * limitNum;
+      
+      let whereClause = "WHERE status = 'active'";
       const params: any[] = [];
 
       if (category) {
-        query += " AND category = ?";
+        whereClause += " AND category = ?";
         params.push(category);
       }
       if (type) {
-        query += " AND question_type = ?";
+        whereClause += " AND question_type = ?";
         params.push(type);
       }
 
-      query += " ORDER BY id ASC";
-      const [rows] = await pool.query(query, params);
-      return res.json(rows);
+      // Get total count
+      const [countResult]: any = await pool.query(
+        `SELECT COUNT(*) as total FROM questions ${whereClause}`,
+        params
+      );
+      const total = countResult[0].total;
+
+      // Get paginated results
+      const query = `SELECT * FROM questions ${whereClause} ORDER BY id ASC LIMIT ? OFFSET ?`;
+      const [rows] = await pool.query(query, [...params, limitNum, offset]);
+      
+      return res.json({
+        questions: rows,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages: Math.ceil(total / limitNum),
+        }
+      });
     } catch (error: any) {
       console.error("Error in getQuestions:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch approved questions" });
@@ -382,8 +424,17 @@ export const getStudentById = async (req: AuthenticatedRequest, res: Response) =
 
 export const getStudents = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const [rows]: any = await pool.query("SELECT id, name, email, role, status, created_at FROM users WHERE role = 'student'");
-    return res.json(rows);
+    const { page = 1, limit = 10, search } = req.query;
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = Math.min(parseInt(limit as string) || 10, 50);
+    
+    const result = await userModel.getStudentsPaginated(
+      pageNum,
+      limitNum,
+      search as string
+    );
+    
+    return res.json(result);
   } catch (error: any) {
     console.error("Error in getStudents:", error);
     return res.status(500).json({ message: error.message || "Failed to fetch students" });

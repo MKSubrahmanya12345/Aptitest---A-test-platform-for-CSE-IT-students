@@ -146,4 +146,40 @@ export const userModel = {
       [token]
     );
   },
+
+  // Get paginated list of students
+  async getStudentsPaginated(page: number = 1, limit: number = 10, search?: string): Promise<{ students: any[], total: number, totalPages: number }> {
+    const offset = (page - 1) * limit;
+    
+    // Build where clause for search
+    let whereClause = "WHERE role = 'student'";
+    const params: any[] = [];
+    
+    if (search) {
+      whereClause += " AND (name LIKE ? OR email LIKE ?)";
+      params.push(`%${search}%`, `%${search}%`);
+    }
+    
+    // Get total count
+    const [countResult]: any = await pool.query(
+      `SELECT COUNT(*) as total FROM users ${whereClause}`,
+      params
+    );
+    const total = countResult[0].total;
+    
+    // Get paginated results
+    const [rows] = await pool.query(
+      `SELECT id, name, email, role, status, email_verified, created_at 
+       FROM users ${whereClause} 
+       ORDER BY created_at DESC 
+       LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+    
+    return {
+      students: rows as any[],
+      total,
+      totalPages: Math.ceil(total / limit),
+    };
+  },
 };

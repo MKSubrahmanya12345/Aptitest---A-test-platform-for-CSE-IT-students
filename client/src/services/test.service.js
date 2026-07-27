@@ -30,8 +30,10 @@ export const testApiService = {
   },
 
   // Get user's past attempt history
-  async getHistory() {
-    const res = await api.get("/test/history");
+  async getHistory(page = 1, limit = 10) {
+    const res = await api.get("/test/history", {
+      params: { page, limit }
+    });
     return res.data;
   },
 
@@ -49,8 +51,10 @@ export const testApiService = {
   }
   */
   // ??$$$
-  async getLeaderboard(type) {
-    const res = await api.get("/leaderboard", { params: { type } });
+  async getLeaderboard(type, page = 1, limit = 20) {
+    const res = await api.get("/leaderboard", {
+      params: { type, page, limit }
+    });
     return res.data;
   },
 

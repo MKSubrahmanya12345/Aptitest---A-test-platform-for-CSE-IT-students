@@ -167,7 +167,10 @@ export const testController = {
         return res.status(401).json({ message: "Authentication required" });
       }
 
-      const result = await testService.getHistory(userId);
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const limit = Math.min(50, parseInt(req.query.limit as string) || 10);
+
+      const result = await testService.getHistory(userId, page, limit);
       return res.json(result);
     } catch (error: any) {
       console.error("Error in testController.getHistory:", error);
@@ -214,10 +217,13 @@ export const testController = {
   async getLeaderboard(req: AuthenticatedRequest, res: Response) {
     try {
       const { type } = req.query;
-      const result = await testService.getLeaderboard(type as string);
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const limit = Math.min(50, parseInt(req.query.limit as string) || 20);
+
+      const result = await testService.getLeaderboard(type as string, page, limit);
 
       // Ensure {user_id, name, rank, total_score, correct_count, total_questions, time_per_correct} are returned
-      const sanitized = result.map((r: any) => ({
+      const sanitized = result.leaderboard.map((r: any) => ({
         user_id: r.user_id,
         name: r.name,
         rank: r.rnk,
@@ -226,7 +232,11 @@ export const testController = {
         total_questions: r.total_questions || 0,
         time_per_correct: Math.round(parseFloat(r.time_per_correct || 0))
       }));
-      return res.json(sanitized);
+
+      return res.json({
+        leaderboard: sanitized,
+        pagination: result.pagination,
+      });
     } catch (error: any) {
       console.error("Error in testController.getLeaderboard:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch leaderboard" });

@@ -665,7 +665,7 @@ export const testService = {
   },
 
   // 5. Get list of user's past sessions
-  async getHistory(userId: number) {
+  async getHistory(userId: number, page: number = 1, limit: number = 10) {
     // Lazy check: find expired sessions for this user and auto submit them
     const [expiredSessions]: any = await pool.query(
       "SELECT id FROM test_sessions WHERE user_id = ? AND status = 'in_progress' AND server_expires_at < NOW()",
@@ -680,15 +680,34 @@ export const testService = {
       }
     }
 
+    const offset = (page - 1) * limit;
+
+    // Get total count
+    const [countResult]: any = await pool.query(
+      'SELECT COUNT(*) as total FROM test_sessions WHERE user_id = ?',
+      [userId]
+    );
+    const total = countResult[0].total;
+
+    // Get paginated results
     const [history]: any = await pool.query(
       `SELECT id, category, subcategory, difficulty, total_questions, duration_seconds, started_at, submitted_at, status, is_reattempt, original_session_id, score, total_marks, correct_count, wrong_count, skipped_count
        FROM test_sessions
        WHERE user_id = ?
-       ORDER BY started_at DESC`,
-      [userId]
+       ORDER BY started_at DESC
+       LIMIT ? OFFSET ?`,
+      [userId, limit, offset]
     );
 
-    return history;
+    return {
+      history,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      }
+    };
   },
 
   // 6. Create a reattempt session from a completed one
@@ -784,7 +803,7 @@ export const testService = {
   // ??$$$
   // Ranks students based on the accuracy ratio (correct_count / total_questions) of their best individual test of the type,
   // with cumulative average time per correct question over all completed tests of the type as the tie-breaker.
-  async getLeaderboard(type?: string) {
+  async getLeaderboard(type?: string, page: number = 1, limit: number = 20) {
     let diffCondition = "counts_for_stats = TRUE";
 
     if (type === 'easy_30') {
@@ -796,6 +815,22 @@ export const testService = {
     } else if (type === 'hard_60') {
       diffCondition += " AND (difficulty IN ('intermediate', 'advanced', 'hard')) AND duration_seconds = 3600";
     }
+
+    const offset = (page - 1) * limit;
+
+    // Get total count first
+    const countQuery = `
+      SELECT COUNT(DISTINCT ts.user_id) as total
+      FROM test_sessions ts
+      WHERE ts.status = 'completed' AND ${diffCondition}
+      AND ts.id IN (
+        SELECT MIN(id) FROM test_sessions 
+        WHERE status = 'completed' AND ${diffCondition}
+        GROUP BY user_id
+      )
+    `;
+    const [countResult]: any = await pool.query(countQuery);
+    const total = countResult[0].total;
 
     const query = `
       WITH user_best_test AS (
@@ -840,11 +875,21 @@ export const testService = {
       JOIN user_cumulative_stats uc ON ub.user_id = uc.user_id
       JOIN users u ON ub.user_id = u.id
       WHERE ub.rn = 1
-      ORDER BY rnk ASC;
+      ORDER BY rnk ASC
+      LIMIT ? OFFSET ?;
     `;
 
-    const [rows]: any = await pool.query(query);
-    return rows;
+    const [rows]: any = await pool.query(query, [limit, offset]);
+    
+    return {
+      leaderboard: rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      }
+    };
   },
 
 

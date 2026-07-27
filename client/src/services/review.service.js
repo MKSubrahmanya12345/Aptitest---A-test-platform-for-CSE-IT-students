@@ -1,8 +1,10 @@
 import api from './api';
 
 export const reviewService = {
-  async getPending(filters = {}) {
-    const response = await api.get('/review-pending', { params: filters });
+  async getPending(page = 1, limit = 20, filters = {}) {
+    const response = await api.get('/review-pending', {
+      params: { page, limit, ...filters }
+    });
     return response.data;
   },
 
@@ -21,8 +23,10 @@ export const reviewService = {
     return response.data;
   },
 
-  async getQuestions(filters = {}) {
-    const response = await api.get('/questions', { params: filters });
+  async getQuestions(page = 1, limit = 20, filters = {}) {
+    const response = await api.get('/questions', {
+      params: { page, limit, ...filters }
+    });
     return response.data;
   },
 
@@ -40,8 +44,10 @@ export const reviewService = {
   },
 
   // ??$$$
-  async getStudents() {
-    const response = await api.get('/view-students');
+  async getStudents(page = 1, limit = 10) {
+    const response = await api.get('/view-students', {
+      params: { page, limit }
+    });
     return response.data;
   },
 

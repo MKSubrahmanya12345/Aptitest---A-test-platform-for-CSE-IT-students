@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../services/auth.service";
 import "../styles/auth.css"
 
 function Signup() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,8 +31,8 @@ function Signup() {
   if (success) {
     return (
       <div className="signup-page">
-        <div className="signup-card auth-success" style={{ textAlign: 'center', padding: '40px' }}>
-          <div className="success-icon" style={{ margin: '0 auto 20px' }}>
+        <div className="signup-card auth-success">
+          <div className="success-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -39,10 +40,10 @@ function Signup() {
           </div>
           <h2>Account Created! 🎉</h2>
           <p>Please check your email <strong>{email}</strong> to verify your account.</p>
-          <p style={{ fontSize: '14px', color: '#94a3b8', marginTop: '16px' }}>
+          <p className="success-hint">
             You need to verify your email before you can log in.
           </p>
-          <div style={{ marginTop: '24px' }}>
+          <div className="signup-actions">
             <Link to="/login" className="btn btn-primary">
               Go to Login
             </Link>
@@ -54,49 +55,92 @@ function Signup() {
 
   return (
     <div className="signup-page">
-        <form className="signup-card" onSubmit={handleSignup}>
-            <h1>AptiTest</h1>
-            <p>Sign up to continue</p>
+      <div className="signup-card">
+        {/* Back to Login Button */}
+        <button
+          type="button"
+          className="back-button"
+          onClick={() => navigate('/login')}
+          aria-label="Go back to login"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5"></path>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Login
+        </button>
 
-            {error && <div className="error-message" style={{ marginBottom: '16px' }}>{error}</div>}
+        <div className="signup-header">
+          <h1>Create Account</h1>
+          <p>Join AptiTest and start your preparation journey</p>
+        </div>
 
+        {error && <div className="error-message">{error}</div>}
+
+        <form className="signup-form" onSubmit={handleSignup}>
+          <div className="form-group">
+            <label htmlFor="name">Full Name</label>
             <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            disabled={loading}
+              id="name"
+              type="text"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={loading}
             />
+          </div>
 
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
             <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
             />
+          </div>
 
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            minLength={6}
+              id="password"
+              type="password"
+              placeholder="Create a password (min 6 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              minLength={6}
             />
+          </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Sign Up'}
-            </button>
-
-            <p>
-              Already have an account?
-              <Link to="/login"> Sign in</Link>
-            </p>
+          <button
+            type="submit"
+            className="btn-submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Creating Account...
+              </>
+            ) : (
+              'Create Account'
+            )}
+          </button>
         </form>
+
+        <div className="signup-footer">
+          <p>
+            Already have an account?{' '}
+            <Link to="/login" className="link-primary">Sign in</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../components/common/Pagination";
 import { testApiService } from "../services/test.service";
 import { paymentService } from "../services/payment.service";
 import PaymentModal from "../components/common/PaymentModal";
@@ -170,6 +171,24 @@ function StudentDashboard() {
   const [leaderboardList, setLeaderboardList] = useState([]);
   const [leaderboardType, setLeaderboardType] = useState("easy_30"); // 'easy_30' | 'easy_60' | 'hard_30' | 'hard_60'
 
+  // Pagination state
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyPagination, setHistoryPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 1,
+  });
+  const [leaderboardPage, setLeaderboardPage] = useState(1);
+  const [leaderboardPagination, setLeaderboardPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 1,
+  });
+  const historyLimit = 10;
+  const leaderboardLimit = 20;
+
   // Summary widgets state (calculated from history)
   const [statsSummary, setStatsSummary] = useState({
     totalTests: 0,
@@ -215,19 +234,12 @@ function StudentDashboard() {
   ];
 
 
+  // Refetch history when page changes
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || user.role !== "student") {
-      localStorage.clear();
-      navigate("/login");
-    } else {
-      fetchHistoryDataSilently();
-      fetchPaymentStatusSilently();
-      if (user.status === "banned") {
-        setShowBannedModal(true);
-      }
+    if (currentView === "history") {
+      fetchHistory(historyPage);
     }
-  }, [navigate, user]);
+  }, [historyPage, currentView]);
 
   // Load history list when tab switches
   useEffect(() => {
@@ -235,21 +247,22 @@ function StudentDashboard() {
     if (!token || user.role !== "student") return;
 
     if (currentView === "history") {
-      fetchHistory();
+      setHistoryPage(1); // Reset to first page when switching to history
+      fetchHistory(1);
     } else if (currentView === "dashboard") {
       fetchHistoryDataSilently();
     }
   }, [currentView]);
 
-  // Load leaderboard when tab or ranking type switches
+  // Load leaderboard when tab, ranking type, or page switches
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token || user.role !== "student") return;
 
     if (currentView === "leaderboard") {
-      fetchLeaderboard();
+      fetchLeaderboard(leaderboardPage);
     }
-  }, [currentView, leaderboardType]);
+  }, [currentView, leaderboardType, leaderboardPage]);
 
   // Sync server side countdown timer
   useEffect(() => {
@@ -382,15 +395,16 @@ function StudentDashboard() {
   }
 
   // API Call: Fetch History
-  async function fetchHistory() {
+  async function fetchHistory(page = historyPage) {
     const token = localStorage.getItem("token");
     if (!token) return;
     setLoading(true);
     setError("");
     try {
-      const data = await testApiService.getHistory();
-      setHistoryList(data);
-      computeStatsSummary(data);
+      const data = await testApiService.getHistory(page, historyLimit);
+      setHistoryList(data.history || []);
+      setHistoryPagination(data.pagination || { page: 1, limit: historyLimit, total: 0, totalPages: 1 });
+      // Don't compute stats from paginated data - use silent fetch for full stats
     } catch (err) {
       setError("Failed to load attempt history.");
     } finally {
@@ -399,14 +413,15 @@ function StudentDashboard() {
   }
 
   // API Call: Fetch Leaderboard
-  async function fetchLeaderboard() {
+  async function fetchLeaderboard(page = leaderboardPage) {
     const token = localStorage.getItem("token");
     if (!token) return;
     setLoading(true);
     setError("");
     try {
-      const data = await testApiService.getLeaderboard(leaderboardType);
-      setLeaderboardList(data);
+      const data = await testApiService.getLeaderboard(leaderboardType, page, leaderboardLimit);
+      setLeaderboardList(data.leaderboard || []);
+      setLeaderboardPagination(data.pagination || { page: 1, limit: leaderboardLimit, total: 0, totalPages: 1 });
     } catch (err) {
       setError("Failed to load leaderboard rankings.");
     } finally {
@@ -1537,6 +1552,16 @@ function StudentDashboard() {
                   </tbody>
                 </table>
               )}
+              {/* History Pagination */}
+              {historyPagination.totalPages > 1 && (
+                <Pagination
+                  currentPage={historyPage}
+                  totalPages={historyPagination.totalPages}
+                  totalItems={historyPagination.total}
+                  itemsPerPage={historyPagination.limit}
+                  onPageChange={(page) => setHistoryPage(page)}
+                />
+              )}
             </div>
           )}
 
@@ -1546,25 +1571,37 @@ function StudentDashboard() {
               {/* 4 Ranking toggles */}
               <div className="ranking-toggle-container">
                 <button
-                  onClick={() => setLeaderboardType("easy_30")}
+                  onClick={() => {
+                    setLeaderboardType("easy_30");
+                    setLeaderboardPage(1);
+                  }}
                   className={`ranking-toggle-btn ${leaderboardType === "easy_30" ? "active" : ""}`}
                 >
                   Easy - 30 Qs
                 </button>
                 <button
-                  onClick={() => setLeaderboardType("easy_60")}
+                  onClick={() => {
+                    setLeaderboardType("easy_60");
+                    setLeaderboardPage(1);
+                  }}
                   className={`ranking-toggle-btn ${leaderboardType === "easy_60" ? "active" : ""}`}
                 >
                   Easy - 60 Qs
                 </button>
                 <button
-                  onClick={() => setLeaderboardType("hard_30")}
+                  onClick={() => {
+                    setLeaderboardType("hard_30");
+                    setLeaderboardPage(1);
+                  }}
                   className={`ranking-toggle-btn ${leaderboardType === "hard_30" ? "active" : ""}`}
                 >
                   Hard - 30 Qs
                 </button>
                 <button
-                  onClick={() => setLeaderboardType("hard_60")}
+                  onClick={() => {
+                    setLeaderboardType("hard_60");
+                    setLeaderboardPage(1);
+                  }}
                   className={`ranking-toggle-btn ${leaderboardType === "hard_60" ? "active" : ""}`}
                 >
                   Hard - 60 Qs
@@ -1621,6 +1658,16 @@ function StudentDashboard() {
                       })}
                     </tbody>
                   </table>
+                  {/* Leaderboard Pagination */}
+                  {leaderboardPagination.totalPages > 1 && (
+                    <Pagination
+                      currentPage={leaderboardPage}
+                      totalPages={leaderboardPagination.totalPages}
+                      totalItems={leaderboardPagination.total}
+                      itemsPerPage={leaderboardPagination.limit}
+                      onPageChange={(page) => setLeaderboardPage(page)}
+                    />
+                  )}
                 </>
                 )}
               </div>

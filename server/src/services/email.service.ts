@@ -9,24 +9,9 @@ interface EmailConfig {
 
 // Create reusable transporter
 const createTransporter = () => {
-  // For development/testing, use a test account or SMTP
-  // For production, configure with actual SMTP credentials
-  
-  // Check if we have SendGrid or other SMTP config
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    return nodemailer.createTransporter({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-  }
-  
-  // For development, use Gmail or create a test account
-  // Note: For Gmail, you need to use an App Password
+  // Use Gmail for sending emails
+  // Note: For Gmail, you need to use an App Password (not your regular password)
+  // Generate one at: https://myaccount.google.com/apppasswords
   if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
     return nodemailer.createTransporter({
       service: 'gmail',
@@ -36,8 +21,8 @@ const createTransporter = () => {
       },
     });
   }
-  
-  // Fallback: Ethereal Email for testing (creates a test account automatically)
+
+  // Fallback: Ethereal Email for local testing (creates a test account automatically)
   return null;
 };
 
@@ -46,9 +31,16 @@ let transporter: nodemailer.Transporter | null = null;
 const getTransporter = async (): Promise<nodemailer.Transporter | null> => {
   if (!transporter) {
     transporter = createTransporter();
-    
-    // If no SMTP config, create ethereal test account
+
+    // If no SMTP config, create ethereal test account (only in development)
     if (!transporter) {
+      // Skip test account creation in production (Render, etc.)
+      // as it requires network access that may be blocked
+      if (process.env.NODE_ENV === 'production') {
+        console.log('No SMTP configuration found. Email sending is disabled in production.');
+        return null;
+      }
+
       try {
         const testAccount = await nodemailer.createTestAccount();
         transporter = nodemailer.createTransporter({
@@ -170,9 +162,10 @@ export const emailService = {
   async sendPasswordResetEmail(email: string, resetToken: string, name: string): Promise<void> {
     const transport = await getTransporter();
     if (!transport) {
-      console.error('Email transporter not available');
-      // Log the token for development purposes
+      console.error('Email transporter not available - password reset email not sent');
+      // Log the token for development purposes (in production, configure SMTP)
       console.log('Password reset token for', email, ':', resetToken);
+      // Don't throw error - just return so the request doesn't fail
       return;
     }
 

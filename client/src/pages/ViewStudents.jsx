@@ -1,6 +1,7 @@
 // ??$$$
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/admin/AdminLayout';
+import Pagination from '../components/common/Pagination';
 import { reviewService } from '../services/review.service';
 import { useToast } from '../contexts/ToastContext';
 import StudentStatsModal from '../components/admin/StudentStatsModal';
@@ -13,11 +14,23 @@ function ViewStudents() {
   const [error, setError] = useState('');
   const [selectedStudent, setSelectedStudent] = useState(null); // ??$$$
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 1,
+  });
+  const limit = 10;
+
   useEffect(() => {
     async function fetchStudents() {
       try {
-        const data = await reviewService.getStudents();
-        setStudents(data);
+        setLoading(true);
+        const data = await reviewService.getStudents(currentPage, limit);
+        setStudents(data.students || []);
+        setPagination(data.pagination || pagination);
       } catch (err) {
         console.error(err);
         setError('Failed to fetch students.');
@@ -26,9 +39,13 @@ function ViewStudents() {
       }
     }
     fetchStudents();
-  }, []);
+  }, [currentPage]);
 
-  const handleToggleStatus = async (studentId, currentStatus) => {
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+const handleToggleStatus = async (studentId, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'banned' : 'active';
     const actionLabel = newStatus === 'banned' ? 'ban' : 'unban';
     
@@ -70,7 +87,7 @@ function ViewStudents() {
       
       <div className="summary-card student-list-card">
         <h3 className="section-subtitle">
-          Students List ({students.length})
+          Students List ({pagination.total})
         </h3>
         
         {students.length === 0 ? (
@@ -137,10 +154,20 @@ function ViewStudents() {
         )}
       </div>
 
+      {pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination.totalPages}
+          totalItems={pagination.total}
+          itemsPerPage={pagination.limit}
+          onPageChange={handlePageChange}
+        />
+      )}
+
       {selectedStudent && (
-        <StudentStatsModal 
-          student={selectedStudent} 
-          onClose={() => setSelectedStudent(null)} 
+        <StudentStatsModal
+          student={selectedStudent}
+          onClose={() => setSelectedStudent(null)}
         />
       )}
     </AdminLayout>

@@ -7,6 +7,11 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) NOT NULL,
   role ENUM('admin', 'student') DEFAULT 'student',
   status ENUM('active', 'banned') DEFAULT 'active',
+  email_verified BOOLEAN DEFAULT FALSE,
+  email_verification_token VARCHAR(255) NULL,
+  email_verification_expires TIMESTAMP NULL,
+  password_reset_token VARCHAR(255) NULL,
+  password_reset_expires TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
