@@ -107,7 +107,7 @@ export const userModel = {
   async resetPassword(token: string, newPassword: string): Promise<void> {
     await pool.query(
       `UPDATE users 
-       SET password = ?, password_reset_token = NULL, password_reset_expires = NULL, updated_at = NOW()
+       SET password = ?, password_reset_token = NULL, password_reset_expires = NULL
        WHERE password_reset_token = ? AND password_reset_expires > NOW()`,
       [newPassword, token]
     );
@@ -141,7 +141,7 @@ export const userModel = {
   async verifyEmail(token: string): Promise<void> {
     await pool.query(
       `UPDATE users 
-       SET email_verified = TRUE, email_verification_token = NULL, email_verification_expires = NULL, updated_at = NOW()
+       SET email_verified = TRUE, email_verification_token = NULL, email_verification_expires = NULL
        WHERE email_verification_token = ? AND email_verification_expires > NOW()`,
       [token]
     );
