@@ -141,7 +141,7 @@ function AdminDashboard() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Chart container */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', height: '180px', gap: '6px', paddingBottom: '8px', borderBottom: '1px solid #cbd5e1' }}>
+          <div className="daily-trends-chart" style={{ display: 'flex', alignItems: 'flex-end', height: '180px', gap: '6px', paddingBottom: '8px', borderBottom: '1px solid #cbd5e1' }}>
             {last30DaysData.map((d, index) => {
               const heightPercent = (d.count / maxCount) * 100;
               return (

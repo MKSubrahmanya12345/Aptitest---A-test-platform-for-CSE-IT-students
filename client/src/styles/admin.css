@@ -1607,3 +1607,36 @@ body.admin-sidebar-open {
     font-size: 22px;
   }
 }
+
+/* Daily Trends Chart - Mobile Responsive */
+.daily-trends-chart {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.daily-trends-chart::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tablet & Mobile (≤768px) - Smaller gaps for chart */
+@media (max-width: 768px) {
+  .daily-trends-chart {
+    gap: 3px !important;
+    height: 150px !important;
+  }
+}
+
+/* Mobile (≤480px) - Even smaller gaps */
+@media (max-width: 480px) {
+  .daily-trends-chart {
+    gap: 2px !important;
+    height: 140px !important;
+    margin: 0 -14px;
+    padding-left: 14px;
+    padding-right: 14px;
+    width: calc(100% + 28px);
+  }
+}
