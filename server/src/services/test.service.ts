@@ -209,7 +209,8 @@ export const testService = {
     categories?: string[],
     difficulty?: string,
     count: number = 10,
-    durationSeconds: number = 600
+    durationSeconds: number = 600,
+    templateId?: number
   ) {
     let query = `
       SELECT id 
@@ -304,9 +305,9 @@ export const testService = {
     const serverExpiresAt = new Date(Date.now() + durationSeconds * 1000);
 
     const [sessionResult]: any = await pool.query(
-      `INSERT INTO test_sessions (user_id, category, subcategory, difficulty, total_questions, duration_seconds, server_expires_at, is_reattempt, counts_for_stats)
-       VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)`,
-      [userId, categoryStr, difficulty || null, questions.length, durationSeconds, serverExpiresAt, false, true]
+      `INSERT INTO test_sessions (user_id, template_id, category, subcategory, difficulty, total_questions, duration_seconds, server_expires_at, is_reattempt, counts_for_stats)
+       VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)`,
+      [userId, templateId || null, categoryStr, difficulty || null, questions.length, durationSeconds, serverExpiresAt, false, true]
     );
 
     const sessionId = sessionResult.insertId;
@@ -728,15 +729,26 @@ export const testService = {
       throw new Error("Only completed sessions can be reattempted");
     }
 
+    // Check if reattempts are allowed for this template
+    if (orig.template_id) {
+      const [templateRows]: any = await pool.query(
+        "SELECT allow_reattempt FROM test_templates WHERE id = ?",
+        [orig.template_id]
+      );
+      if (templateRows.length > 0 && !templateRows[0].allow_reattempt) {
+        throw new Error("Reattempts are not allowed for this test");
+      }
+    }
+
     // Determine the root session ID if this is a chain of reattempts
     const rootSessionId = orig.original_session_id || orig.id;
 
     // Create a new session
     const serverExpiresAt = new Date(Date.now() + orig.duration_seconds * 1000);
     const [newSessionResult]: any = await pool.query(
-      `INSERT INTO test_sessions (user_id, category, subcategory, difficulty, total_questions, duration_seconds, server_expires_at, is_reattempt, original_session_id, counts_for_stats)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [userId, orig.category, orig.subcategory, orig.difficulty, orig.total_questions, orig.duration_seconds, serverExpiresAt, true, rootSessionId, false]
+      `INSERT INTO test_sessions (user_id, template_id, category, subcategory, difficulty, total_questions, duration_seconds, server_expires_at, is_reattempt, original_session_id, counts_for_stats)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [userId, orig.template_id, orig.category, orig.subcategory, orig.difficulty, orig.total_questions, orig.duration_seconds, serverExpiresAt, true, rootSessionId, false]
     );
 
     const newSessionId = newSessionResult.insertId;

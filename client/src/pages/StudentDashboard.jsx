@@ -526,7 +526,8 @@ function StudentDashboard() {
         categories: checkedCategories,
         difficulty: selectedTemplate.difficulty,
         count: selectedTemplate.count,
-        duration_seconds: durationSeconds
+        duration_seconds: durationSeconds,
+        template_id: selectedTemplate.id
       };
 
       const data = await testApiService.startTest(apiPayload);

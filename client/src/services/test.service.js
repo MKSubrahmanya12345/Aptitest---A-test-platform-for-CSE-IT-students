@@ -2,6 +2,7 @@ import api from "./api";
 
 export const testApiService = {
   // Start a new test attempt
+  // config: { categories, difficulty, count, duration_seconds, template_id }
   async startTest(config) {
     const res = await api.post("/test/start", config);
     return res.data;

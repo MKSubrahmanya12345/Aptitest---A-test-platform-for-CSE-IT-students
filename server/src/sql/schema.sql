@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS review_pending_questions (
 CREATE TABLE IF NOT EXISTS test_sessions (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT NOT NULL,
+  template_id INT NULL,                        -- FK to test_templates.id if started from template
   category VARCHAR(100),
   subcategory VARCHAR(100),
   difficulty VARCHAR(50),
@@ -82,6 +83,7 @@ CREATE TABLE IF NOT EXISTS test_sessions (
   wrong_count INT NULL,
   skipped_count INT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (template_id) REFERENCES test_templates(id),
   FOREIGN KEY (original_session_id) REFERENCES test_sessions(id)
 );
 
@@ -116,6 +118,7 @@ CREATE TABLE IF NOT EXISTS test_session_answers (
 CREATE INDEX idx_sessions_user_status ON test_sessions (user_id, status);
 CREATE INDEX idx_sessions_expires_status ON test_sessions (status, server_expires_at);
 CREATE INDEX idx_sessions_submitted ON test_sessions (submitted_at);
+CREATE INDEX idx_sessions_template ON test_sessions (template_id);
 CREATE INDEX idx_session_questions_viewed ON test_session_questions (session_id, is_viewed, question_id);
 CREATE INDEX idx_answers_session_question ON test_session_answers (session_id, question_id);
 

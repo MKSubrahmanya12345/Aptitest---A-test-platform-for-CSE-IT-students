@@ -19,14 +19,15 @@ export const testController = {
         return res.status(403).json({ message: "Account is banned. You cannot attempt new tests." });
       }
 
-      const { categories, difficulty, count, duration_seconds } = req.body;
+      const { categories, difficulty, count, duration_seconds, template_id } = req.body;
 
       const result = await testService.startSession(
         userId,
         categories,
         difficulty,
         count ? parseInt(count) : undefined,
-        duration_seconds ? parseInt(duration_seconds) : undefined
+        duration_seconds ? parseInt(duration_seconds) : undefined,
+        template_id ? parseInt(template_id) : undefined
       );
 
       return res.status(201).json(result);
