@@ -714,7 +714,7 @@ export const testService = {
   // 5b. Get category performance breakdown from DB (aggregates by actual question categories)
   async getCategoryPerformance(userId: number) {
     // Query to get per-category stats from actual answered questions
-    // Joins with test_session_answers to get is_correct and time_taken
+    // Uses COALESCE to handle NULL time_taken_seconds - estimates from session duration / total_questions
     // Orders by accuracy DESC so best categories appear first
     const [rows]: any = await pool.query(
       `SELECT 
@@ -722,7 +722,7 @@ export const testService = {
         COUNT(DISTINCT s.id) as attempts,
         COUNT(sa.question_id) as total_questions,
         SUM(CASE WHEN sa.is_correct = 1 THEN 1 ELSE 0 END) as correct_count,
-        AVG(sa.time_taken_seconds) as avg_time_per_q
+        AVG(COALESCE(sa.time_taken_seconds, s.duration_seconds / NULLIF(s.total_questions, 0))) as avg_time_per_q
        FROM test_sessions s
        JOIN test_session_answers sa ON s.id = sa.session_id
        JOIN questions q ON sa.question_id = q.id
