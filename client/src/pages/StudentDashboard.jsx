@@ -203,6 +203,7 @@ function StudentDashboard() {
     highScore: 0,
     reattempts: 0
   });
+  const [categoryAnalysis, setCategoryAnalysis] = useState([]);
 
   // Fetch test templates from API on mount
   useEffect(() => {
@@ -331,6 +332,8 @@ function StudentDashboard() {
       const historyArray = Array.isArray(data) ? data : (data?.history || []);
       setHistoryList(historyArray);
       computeStatsSummary(historyArray);
+      // Fetch category analysis from DB (proper per-category breakdown)
+      await fetchCategoryAnalysis();
     } catch (err) {
       console.error("Silent stats fetch failed:", err);
     }
@@ -438,6 +441,18 @@ function StudentDashboard() {
       setError("Failed to load attempt history.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  // API Call: Fetch Category Performance from DB
+  async function fetchCategoryAnalysis() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const data = await testApiService.getCategoryPerformance();
+      setCategoryAnalysis(data.categories || []);
+    } catch (err) {
+      console.error("Failed to load category performance:", err);
     }
   }
 
@@ -966,15 +981,12 @@ function StudentDashboard() {
               )}
 
               {/* ??$$$ */}
-              {/* Strengths & Weaknesses */}
-              {(() => {
-                const categoryAnalysis = computeCategoryAnalysis(historyList);
-                if (categoryAnalysis.length === 0) return null;
-                return (
-                  <div className="category-analysis-wrapper">
-                    <h3 className="section-title">Topic Performance Breakdown</h3>
-                    <div className="category-analysis-grid">
-                      {categoryAnalysis.map((cat, idx) => {
+              {/* Strengths & Weaknesses - uses categoryAnalysis from DB */}
+              {categoryAnalysis.length > 0 && (
+                <div className="category-analysis-wrapper">
+                  <h3 className="section-title">Topic Performance Breakdown</h3>
+                  <div className="category-analysis-grid">
+                    {categoryAnalysis.map((cat, idx) => {
                         const statusText =
                           cat.status === "strength"
                             ? "Strength"
@@ -1023,8 +1035,7 @@ function StudentDashboard() {
                       })}
                     </div>
                   </div>
-                );
-              })()}
+                )}
             </div>
           )}
 
