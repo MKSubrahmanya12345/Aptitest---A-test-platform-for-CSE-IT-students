@@ -738,6 +738,16 @@ export const testService = {
       if (templateRows.length > 0 && !templateRows[0].allow_reattempt) {
         throw new Error("Reattempts are not allowed for this test");
       }
+    } else {
+      // For old sessions without template_id, try to find matching template by category/difficulty
+      // and check its allow_reattempt flag. If found and disabled, block reattempt.
+      const [matchingTemplates]: any = await pool.query(
+        "SELECT allow_reattempt FROM test_templates WHERE category = ? AND difficulty = ? LIMIT 1",
+        [orig.category, orig.difficulty]
+      );
+      if (matchingTemplates.length > 0 && !matchingTemplates[0].allow_reattempt) {
+        throw new Error("Reattempts are not allowed for this test");
+      }
     }
 
     // Determine the root session ID if this is a chain of reattempts
