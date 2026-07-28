@@ -124,6 +124,13 @@ function ManageQuestions() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [isAddMode, setIsAddMode] = useState(false); // Track if adding new question
 
+  // Categories from DB (fetched dynamically)
+  const [categories, setCategories] = useState([]);
+  const [guideExpanded, setGuideExpanded] = useState(() => {
+    const saved = localStorage.getItem('guideExpanded');
+    return saved ? JSON.parse(saved) : true;
+  });
+
   // Filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -135,6 +142,28 @@ function ManageQuestions() {
   const [pendingPagination, setPendingPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
   const [approvedPagination, setApprovedPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
   const limit = 10;
+
+  // Save guide expanded state
+  useEffect(() => {
+    localStorage.setItem('guideExpanded', JSON.stringify(guideExpanded));
+  }, [guideExpanded]);
+
+  // Fetch categories from DB on mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  async function fetchCategories() {
+    try {
+      const data = await reviewService.getCategories();
+      if (data.categories && data.categories.length > 0) {
+        setCategories(data.categories);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+      // Fall back to empty array - component will still work
+    }
+  }
 
   // Fetch questions on mount, when tab or pagination changes
   useEffect(() => {
@@ -481,7 +510,7 @@ function ManageQuestions() {
           onChange={(e) => setCategoryFilter(e.target.value)}
         >
           <option value="">All Categories</option>
-          {CATEGORIES.map(cat => (
+          {categories.map(cat => (
             <option key={cat.id} value={cat.id}>{cat.label}</option>
           ))}
         </select>
@@ -645,10 +674,10 @@ function ManageQuestions() {
                   <select
                     className="form-select"
                     value={editingQuestion.category || ''}
-                    onChange={(e) => setEditingQuestion(prev => ({ ...prev, category: e.target.value }))}
+                    onChange={(e) => setEditingQuestion(prev => ({ ...prev, category: e.target.value, subcategory: '' }))}
                   >
                     <option value="">Select Category</option>
-                    {CATEGORIES.map(cat => (
+                    {categories.map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.label}</option>
                     ))}
                   </select>
@@ -661,7 +690,7 @@ function ManageQuestions() {
                     onChange={(e) => setEditingQuestion(prev => ({ ...prev, subcategory: e.target.value }))}
                   >
                     <option value="">Select Subcategory</option>
-                    {editingQuestion.category && CATEGORIES.find(c => c.id === editingQuestion.category)?.subcategories.map(sub => (
+                    {editingQuestion.category && categories.find(c => c.id === editingQuestion.category)?.subcategories.map(sub => (
                       <option key={sub} value={sub}>{sub}</option>
                     ))}
                   </select>

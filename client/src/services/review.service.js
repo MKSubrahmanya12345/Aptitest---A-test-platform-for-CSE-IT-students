@@ -30,6 +30,12 @@ export const reviewService = {
     return response.data;
   },
 
+  // Fetch categories and subcategories from DB
+  async getCategories() {
+    const response = await api.get('/questions/categories');
+    return response.data;
+  },
+
   /* old code
   async getStats() {
     const response = await api.get('/stats');

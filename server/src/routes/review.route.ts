@@ -21,6 +21,7 @@ router.post('/review-pending/:id/approve', reviewController.approvePending);
 router.post('/review-pending/:id/reject', reviewController.rejectPending);
 router.post('/questions/create', reviewController.createQuestion);
 router.get('/questions', reviewController.getQuestions);
+router.get('/questions/categories', reviewController.getCategories);
 router.put('/questions/:id', reviewController.updateApproved);
 router.get('/stats', reviewController.getStats);
 

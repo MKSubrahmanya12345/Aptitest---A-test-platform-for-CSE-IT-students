@@ -471,6 +471,67 @@ export const reviewController = {
       console.error("Error in getStats:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch statistics" });
     }
+  },
+
+  // GET /api/questions/categories - Get unique categories and subcategories from DB
+  async getCategories(req: AuthenticatedRequest, res: Response) {
+    try {
+      // Get unique categories from both approved questions and pending questions
+      const [approvedCategories]: any = await pool.query(
+        `SELECT DISTINCT category FROM questions WHERE status = 'active' AND category IS NOT NULL ORDER BY category`
+      );
+      
+      const [pendingCategories]: any = await pool.query(
+        `SELECT DISTINCT category FROM review_pending_questions WHERE category IS NOT NULL ORDER BY category`
+      );
+
+      // Merge and deduplicate categories
+      const allCategories = new Set([
+        ...approvedCategories.map((r: any) => r.category),
+        ...pendingCategories.map((r: any) => r.category)
+      ]);
+
+      // Get subcategories for each category
+      const categoryMap: Record<string, Set<string>> = {};
+      
+      for (const category of allCategories) {
+        if (!category) continue;
+        categoryMap[category] = new Set();
+        
+        // Get subcategories from approved questions
+        const [approvedSubs]: any = await pool.query(
+          `SELECT DISTINCT subcategory FROM questions 
+           WHERE category = ? AND subcategory IS NOT NULL AND status = 'active' 
+           ORDER BY subcategory`,
+          [category]
+        );
+        approvedSubs.forEach((r: any) => { if (r.subcategory) categoryMap[category].add(r.subcategory); });
+        
+        // Get subcategories from pending questions
+        const [pendingSubs]: any = await pool.query(
+          `SELECT DISTINCT subcategory FROM review_pending_questions 
+           WHERE category = ? AND subcategory IS NOT NULL 
+           ORDER BY subcategory`,
+          [category]
+        );
+        pendingSubs.forEach((r: any) => { if (r.subcategory) categoryMap[category].add(r.subcategory); });
+      }
+
+      // Convert to array format
+      const result = Array.from(allCategories)
+        .filter(c => c) // Remove null/empty
+        .map(category => ({
+          id: category,
+          label: category,
+          subcategories: Array.from(categoryMap[category] || [])
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+
+      return res.json({ categories: result });
+    } catch (error: any) {
+      console.error("Error in getCategories:", error);
+      return res.status(500).json({ message: error.message || "Failed to fetch categories" });
+    }
   }
 };
 
