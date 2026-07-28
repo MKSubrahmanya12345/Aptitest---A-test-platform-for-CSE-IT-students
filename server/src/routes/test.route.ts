@@ -13,6 +13,7 @@ router.post('/test/view-question', testController.viewQuestion);
 router.post('/test/submit', testController.submit);
 router.get('/test/session/:id', testController.getSession);
 router.get('/test/history', testController.getHistory);
+router.get('/test/category-performance', testController.getCategoryPerformance);
 router.post('/test/reattempt/:id', testController.reattempt);
 router.get('/leaderboard', testController.getLeaderboard);
 

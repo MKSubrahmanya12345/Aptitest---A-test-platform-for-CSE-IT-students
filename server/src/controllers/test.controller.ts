@@ -179,6 +179,22 @@ export const testController = {
     }
   },
 
+  // GET /api/test/category-performance
+  async getCategoryPerformance(req: AuthenticatedRequest, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const result = await testService.getCategoryPerformance(userId);
+      return res.json({ categories: result });
+    } catch (error: any) {
+      console.error("Error in testController.getCategoryPerformance:", error);
+      return res.status(500).json({ message: error.message || "Failed to fetch category performance" });
+    }
+  },
+
   // POST /api/test/reattempt/:id
   async reattempt(req: AuthenticatedRequest, res: Response) {
     try {

@@ -66,5 +66,11 @@ export const testApiService = {
       question_id: questionId,
     });
     return res.data;
+  },
+
+  // Get category performance breakdown from DB
+  async getCategoryPerformance() {
+    const res = await api.get("/test/category-performance");
+    return res.data;
   }
 };
