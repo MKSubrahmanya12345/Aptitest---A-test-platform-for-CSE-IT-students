@@ -74,40 +74,6 @@ const QUESTION_TYPES = [
   }
 ];
 
-// Default categories and subcategories - FIXED from actual database
-const CATEGORIES = [
-  {
-    id: 'Abstract Reasoning',
-    label: 'Abstract Reasoning',
-    subcategories: ['Analogy Questions', 'Matrix Pattern Questions', 'Number Sequence Questions', 'Odd One Out Questions', 'Shape Pattern Questions']
-  },
-  {
-    id: 'Data Interpretation and Analysis',
-    label: 'Data Interpretation and Analysis',
-    subcategories: ['Bar Graph-Based Questions', 'Caselet-Based Questions', 'Combination Chart-Based Questions', 'Line Graph-Based Questions', 'Multiple Table-Based Questions', 'Pie Chart with Secondary Data-Based Questions', 'Pie Chart-Based Questions', 'Stacked Bar Graph-Based Questions', 'Table-Based Questions']
-  },
-  {
-    id: 'Logical Reasoning',
-    label: 'Logical Reasoning',
-    subcategories: ['Additional Basic Questions', 'Analogies', 'Blood Relations', 'Coding-Decoding', 'Critical Reasoning', 'Data Sufficiency', 'Directions', 'Non-Verbal Reasoning', 'Puzzles', 'Series', 'Syllogisms']
-  },
-  {
-    id: 'Quantitative Aptitude',
-    label: 'Quantitative Aptitude',
-    subcategories: ['Averages', 'Miscellaneous', 'Number Systems', 'Percentages', 'Permutations and Combinations', 'Probability', 'Profit and Loss', 'Ratios and Proportions', 'Simple and Compound Interest', 'Simple Interest', 'Time and Distance', 'Time and Work']
-  },
-  {
-    id: 'Technical Aptitude',
-    label: 'Technical Aptitude',
-    subcategories: ['AI/ML Foundations', 'Algorithms', 'Computer Networks', 'Data Structures', 'Database Basics', 'Operating Systems', 'Programming Fundamentals']
-  },
-  {
-    id: 'Verbal Ability',
-    label: 'Verbal Ability',
-    subcategories: ['Antonyms', 'Cloze Test', 'Idioms/Phrases', 'Jumbled Sentences', 'Reading Comprehension', 'Sentence Completion', 'Sentence Correction', 'Spotting Errors', 'Synonyms', 'Verbal Analogies']
-  }
-];
-
 const DIFFICULTIES = ['Basic', 'Intermediate', 'Advanced'];
 
 function ManageQuestions() {
@@ -493,6 +459,62 @@ function ManageQuestions() {
         >
           + Add New Question
         </button>
+      </div>
+
+      {/* Guide Panel */}
+      <div className="guide-panel" style={{ margin: '16px 24px', border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden' }}>
+        <div 
+          className="guide-header" 
+          onClick={() => setGuideExpanded(!guideExpanded)}
+          style={{ 
+            padding: '12px 16px', 
+            background: '#f9fafb', 
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#374151' }}>📖 How to Review and Add Questions</h3>
+          <span style={{ fontSize: '12px', color: '#6b7280' }}>
+            {guideExpanded ? 'Collapse ▼' : 'Expand ▶'}
+          </span>
+        </div>
+        
+        {guideExpanded && (
+          <div className="guide-content" style={{ padding: '16px', background: '#fff' }}>
+            <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '16px' }}>
+              Verify that the question type matches the structure, and that correct_answer and grading_config are valid JSON.
+              Categories and subcategories are loaded from your existing questions database.
+            </p>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                <thead>
+                  <tr style={{ background: '#f3f4f6' }}>
+                    <th style={{ padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #e5e7eb', fontWeight: 600 }}>Question Type</th>
+                    <th style={{ padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #e5e7eb', fontWeight: 600 }}>Correct Answer Schema</th>
+                    <th style={{ padding: '8px 12px', textAlign: 'left', borderBottom: '2px solid #e5e7eb', fontWeight: 600 }}>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {QUESTION_TYPES.map(type => (
+                    <tr key={type.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                      <td style={{ padding: '8px 12px' }}>
+                        <code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px', fontSize: '11px' }}>{type.id}</code>
+                      </td>
+                      <td style={{ padding: '8px 12px' }}>
+                        <code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px', fontSize: '11px' }}>
+                          {JSON.stringify(type.defaultCorrectAnswer)}
+                        </code>
+                      </td>
+                      <td style={{ padding: '8px 12px', color: '#4b5563' }}>{type.label}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Filter Bar */}
