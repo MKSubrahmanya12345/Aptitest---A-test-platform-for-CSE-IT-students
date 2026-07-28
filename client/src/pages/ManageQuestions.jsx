@@ -6,7 +6,7 @@ import { reviewService } from '../services/review.service';
 import { useToast } from '../contexts/ToastContext';
 import '../styles/admin.css';
 
-// Question type definitions with default structures
+// Question type definitions matching BACKEND grading logic (test.service.ts)
 const QUESTION_TYPES = [
   {
     id: 'mcq_single',
@@ -21,70 +21,56 @@ const QUESTION_TYPES = [
     ]
   },
   {
-    id: 'mcq_multiple',
-    label: 'MCQ (Multiple Answers)',
-    defaultCorrectAnswer: { value: ['A', 'B'] },
-    defaultGradingConfig: { type: 'mcq_multiple', marks: 1, negativeMarks: 0 },
+    id: 'boolean',
+    label: 'True/False (Boolean)',
+    defaultCorrectAnswer: { value: true },
+    defaultGradingConfig: { type: 'boolean', marks: 1, negativeMarks: 0 },
     defaultOptions: [
-      { key: 'A', text: 'Option A' },
-      { key: 'B', text: 'Option B' },
-      { key: 'C', text: 'Option C' },
-      { key: 'D', text: 'Option D' }
+      { key: 'true', text: 'True' },
+      { key: 'false', text: 'False' }
     ]
   },
   {
-    id: 'numeric_integer',
-    label: 'Numeric (Integer)',
-    defaultCorrectAnswer: { value: 0 },
-    defaultGradingConfig: { type: 'numeric_integer', marks: 1, negativeMarks: 0, tolerance: 0 },
+    id: 'fraction',
+    label: 'Fraction (Numerator/Denominator)',
+    defaultCorrectAnswer: { numerator: 0, denominator: 1 },
+    defaultGradingConfig: { type: 'fraction', marks: 1, negativeMarks: 0 },
     defaultOptions: null
   },
   {
-    id: 'numeric_decimal',
-    label: 'Numeric (Decimal)',
-    defaultCorrectAnswer: { value: 0.0 },
-    defaultGradingConfig: { type: 'numeric_decimal', marks: 1, negativeMarks: 0, tolerance: 0.01 },
+    id: 'ratio',
+    label: 'Ratio (Values like 3:4)',
+    defaultCorrectAnswer: { values: [1, 2] },
+    defaultGradingConfig: { type: 'ratio', marks: 1, negativeMarks: 0 },
+    defaultOptions: null
+  },
+  {
+    id: 'numeric',
+    label: 'Numeric (Integer/Decimal)',
+    defaultCorrectAnswer: { value: 0 },
+    defaultGradingConfig: { type: 'numeric', marks: 1, negativeMarks: 0, tolerance: 0.01 },
     defaultOptions: null
   },
   {
     id: 'numeric_with_unit',
-    label: 'Numeric with Unit',
+    label: 'Numeric with Unit (e.g., 10 meters)',
     defaultCorrectAnswer: { value: 0, unit: '' },
-    defaultGradingConfig: { type: 'numeric_with_unit', marks: 1, negativeMarks: 0, tolerance: 0.01 },
+    defaultGradingConfig: { type: 'numeric_with_unit', marks: 1, negativeMarks: 0, tolerance: 0.01, unit_required: true },
     defaultOptions: null
   },
   {
-    id: 'matrix',
-    label: 'Matrix (Grid)',
-    defaultCorrectAnswer: { rows: 2, cols: 2, values: [[0, 0], [0, 0]] },
-    defaultGradingConfig: { type: 'matrix', marks: 1, negativeMarks: 0 },
+    id: 'data_interpretation',
+    label: 'Data Interpretation',
+    defaultCorrectAnswer: { value: 0 },
+    defaultGradingConfig: { type: 'data_interpretation', marks: 1, negativeMarks: 0, tolerance: 0.01 },
     defaultOptions: null
   },
   {
-    id: 'fill_in_blanks',
-    label: 'Fill in the Blanks',
-    defaultCorrectAnswer: { blanks: [{ id: 1, answer: '' }] },
-    defaultGradingConfig: { type: 'fill_in_blanks', marks: 1, negativeMarks: 0 },
+    id: 'fill_in_blank',
+    label: 'Fill in the Blank(s)',
+    defaultCorrectAnswer: { answers: [''] },
+    defaultGradingConfig: { type: 'fill_in_blank', marks: 1, negativeMarks: 0 },
     defaultOptions: null
-  },
-  {
-    id: 'assertion_reason',
-    label: 'Assertion-Reason',
-    defaultCorrectAnswer: { assertion: true, reason: true, relation: true },
-    defaultGradingConfig: { type: 'assertion_reason', marks: 1, negativeMarks: 0 },
-    defaultOptions: null
-  },
-  {
-    id: 'comprehension',
-    label: 'Comprehension',
-    defaultCorrectAnswer: { value: 'A' },
-    defaultGradingConfig: { type: 'comprehension', marks: 1, negativeMarks: 0 },
-    defaultOptions: [
-      { key: 'A', text: 'Option A' },
-      { key: 'B', text: 'Option B' },
-      { key: 'C', text: 'Option C' },
-      { key: 'D', text: 'Option D' }
-    ]
   }
 ];
 
@@ -154,6 +140,67 @@ function ManageQuestions() {
   useEffect(() => {
     fetchQuestions();
   }, [currentTab, pendingPage, approvedPage]);
+
+  // Auto-update correct_answer, grading_config, options when question type changes
+  useEffect(() => {
+    if (!editingQuestion?.type) return;
+    
+    const typeConfig = getTypeConfig(editingQuestion.type);
+    if (!typeConfig) return;
+
+    // Check if we need to reset (only if the current structure doesn't match the type)
+    const currentType = editingQuestion.type;
+    const currentCorrectAnswer = editingQuestion.correct_answer;
+    
+    let needsReset = false;
+    
+    // Check if correct_answer structure matches the expected type
+    switch (currentType) {
+      case 'mcq_single':
+        needsReset = !currentCorrectAnswer || typeof currentCorrectAnswer.value !== 'string';
+        break;
+      case 'boolean':
+        needsReset = !currentCorrectAnswer || typeof currentCorrectAnswer.value !== 'boolean';
+        break;
+      case 'fraction':
+        needsReset = !currentCorrectAnswer || 
+                     typeof currentCorrectAnswer.numerator !== 'number' || 
+                     typeof currentCorrectAnswer.denominator !== 'number';
+        break;
+      case 'ratio':
+        needsReset = !currentCorrectAnswer || 
+                     !Array.isArray(currentCorrectAnswer.values);
+        break;
+      case 'numeric':
+      case 'data_interpretation':
+        needsReset = !currentCorrectAnswer || 
+                     typeof currentCorrectAnswer.value !== 'number';
+        break;
+      case 'numeric_with_unit':
+        needsReset = !currentCorrectAnswer || 
+                     typeof currentCorrectAnswer.value !== 'number' ||
+                     typeof currentCorrectAnswer.unit !== 'string';
+        break;
+      case 'fill_in_blank':
+        needsReset = !currentCorrectAnswer || 
+                     !Array.isArray(currentCorrectAnswer.answers);
+        break;
+      default:
+        needsReset = false;
+    }
+
+    if (needsReset) {
+      const defaults = getDefaultsForType(currentType);
+      if (defaults) {
+        setEditingQuestion(prev => ({
+          ...prev,
+          correct_answer: defaults.correct_answer,
+          grading_config: defaults.grading_config,
+          options: defaults.options
+        }));
+      }
+    }
+  }, [editingQuestion?.type]);
 
   const fetchQuestions = async () => {
     try {
@@ -710,31 +757,15 @@ function ManageQuestions() {
                 </div>
               )}
 
-              {/* Correct Answer - Numeric Integer */}
-              {editingQuestion.type === 'numeric_integer' && (
+              {/* Correct Answer - Numeric / Data Interpretation */}
+              {(editingQuestion.type === 'numeric' || editingQuestion.type === 'data_interpretation') && (
                 <div className="form-group">
                   <label className="form-label">Correct Answer *</label>
                   <input
                     type="number"
+                    step="any"
                     className="form-input"
                     value={editingQuestion.correct_answer?.value || 0}
-                    onChange={(e) => setEditingQuestion(prev => ({
-                      ...prev,
-                      correct_answer: { ...prev.correct_answer, value: parseInt(e.target.value) }
-                    }))}
-                  />
-                </div>
-              )}
-
-              {/* Correct Answer - Numeric Decimal */}
-              {editingQuestion.type === 'numeric_decimal' && (
-                <div className="form-group">
-                  <label className="form-label">Correct Answer *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    className="form-input"
-                    value={editingQuestion.correct_answer?.value || 0.0}
                     onChange={(e) => setEditingQuestion(prev => ({
                       ...prev,
                       correct_answer: { ...prev.correct_answer, value: parseFloat(e.target.value) }
@@ -750,7 +781,7 @@ function ManageQuestions() {
                     <label className="form-label">Value *</label>
                     <input
                       type="number"
-                      step="0.01"
+                      step="any"
                       className="form-input"
                       value={editingQuestion.correct_answer?.value || 0}
                       onChange={(e) => setEditingQuestion(prev => ({
@@ -775,6 +806,144 @@ function ManageQuestions() {
                 </div>
               )}
 
+              {/* Correct Answer - Boolean */}
+              {editingQuestion.type === 'boolean' && (
+                <div className="form-group">
+                  <label className="form-label">Correct Answer *</label>
+                  <select
+                    className="form-select"
+                    value={String(editingQuestion.correct_answer?.value ?? true)}
+                    onChange={(e) => setEditingQuestion(prev => ({
+                      ...prev,
+                      correct_answer: { value: e.target.value === 'true' }
+                    }))}
+                  >
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
+                </div>
+              )}
+
+              {/* Correct Answer - Fraction */}
+              {editingQuestion.type === 'fraction' && (
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">Numerator *</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.numerator || 0}
+                      onChange={(e) => setEditingQuestion(prev => ({
+                        ...prev,
+                        correct_answer: { ...prev.correct_answer, numerator: parseInt(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Denominator *</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.denominator || 1}
+                      onChange={(e) => setEditingQuestion(prev => ({
+                        ...prev,
+                        correct_answer: { ...prev.correct_answer, denominator: parseInt(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Correct Answer - Ratio */}
+              {editingQuestion.type === 'ratio' && (
+                <div className="form-group">
+                  <label className="form-label">Ratio Values (e.g., 3:4) *</label>
+                  <div className="form-row">
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.values?.[0] || 1}
+                      onChange={(e) => {
+                        const newValues = [...(editingQuestion.correct_answer?.values || [1, 1])];
+                        newValues[0] = parseInt(e.target.value);
+                        setEditingQuestion(prev => ({
+                          ...prev,
+                          correct_answer: { values: newValues }
+                        }));
+                      }}
+                    />
+                    <span style={{ padding: '0 10px' }}>:</span>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={editingQuestion.correct_answer?.values?.[1] || 1}
+                      onChange={(e) => {
+                        const newValues = [...(editingQuestion.correct_answer?.values || [1, 1])];
+                        newValues[1] = parseInt(e.target.value);
+                        setEditingQuestion(prev => ({
+                          ...prev,
+                          correct_answer: { values: newValues }
+                        }));
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Correct Answer - Fill in Blank */}
+              {editingQuestion.type === 'fill_in_blank' && (
+                <div className="form-group">
+                  <label className="form-label">Answers (one per blank) *</label>
+                  {(editingQuestion.correct_answer?.answers || ['']).map((answer, idx) => (
+                    <div key={idx} className="option-edit-row" style={{ marginBottom: '8px' }}>
+                      <span className="option-label">{idx + 1}.</span>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={answer}
+                        onChange={(e) => {
+                          const newAnswers = [...(editingQuestion.correct_answer?.answers || [''])];
+                          newAnswers[idx] = e.target.value;
+                          setEditingQuestion(prev => ({
+                            ...prev,
+                            correct_answer: { answers: newAnswers }
+                          }));
+                        }}
+                        placeholder={`Answer for blank ${idx + 1}`}
+                      />
+                      {idx > 0 && (
+                        <button
+                          type="button"
+                          className="btn btn-small btn-danger"
+                          onClick={() => {
+                            const newAnswers = editingQuestion.correct_answer.answers.filter((_, i) => i !== idx);
+                            setEditingQuestion(prev => ({
+                              ...prev,
+                              correct_answer: { answers: newAnswers }
+                            }));
+                          }}
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-small btn-secondary"
+                    onClick={() => {
+                      const newAnswers = [...(editingQuestion.correct_answer?.answers || ['']), ''];
+                      setEditingQuestion(prev => ({
+                        ...prev,
+                        correct_answer: { answers: newAnswers }
+                      }));
+                    }}
+                  >
+                    + Add Blank
+                  </button>
+                </div>
+              )}
+
               {/* Correct Answer - MCQ Single */}
               {editingQuestion.type === 'mcq_single' && (
                 <div className="form-group">
@@ -784,7 +953,7 @@ function ManageQuestions() {
                     value={editingQuestion.correct_answer?.value || 'A'}
                     onChange={(e) => setEditingQuestion(prev => ({
                       ...prev,
-                      correct_answer: { ...prev.correct_answer, value: e.target.value }
+                      correct_answer: { value: e.target.value }
                     }))}
                   >
                     {editingQuestion.options?.map((opt, idx) => (

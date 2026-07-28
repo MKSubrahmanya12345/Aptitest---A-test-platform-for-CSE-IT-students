@@ -371,6 +371,73 @@ export const reviewController = {
     }
   },
 
+  // PUT /api/questions/:id - Update approved question
+  async updateApproved(req: AuthenticatedRequest, res: Response) {
+    try {
+      const { id } = req.params;
+      const {
+        category,
+        subcategory,
+        difficulty,
+        question_type,
+        question_text,
+        passage,
+        data_block,
+        options,
+        correct_answer,
+        grading_config,
+        solution
+      } = req.body;
+
+      // Validation
+      if (!question_text || !category || !question_type) {
+        return res.status(400).json({ message: "question_text, category, and question_type are required" });
+      }
+
+      const query = `
+        UPDATE questions SET
+          category = ?,
+          subcategory = ?,
+          difficulty = ?,
+          question_type = ?,
+          question_text = ?,
+          passage = ?,
+          data_block = ?,
+          options = ?,
+          correct_answer = ?,
+          grading_config = ?,
+          solution = ?,
+          updated_at = NOW()
+        WHERE id = ?
+      `;
+
+      const values = [
+        category,
+        subcategory || null,
+        difficulty || 'basic',
+        question_type,
+        question_text,
+        passage || null,
+        typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block || null,
+        typeof options === 'object' && options !== null ? JSON.stringify(options) : options || null,
+        typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
+        typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+        solution || null,
+        id
+      ];
+
+      const [result]: any = await pool.query(query, values);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      return res.json({ message: "Question updated successfully" });
+    } catch (error: any) {
+      console.error("Error in updateApproved:", error);
+      return res.status(500).json({ message: error.message || "Failed to update question" });
+    }
+  },
 
   async getStats(req: AuthenticatedRequest, res: Response) {
     try {
