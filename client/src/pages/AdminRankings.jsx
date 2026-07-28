@@ -22,10 +22,13 @@ function AdminRankings() {
     setError("");
     try {
       const data = await testApiService.getLeaderboard(leaderboardType);
-      setLeaderboardList(data);
+      // Handle both direct array and { leaderboard: [] } response formats
+      const list = Array.isArray(data) ? data : (data.leaderboard || []);
+      setLeaderboardList(list);
     } catch (err) {
       console.error(err);
       setError("Failed to load leaderboard rankings.");
+      setLeaderboardList([]); // Ensure it's always an array
     } finally {
       setLoading(false);
     }

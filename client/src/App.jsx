@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ManageQuestions from "./pages/ManageQuestions";
 import ViewStudents from "./pages/ViewStudents";
 import AdminRankings from "./pages/AdminRankings";
+import TestTemplates from "./pages/TestTemplates";
 import NotFound from "./pages/NotFound.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess";
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/admin/view-students" element={<ViewStudents />} />
         <Route path="/admin/rankings" element={<AdminRankings />} />
+        <Route path="/admin/test-templates" element={<TestTemplates />} />
       </Routes>
     </>
   )

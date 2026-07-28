@@ -117,6 +117,13 @@ function AdminLayout({ children, title = "Admin Dashboard" }) {
           >
             <span>Rankings</span>
           </Link>
+          <Link
+            to="/admin/test-templates"
+            className={`menu-item ${location.pathname === '/admin/test-templates' ? 'active' : ''}`}
+            onClick={() => setSidebarOpen(false)}
+          >
+            <span>Test Templates</span>
+          </Link>
         </nav>
 
         <div className="sidebar-footer">

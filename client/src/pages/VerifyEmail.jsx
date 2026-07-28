@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { verifyEmail } from '../services/auth.service';
-import '../styles/auth.css';
+import '../styles/auth-pages.css';
 
 function VerifyEmail() {
   const [searchParams] = useSearchParams();

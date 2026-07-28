@@ -2,6 +2,7 @@ import type { Response } from 'express';
 import type { AuthenticatedRequest } from '../middleware/auth';
 import Stripe from 'stripe';
 import pool from '../config/db';
+import { testTemplateService } from '../services/testTemplate.service';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-06-30.basil' as any,
@@ -12,13 +13,27 @@ const HARD_60_TEST_TYPE = 'hard_60';
 
 export const createPaymentIntent = async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user?.id;
-    const { idempotencyKey } = req.body;
+    const { idempotencyKey, testType, templateId } = req.body;
 
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
     if (!idempotencyKey) return res.status(400).json({ message: 'idempotencyKey is required' });
 
     const conn = await pool.getConnection();
     try {
+        // Determine the actual test type and price
+        let actualTestType = testType || HARD_60_TEST_TYPE;
+        let pricePaise = HARD_60_PRICE_PAISE;
+        let templateData = null;
+
+        // If templateId is provided, fetch the template details
+        if (templateId && templateId !== 'hard_60') {
+            templateData = await testTemplateService.getTemplateById(parseInt(templateId));
+            if (templateData && templateData.is_paid) {
+                actualTestType = `template_${templateId}`;
+                pricePaise = templateData.price_paise || HARD_60_PRICE_PAISE;
+            }
+        }
+
         const [existing]: any = await conn.execute(
             `SELECT id, status, stripe_payment_intent_id FROM payments WHERE idempotency_key = ? AND user_id = ?`,
             [idempotencyKey, userId]
@@ -35,11 +50,21 @@ export const createPaymentIntent = async (req: AuthenticatedRequest, res: Respon
             }
         }
 
+        // Check if user already paid for this test type
+        const [alreadyPaid]: any = await conn.execute(
+            `SELECT id FROM payments WHERE user_id = ? AND test_type = ? AND status = 'succeeded' LIMIT 1`,
+            [userId, actualTestType]
+        );
+
+        if (alreadyPaid.length > 0) {
+            return res.json({ alreadyPaid: true, clientSecret: null });
+        }
+
         const paymentIntent = await stripe.paymentIntents.create(
             {
-                amount: HARD_60_PRICE_PAISE,
+                amount: pricePaise,
                 currency: 'inr',
-                metadata: { userId: String(userId), testType: HARD_60_TEST_TYPE },
+                metadata: { userId: String(userId), testType: actualTestType, templateId: templateId || '' },
             },
             { idempotencyKey }
         );
@@ -48,7 +73,7 @@ export const createPaymentIntent = async (req: AuthenticatedRequest, res: Respon
             `INSERT INTO payments (user_id, idempotency_key, stripe_payment_intent_id, amount_paise, currency, test_type, status)
        VALUES (?, ?, ?, ?, 'inr', ?, 'pending')
        ON DUPLICATE KEY UPDATE stripe_payment_intent_id = VALUES(stripe_payment_intent_id)`,
-            [userId, idempotencyKey, paymentIntent.id, HARD_60_PRICE_PAISE, HARD_60_TEST_TYPE]
+            [userId, idempotencyKey, paymentIntent.id, pricePaise, actualTestType]
         );
 
         return res.json({ clientSecret: paymentIntent.client_secret, alreadyPaid: false });
@@ -92,16 +117,21 @@ export const confirmPayment = async (req: AuthenticatedRequest, res: Response) =
 
 export const checkPaymentStatus = async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user?.id;
+    const { testType } = req.query;
+    
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     const conn = await pool.getConnection();
     try {
+        // If specific testType provided, check that; otherwise default to hard_60
+        const checkTestType = testType || HARD_60_TEST_TYPE;
+        
         const [rows]: any = await conn.execute(
             `SELECT id FROM payments WHERE user_id = ? AND test_type = ? AND status = 'succeeded' LIMIT 1`,
-            [userId, HARD_60_TEST_TYPE]
+            [userId, checkTestType]
         );
 
-        return res.json({ hasPaid: rows.length > 0 });
+        return res.json({ hasPaid: rows.length > 0, testType: checkTestType });
     } catch (err: any) {
         console.error('checkPaymentStatus error:', err);
         return res.status(500).json({ message: 'Failed to check payment status' });

@@ -20,7 +20,99 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-function CheckoutForm({ idempotencyKey, clientSecret, onSuccess, onCancel }) {
+function PaymentModal({ onClose, onPaymentSuccess, templateId, templateName, pricePaise = 5000 }) {
+  const [clientSecret, setClientSecret] = useState(null);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
+  const [loadError, setLoadError] = useState('');
+  const [initializing, setInitializing] = useState(true);
+
+  // Determine if this is the legacy hard_60 template
+  const isLegacyHard60 = templateId === 'hard_60' || !templateId;
+  const priceRupees = pricePaise / 100;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // Pass templateId for dynamic test types
+        const testType = isLegacyHard60 ? 'hard_60' : `template_${templateId}`;
+        const data = await paymentService.createIntent(idempotencyKey, testType, templateId);
+        if (data.alreadyPaid) {
+          onPaymentSuccess();
+          onClose();
+          return;
+        }
+        setClientSecret(data.clientSecret);
+      } catch (err) {
+        setLoadError(err?.response?.data?.message || 'Failed to initialize payment. Try again.');
+      } finally {
+        setInitializing(false);
+      }
+    })();
+  }, [templateId]);
+
+  return (
+    <div className="payment-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="payment-modal">
+        <button id="payment-modal-close" className="payment-modal-close" onClick={onClose}>×</button>
+
+        <div className="payment-modal-badge">Premium Test</div>
+        <h2>{isLegacyHard60 ? 'Unlock Hard 60' : `Unlock ${templateName || 'Premium Test'}`}</h2>
+        <p className="payment-modal-desc">
+          {isLegacyHard60 ? (
+            <>
+              Get one-time access to the <strong>Hard Practice – 60 Questions</strong> test.
+              Challenge yourself with advanced aptitude questions across all streams.
+            </>
+          ) : (
+            <>
+              Get one-time access to the <strong>{templateName}</strong> test.
+              Challenge yourself with premium aptitude questions.
+            </>
+          )}
+        </p>
+
+        <ul className="payment-features-list">
+          <li><span className="feat-icon">🎯</span> Premium questions across selected topics</li>
+          <li><span className="feat-icon">⏱️</span> Full simulation test experience</li>
+          <li><span className="feat-icon">📊</span> Detailed result breakdown & analysis</li>
+          <li><span className="feat-icon">♾️</span> Unlimited reattempts once unlocked</li>
+        </ul>
+
+        <div className="payment-price-row">
+          <div>
+            <div className="payment-price-label">One-time payment</div>
+            <div className="payment-price-note">Lifetime access. No subscription.</div>
+          </div>
+          <div className="payment-price-amount">₹{priceRupees}</div>
+        </div>
+
+        {loadError && <div className="payment-error-msg">⚠️ {loadError}</div>}
+
+        {initializing && (
+          <div style={{ textAlign: 'center', color: '#64748b', padding: '12px 0' }}>
+            Initializing payment...
+          </div>
+        )}
+
+        {!initializing && clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <CheckoutForm
+              idempotencyKey={idempotencyKey}
+              clientSecret={clientSecret}
+              onSuccess={onPaymentSuccess}
+              onCancel={onClose}
+              priceRupees={priceRupees}
+              templateName={templateName}
+              isLegacyHard60={isLegacyHard60}
+            />
+          </Elements>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CheckoutForm({ idempotencyKey, clientSecret, onSuccess, onCancel, priceRupees, templateName, isLegacyHard60 }) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -58,6 +150,10 @@ function CheckoutForm({ idempotencyKey, clientSecret, onSuccess, onCancel }) {
     setProcessing(false);
   };
 
+  const buttonText = processing 
+    ? '⏳ Processing...' 
+    : `💳 Pay ₹${priceRupees} & Unlock ${isLegacyHard60 ? 'Hard 60' : templateName || 'Premium Test'}`;
+
   return (
     <form onSubmit={handleSubmit}>
       {cardError && <div className="payment-error-msg">⚠️ {cardError}</div>}
@@ -72,87 +168,13 @@ function CheckoutForm({ idempotencyKey, clientSecret, onSuccess, onCancel }) {
         className="btn-pay-now"
         disabled={!stripe || processing}
       >
-        {processing ? '⏳ Processing...' : '💳 Pay ₹50 & Unlock Hard 60'}
+        {buttonText}
       </button>
 
       <p className="payment-secure-note">
         🔒 Secured by Stripe. Your card info is never stored on our servers.
       </p>
     </form>
-  );
-}
-
-function PaymentModal({ onClose, onPaymentSuccess }) {
-  const [clientSecret, setClientSecret] = useState(null);
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
-  const [loadError, setLoadError] = useState('');
-  const [initializing, setInitializing] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await paymentService.createIntent(idempotencyKey);
-        if (data.alreadyPaid) {
-          onPaymentSuccess();
-          onClose();
-          return;
-        }
-        setClientSecret(data.clientSecret);
-      } catch (err) {
-        setLoadError(err?.response?.data?.message || 'Failed to initialize payment. Try again.');
-      } finally {
-        setInitializing(false);
-      }
-    })();
-  }, []);
-
-  return (
-    <div className="payment-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="payment-modal">
-        <button id="payment-modal-close" className="payment-modal-close" onClick={onClose}>×</button>
-
-        <div className="payment-modal-badge">Premium Test</div>
-        <h2>Unlock Hard 60</h2>
-        <p className="payment-modal-desc">
-          Get one-time access to the <strong>Hard Practice – 60 Questions</strong> test.
-          Challenge yourself with advanced aptitude questions across all streams.
-        </p>
-
-        <ul className="payment-features-list">
-          <li><span className="feat-icon">🎯</span> 60 Hard-level questions across 6 streams</li>
-          <li><span className="feat-icon">⏱️</span> 60-minute full simulation test</li>
-          <li><span className="feat-icon">📊</span> Detailed result breakdown & analysis</li>
-          <li><span className="feat-icon">♾️</span> Unlimited reattempts once unlocked</li>
-        </ul>
-
-        <div className="payment-price-row">
-          <div>
-            <div className="payment-price-label">One-time payment</div>
-            <div className="payment-price-note">Lifetime access. No subscription.</div>
-          </div>
-          <div className="payment-price-amount">₹50</div>
-        </div>
-
-        {loadError && <div className="payment-error-msg">⚠️ {loadError}</div>}
-
-        {initializing && (
-          <div style={{ textAlign: 'center', color: '#64748b', padding: '12px 0' }}>
-            Initializing payment...
-          </div>
-        )}
-
-        {!initializing && clientSecret && (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm
-              idempotencyKey={idempotencyKey}
-              clientSecret={clientSecret}
-              onSuccess={onPaymentSuccess}
-              onCancel={onClose}
-            />
-          </Elements>
-        )}
-      </div>
-    </div>
   );
 }
 

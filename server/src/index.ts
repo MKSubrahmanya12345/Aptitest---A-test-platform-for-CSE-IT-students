@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.route";
 import reviewRoutes from "./routes/review.route";
 import paymentRoutes from "./routes/payment.route";
 import testRoutes from "./routes/test.route";
+import testTemplateRoutes from "./routes/testTemplate.routes";
 import { testService } from "./services/test.service";
 
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes); // Auth routes have no protection.
 app.use("/api", testRoutes);      // Student test routes require authentication.
 app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
+app.use("/api/test-templates", testTemplateRoutes); // Test template routes
 
 // Start the auto-submit safety net check every minute.
 // A 60-second interval is a bit friendlier for a free hosting plan.

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../components/common/Pagination";
 import { testApiService } from "../services/test.service";
 import { paymentService } from "../services/payment.service";
+import { testTemplateService } from "../services/testTemplate.service";
 import PaymentModal from "../components/common/PaymentModal";
 import "../styles/student.css";
 import "../styles/payment.css";
@@ -141,7 +142,9 @@ function StudentDashboard() {
   const [showChecklistModal, setShowChecklistModal] = useState(false);
   const [showBannedModal, setShowBannedModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentTemplateId, setPaymentTemplateId] = useState(null); // For dynamic payment
   const [hasPaidHard60, setHasPaidHard60] = useState(false);
+  const [paidTemplates, setPaidTemplates] = useState({}); // Map of template_id -> hasPaid
   const [selectedTemplate, setSelectedTemplate] = useState(null); // { name, difficulty, count, duration }
   const [categoriesList] = useState([
     "Quantitative Aptitude",
@@ -154,6 +157,10 @@ function StudentDashboard() {
   const [checkedCategories, setCheckedCategories] = useState(
     ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability", "Data Interpretation and Analysis", "Abstract Reasoning", "Technical Aptitude"]
   );
+
+  // Test Templates state (fetched from API)
+  const [testTemplates, setTestTemplates] = useState([]);
+  const [templatesLoading, setTemplatesLoading] = useState(true);
 
   // Active test taking state
   const [activeSession, setActiveSession] = useState(null);
@@ -197,41 +204,45 @@ function StudentDashboard() {
     reattempts: 0
   });
 
-  // 4 Test Templates
-  const testTemplates = [
-    {
-      id: "easy_30",
-      name: "Easy Practice - 30 Qs",
-      desc: "Perfect for quick basic revision. Covers easy level questions across chosen streams.",
-      difficulty: "easy",
-      count: 30,
-      duration: 30 // minutes
-    },
-    {
-      id: "easy_60",
-      name: "Easy Practice - 60 Qs",
-      desc: "Full length foundation practice. Ideal for building solid speed and accuracy.",
-      difficulty: "easy",
-      count: 60,
-      duration: 60 // minutes
-    },
-    {
-      id: "hard_30",
-      name: "Hard Practice - 30 Qs",
-      desc: "Challenging intermediate and advanced tasks designed to test logical limits.",
-      difficulty: "hard",
-      count: 30,
-      duration: 30 // minutes
-    },
-    {
-      id: "hard_60",
-      name: "Hard Practice - 60 Qs",
-      desc: "Complete advanced simulation. Designed to stress test your skill stamina.",
-      difficulty: "hard",
-      count: 60,
-      duration: 60 // minutes
+  // Fetch test templates from API on mount
+  useEffect(() => {
+    fetchTestTemplates();
+  }, []);
+
+  async function fetchTestTemplates() {
+    try {
+      setTemplatesLoading(true);
+      const data = await testTemplateService.getAllTemplates({ active: true });
+      setTestTemplates(data.templates || []);
+      
+      // Also fetch user's paid template access
+      try {
+        const accessData = await testTemplateService.getMyTemplateAccess();
+        setPaidTemplates(accessData.access || {});
+        
+        // Legacy: also check hard_60 for backward compatibility
+        const legacyData = await paymentService.checkStatus();
+        setHasPaidHard60(legacyData.hasPaid);
+      } catch (err) {
+        console.error("Failed to fetch payment status:", err);
+      }
+    } catch (err) {
+      console.error("Failed to fetch test templates:", err);
+      // Fallback to empty array - could add default templates here if desired
+    } finally {
+      setTemplatesLoading(false);
     }
-  ];
+  }
+
+  // Helper to check if a template is paid and user has access
+  function hasAccessToTemplate(template) {
+    if (!template.is_paid) return true;
+    // Legacy hard_60 check
+    if (template.id === 'hard_60' || template.name === 'Hard Practice - 60 Qs') {
+      return hasPaidHard60 || paidTemplates[template.id];
+    }
+    return paidTemplates[template.id];
+  }
 
 
   // Refetch history when page changes
@@ -316,8 +327,10 @@ function StudentDashboard() {
     if (!token) return;
     try {
       const data = await testApiService.getHistory();
-      setHistoryList(data);
-      computeStatsSummary(data);
+      // Handle API response format - could be {history: [], pagination: {}} or just []
+      const historyArray = Array.isArray(data) ? data : (data?.history || []);
+      setHistoryList(historyArray);
+      computeStatsSummary(historyArray);
     } catch (err) {
       console.error("Silent stats fetch failed:", err);
     }
@@ -334,6 +347,17 @@ function StudentDashboard() {
 
   // Calculate statistics from attempt list
   function computeStatsSummary(list) {
+    // Handle non-array responses (e.g., error messages)
+    if (!Array.isArray(list)) {
+      console.warn("computeStatsSummary received non-array:", list);
+      setStatsSummary({
+        totalTests: 0,
+        avgScore: 0,
+        highScore: 0,
+        reattempts: 0
+      });
+      return;
+    }
     const completed = list.filter(h => h.status === "completed");
     const totalTests = completed.length;
     
@@ -362,6 +386,11 @@ function StudentDashboard() {
 
   // Calculate category-wise analysis for strengths & weaknesses (A for student)
   function computeCategoryAnalysis(list) {
+    // Handle non-array responses
+    if (!Array.isArray(list)) {
+      console.warn("computeCategoryAnalysis received non-array:", list);
+      return [];
+    }
     const completed = list.filter(h => h.status === "completed" && h.category);
     const categoryMap = {};
 
@@ -436,12 +465,24 @@ function StudentDashboard() {
       setShowBannedModal(true);
       return;
     }
+    // Check if this is a paid template and user doesn't have access
+    if (template.is_paid && !hasAccessToTemplate(template)) {
+      setPaymentTemplateId(template.id);
+      setShowPaymentModal(true);
+      return;
+    }
+    // Legacy: check hard_60
     if (template.id === "hard_60" && !hasPaidHard60) {
+      setPaymentTemplateId('hard_60');
       setShowPaymentModal(true);
       return;
     }
     setSelectedTemplate(template);
-    setCheckedCategories([...categoriesList]);
+    // If template has specific categories, use those as default; otherwise select all
+    const defaultCategories = template.categories && template.categories.length > 0 
+      ? template.categories 
+      : [...categoriesList];
+    setCheckedCategories(defaultCategories);
     setShowChecklistModal(true);
   };
 
@@ -477,11 +518,15 @@ function StudentDashboard() {
     setShowChecklistModal(false);
     
     try {
+      // Support both old and new template formats
+      const durationSeconds = selectedTemplate.duration_seconds 
+        || (selectedTemplate.duration ? selectedTemplate.duration * 60 : 1800);
+      
       const apiPayload = {
         categories: checkedCategories,
         difficulty: selectedTemplate.difficulty,
         count: selectedTemplate.count,
-        duration_seconds: selectedTemplate.duration * 60
+        duration_seconds: durationSeconds
       };
 
       const data = await testApiService.startTest(apiPayload);
@@ -858,48 +903,66 @@ function StudentDashboard() {
 
               {/* Practice Test Templates */}
               <h3 className="section-title">🚀 Launch Practice Test Session</h3>
-              <div className="test-templates-grid">
-                {testTemplates.map((template) => (
-                  <div key={template.id} className="template-card">
-                    <div>
-                      <span className={`template-badge ${template.difficulty}`}>
-                        {template.difficulty}
-                      </span>
-                      {template.id === "hard_60" && (
-                        <span style={{ marginLeft: 8, fontSize: '11px', fontWeight: 700, color: hasPaidHard60 ? '#22c55e' : '#f87171', letterSpacing: '0.5px' }}>
-                          {hasPaidHard60 ? '✓ UNLOCKED' : '🔒 PREMIUM'}
-                        </span>
-                      )}
-                      <h4 className="template-title">{template.name}</h4>
-                      <p className="template-desc">{template.desc}</p>
-                      
-                      <div className="template-meta-row">
-                        <span className="template-meta-item">
-                          ❓ {template.count} Questions
-                        </span>
-                        <span className="template-meta-item">
-                          ⏱️ {template.duration} Minutes
-                        </span>
-                      </div>
-                    </div>
+              {templatesLoading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : testTemplates.length === 0 ? (
+                <div className="empty-state">
+                  <h3>No Test Templates Available</h3>
+                  <p>Check back later for new practice tests!</p>
+                </div>
+              ) : (
+                <div className="test-templates-grid">
+                  {testTemplates.map((template) => {
+                    const hasAccess = hasAccessToTemplate(template);
+                    const isPaidTemplate = template.is_paid || template.id === 'hard_60';
+                    const priceRupees = template.price_paise ? template.price_paise / 100 : 50;
+                    const durationMinutes = template.duration || Math.round((template.duration_seconds || 1800) / 60);
+                    
+                    return (
+                      <div key={template.id} className="template-card">
+                        <div>
+                          <span className={`template-badge ${template.difficulty}`}>
+                            {template.difficulty}
+                          </span>
+                          {isPaidTemplate && (
+                            <span style={{ marginLeft: 8, fontSize: '11px', fontWeight: 700, color: hasAccess ? '#22c55e' : '#f87171', letterSpacing: '0.5px' }}>
+                              {hasAccess ? '✓ UNLOCKED' : `🔒 PREMIUM ₹${priceRupees}`}
+                            </span>
+                          )}
+                          <h4 className="template-title">{template.name}</h4>
+                          <p className="template-desc">{template.description || template.desc || 'Practice test'}</p>
+                          
+                          <div className="template-meta-row">
+                            <span className="template-meta-item">
+                              ❓ {template.count} Questions
+                            </span>
+                            <span className="template-meta-item">
+                              ⏱️ {durationMinutes} Minutes
+                            </span>
+                          </div>
+                        </div>
 
-                    <button
-                      onClick={() => handleLaunchChecklist(template)}
-                      className={`btn-launch-template${
-                        template.id === 'hard_60'
-                          ? hasPaidHard60
-                            ? ' unlocked'
-                            : ' locked'
-                          : ''
-                      }`}
-                    >
-                      {template.id === 'hard_60' && !hasPaidHard60
-                        ? '🔒 Pay ₹50 to Unlock'
-                        : 'Select Topics & Launch Test'}
-                    </button>
-                  </div>
-                ))}
-              </div>
+                        <button
+                          onClick={() => handleLaunchChecklist(template)}
+                          className={`btn-launch-template${
+                            isPaidTemplate
+                              ? hasAccess
+                                ? ' unlocked'
+                                : ' locked'
+                              : ''
+                          }`}
+                        >
+                          {isPaidTemplate && !hasAccess
+                            ? `🔒 Pay ₹${priceRupees} to Unlock`
+                            : 'Select Topics & Launch Test'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* ??$$$ */}
               {/* Strengths & Weaknesses */}
@@ -1677,10 +1740,21 @@ function StudentDashboard() {
       </div>
       {showPaymentModal && (
         <PaymentModal
-          onClose={() => setShowPaymentModal(false)}
+          templateId={paymentTemplateId}
+          templateName={paymentTemplateId && testTemplates.find(t => t.id == paymentTemplateId)?.name}
+          pricePaise={paymentTemplateId && testTemplates.find(t => t.id == paymentTemplateId)?.price_paise}
+          onClose={() => {
+            setShowPaymentModal(false);
+            setPaymentTemplateId(null);
+          }}
           onPaymentSuccess={() => {
             setHasPaidHard60(true);
+            // Refresh paid templates map
+            testTemplateService.getMyTemplateAccess().then(data => {
+              setPaidTemplates(data.access || {});
+            });
             setShowPaymentModal(false);
+            setPaymentTemplateId(null);
           }}
         />
       )}

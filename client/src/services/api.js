@@ -33,8 +33,15 @@ api.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       const message = error.response.data && error.response.data.message;
-      const isAuthError = status === 401 || (status === 403 && message && message.toLowerCase().includes('token'));
-      if (isAuthError) {
+      const isTokenError = message && (
+        message.toLowerCase().includes('token') ||
+        message.toLowerCase().includes('invalid') ||
+        message.toLowerCase().includes('unauthorized')
+      );
+      const isEmailVerificationError = message && message.toLowerCase().includes('verify your email');
+
+      // Only redirect for token/auth errors, not for email verification errors
+      if ((status === 401 && !isEmailVerificationError) || (status === 403 && isTokenError)) {
         localStorage.clear();
         window.location.href = '/login';
       }

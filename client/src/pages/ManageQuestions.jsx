@@ -162,7 +162,7 @@ function ManageQuestions() {
 
       if (currentTab === 'pending') {
         const data = await reviewService.getPending(pendingPage, limit);
-        setPendingQuestions(data.pending || []);
+        setPendingQuestions(data.questions || []);
         setPendingPagination(data.pagination || { page: 1, limit, total: 0, totalPages: 1 });
       } else if (currentTab === 'approved') {
         const data = await reviewService.getQuestions(approvedPage, limit);
@@ -402,13 +402,13 @@ function ManageQuestions() {
           className={`tab-btn ${currentTab === 'pending' ? 'active' : ''}`}
           onClick={() => setSearchParams({ tab: 'pending' })}
         >
-          Pending Review ({pendingQuestions.length})
+          Pending Review ({pendingPagination.total})
         </button>
         <button
           className={`tab-btn ${currentTab === 'approved' ? 'active' : ''}`}
           onClick={() => setSearchParams({ tab: 'approved' })}
         >
-          Approved Questions ({approvedQuestions.length})
+          Approved Questions ({approvedPagination.total})
         </button>
         <button
           className="btn btn-approve"

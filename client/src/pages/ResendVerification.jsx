@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { resendVerificationEmail } from '../services/auth.service';
-import '../styles/auth.css';
+import '../styles/auth-pages.css';
 
 function ResendVerification() {
   const [email, setEmail] = useState('');

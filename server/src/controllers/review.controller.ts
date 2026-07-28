@@ -1,6 +1,7 @@
 import type { Response } from 'express';
 import type { AuthenticatedRequest } from '../middleware/auth';
 import pool from '../config/db';
+import { userModel } from '../models/user.model';
 
 export const reviewController = {
   // GET /api/review-pending
@@ -427,14 +428,22 @@ export const getStudents = async (req: AuthenticatedRequest, res: Response) => {
     const { page = 1, limit = 10, search } = req.query;
     const pageNum = parseInt(page as string) || 1;
     const limitNum = Math.min(parseInt(limit as string) || 10, 50);
-    
+
     const result = await userModel.getStudentsPaginated(
       pageNum,
       limitNum,
       search as string
     );
-    
-    return res.json(result);
+
+    return res.json({
+      students: result.students,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total: result.total,
+        totalPages: result.totalPages
+      }
+    });
   } catch (error: any) {
     console.error("Error in getStudents:", error);
     return res.status(500).json({ message: error.message || "Failed to fetch students" });
