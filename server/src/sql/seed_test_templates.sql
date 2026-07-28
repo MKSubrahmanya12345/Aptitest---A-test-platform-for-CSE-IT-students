@@ -28,6 +28,7 @@ CREATE INDEX IF NOT EXISTS idx_test_templates_active ON test_templates (is_activ
 CREATE INDEX IF NOT EXISTS idx_test_templates_paid ON test_templates (is_paid, is_active);
 
 -- Insert default templates (only if they don't exist and there's at least one admin user)
+-- Template 1: Easy 30 Questions (FREE)
 INSERT INTO test_templates (
   name, description, difficulty, count, duration_seconds, 
   categories, question_types, subcategories,
@@ -50,11 +51,10 @@ SELECT
   id
 FROM users 
 WHERE role = 'admin' 
-LIMIT 1
-WHERE NOT EXISTS (
-  SELECT 1 FROM test_templates WHERE name = 'Easy Practice - 30 Qs'
-);
+  AND NOT EXISTS (SELECT 1 FROM test_templates WHERE name = 'Easy Practice - 30 Qs')
+LIMIT 1;
 
+-- Template 2: Easy 60 Questions (FREE)
 INSERT INTO test_templates (
   name, description, difficulty, count, duration_seconds,
   categories, question_types, subcategories,
@@ -77,11 +77,10 @@ SELECT
   id
 FROM users 
 WHERE role = 'admin' 
-LIMIT 1
-WHERE NOT EXISTS (
-  SELECT 1 FROM test_templates WHERE name = 'Easy Practice - 60 Qs'
-);
+  AND NOT EXISTS (SELECT 1 FROM test_templates WHERE name = 'Easy Practice - 60 Qs')
+LIMIT 1;
 
+-- Template 3: Hard 30 Questions (FREE)
 INSERT INTO test_templates (
   name, description, difficulty, count, duration_seconds,
   categories, question_types, subcategories,
@@ -104,11 +103,10 @@ SELECT
   id
 FROM users 
 WHERE role = 'admin' 
-LIMIT 1
-WHERE NOT EXISTS (
-  SELECT 1 FROM test_templates WHERE name = 'Hard Practice - 30 Qs'
-);
+  AND NOT EXISTS (SELECT 1 FROM test_templates WHERE name = 'Hard Practice - 30 Qs')
+LIMIT 1;
 
+-- Template 4: Hard 60 Questions (PAID - ₹50)
 INSERT INTO test_templates (
   name, description, difficulty, count, duration_seconds,
   categories, question_types, subcategories,
@@ -131,7 +129,5 @@ SELECT
   id
 FROM users 
 WHERE role = 'admin' 
-LIMIT 1
-WHERE NOT EXISTS (
-  SELECT 1 FROM test_templates WHERE name = 'Hard Practice - 60 Qs'
-);
+  AND NOT EXISTS (SELECT 1 FROM test_templates WHERE name = 'Hard Practice - 60 Qs')
+LIMIT 1;
