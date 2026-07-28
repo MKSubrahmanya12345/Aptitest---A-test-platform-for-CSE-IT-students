@@ -714,23 +714,25 @@ export const testService = {
   // 5b. Get category performance breakdown from DB (aggregates by actual question categories)
   async getCategoryPerformance(userId: number) {
     // Query to get per-category stats from actual answered questions
+    // Joins with test_session_answers to get is_correct and time_taken
     // Orders by accuracy DESC so best categories appear first
     const [rows]: any = await pool.query(
       `SELECT 
         q.category,
         COUNT(DISTINCT s.id) as attempts,
-        COUNT(sq.id) as total_questions,
-        SUM(CASE WHEN sq.is_correct = 1 THEN 1 ELSE 0 END) as correct_count,
-        AVG(sq.time_spent_seconds) as avg_time_per_q
+        COUNT(sa.question_id) as total_questions,
+        SUM(CASE WHEN sa.is_correct = 1 THEN 1 ELSE 0 END) as correct_count,
+        AVG(sa.time_taken_seconds) as avg_time_per_q
        FROM test_sessions s
-       JOIN test_session_questions sq ON s.id = sq.session_id
-       JOIN questions q ON sq.question_id = q.id
+       JOIN test_session_answers sa ON s.id = sa.session_id
+       JOIN questions q ON sa.question_id = q.id
        WHERE s.user_id = ?
          AND s.status = 'completed'
          AND s.counts_for_stats = TRUE
          AND q.category IS NOT NULL
        GROUP BY q.category
-       ORDER BY (SUM(CASE WHEN sq.is_correct = 1 THEN 1 ELSE 0 END) / COUNT(sq.id)) DESC, attempts DESC`,
+       HAVING COUNT(sa.question_id) > 0
+       ORDER BY (SUM(CASE WHEN sa.is_correct = 1 THEN 1 ELSE 0 END) / COUNT(sa.question_id)) DESC, attempts DESC`,
       [userId]
     );
 
