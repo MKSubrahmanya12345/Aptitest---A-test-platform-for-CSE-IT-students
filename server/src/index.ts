@@ -25,10 +25,10 @@ app.use(express.json());
 
 // Student-specific routes should be checked before the more restrictive admin routes.
 app.use("/api/auth", authRoutes); // Auth routes have no protection.
+app.use("/api/test-templates", testTemplateRoutes); // Test template routes - PUBLIC, must come before auth routes
 app.use("/api", testRoutes);      // Student test routes require authentication.
 app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
-app.use("/api/test-templates", testTemplateRoutes); // Test template routes
 
 // Start the auto-submit safety net check every minute.
 // A 60-second interval is a bit friendlier for a free hosting plan.
