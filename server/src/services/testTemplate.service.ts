@@ -1,5 +1,17 @@
 import pool from "../config/db";
 
+// Helper to safely parse JSON fields that might be strings or already parsed
+function safeJsonParse(value: any): any {
+  if (value === null || value === undefined) return null;
+  if (typeof value !== 'string') return value; // Already parsed or not a string
+  try {
+    return JSON.parse(value);
+  } catch {
+    // If not valid JSON, wrap it in an array
+    return [value];
+  }
+}
+
 export interface TestTemplate {
   id?: number;
   name: string;
@@ -54,9 +66,9 @@ export const testTemplateService = {
       
       return rows.map((row: any) => ({
         ...row,
-        categories: row.categories ? JSON.parse(row.categories) : null,
-        question_types: row.question_types ? JSON.parse(row.question_types) : null,
-        subcategories: row.subcategories ? JSON.parse(row.subcategories) : null,
+        categories: safeJsonParse(row.categories),
+        question_types: safeJsonParse(row.question_types),
+        subcategories: safeJsonParse(row.subcategories),
       }));
     } catch (err: any) {
       // If table doesn't exist, return empty array
@@ -80,9 +92,9 @@ export const testTemplateService = {
     const row = rows[0];
     return {
       ...row,
-      categories: row.categories ? JSON.parse(row.categories) : null,
-      question_types: row.question_types ? JSON.parse(row.question_types) : null,
-      subcategories: row.subcategories ? JSON.parse(row.subcategories) : null,
+      categories: safeJsonParse(row.categories),
+      question_types: safeJsonParse(row.question_types),
+      subcategories: safeJsonParse(row.subcategories),
     };
   },
 
@@ -98,9 +110,9 @@ export const testTemplateService = {
     const row = rows[0];
     return {
       ...row,
-      categories: row.categories ? JSON.parse(row.categories) : null,
-      question_types: row.question_types ? JSON.parse(row.question_types) : null,
-      subcategories: row.subcategories ? JSON.parse(row.subcategories) : null,
+      categories: safeJsonParse(row.categories),
+      question_types: safeJsonParse(row.question_types),
+      subcategories: safeJsonParse(row.subcategories),
     };
   },
 
