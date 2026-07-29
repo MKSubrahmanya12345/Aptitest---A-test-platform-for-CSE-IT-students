@@ -50,7 +50,8 @@ export const userModel = {
     password: string,
     role: "admin" | "student" = "student",
     status: "active" | "banned" = "active",
-    emailVerificationToken: string | null = null
+    emailVerificationToken: string | null = null,
+    emailVerified: boolean = false
   ): Promise<User> {
     const expiresAt = emailVerificationToken 
       ? new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
@@ -59,7 +60,7 @@ export const userModel = {
     const [result]: any = await pool.query(
       `INSERT INTO users (name, email, password, role, status, email_verified, email_verification_token, email_verification_expires)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, email, password, role, status, false, emailVerificationToken, expiresAt]
+      [name, email, password, role, status, emailVerified, emailVerificationToken, expiresAt]
     );
 
     return {
@@ -69,7 +70,7 @@ export const userModel = {
       password,
       role,
       status,
-      email_verified: false,
+      email_verified: emailVerified,
       email_verification_token: emailVerificationToken,
       email_verification_expires: expiresAt,
       password_reset_token: null,

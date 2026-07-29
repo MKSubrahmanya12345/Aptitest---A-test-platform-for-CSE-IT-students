@@ -5,6 +5,27 @@ import { v4 as uuidv4 } from 'uuid';
 import { userModel } from "../models/user.model";
 import { emailService } from "./email.service";
 
+// Temporary storage for pending signups (24 hour expiry)
+interface PendingSignup {
+  name: string;
+  email: string;
+  hashedPassword: string;
+  token: string;
+  expiresAt: Date;
+}
+
+const pendingSignups = new Map<string, PendingSignup>();
+
+// Clean up expired entries every hour
+setInterval(() => {
+  const now = new Date();
+  for (const [token, signup] of pendingSignups.entries()) {
+    if (signup.expiresAt < now) {
+      pendingSignups.delete(token);
+    }
+  }
+}, 60 * 60 * 1000);
+
 export const authService = {
   async login(email: string, password: string) {
     // Find user
@@ -62,47 +83,59 @@ export const authService = {
   },
 
   async signup(name: string, email: string, password: string) {
+    console.log('[AuthService] Starting signup for:', email);
+
     // Check if user already exists
     const existingUser = await userModel.findByEmail(email);
 
     if (existingUser) {
+      console.log('[AuthService] User already exists:', email);
       throw new Error("User already exists");
     }
 
+    // Check if there's a pending signup for this email
+    for (const signup of pendingSignups.values()) {
+      if (signup.email === email) {
+        console.log('[AuthService] Pending signup already exists:', email);
+        throw new Error("A verification email has already been sent. Please check your inbox or wait 10 minutes to request a new one.");
+      }
+    }
+
     // Hash password
+    console.log('[AuthService] Hashing password...');
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate email verification token
     const verificationToken = uuidv4();
+    console.log('[AuthService] Generated verification token:', verificationToken);
 
-    // Create user with unverified email
-    const newUser = await userModel.create(
+    // Store pending signup (expires in 24 hours)
+    pendingSignups.set(verificationToken, {
       name,
       email,
       hashedPassword,
-      "student", // default role
-      "active",  // default status
-      verificationToken
-    );
+      token: verificationToken,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+    console.log('[AuthService] Stored pending signup. Total pending:', pendingSignups.size);
 
     // Send verification email
+    console.log('[AuthService] Sending verification email...');
     try {
       await emailService.sendVerificationEmail(email, verificationToken, name);
-    } catch (err) {
-      console.error('Failed to send verification email:', err);
-      // Don't throw here - user is created, they can resend verification
+      console.log('[AuthService] Verification email sent successfully!');
+    } catch (err: any) {
+      console.error('[AuthService] Failed to send verification email:', err.message);
+      // Remove pending signup if email fails
+      pendingSignups.delete(verificationToken);
+      console.log('[AuthService] Removed pending signup due to email failure');
+      throw new Error("Failed to send verification email. Please try again later.");
     }
 
-    // Return response without token - user needs to verify email first
+    // Return response - user is NOT created yet
     return {
-      message: "Account created successfully. Please check your email to verify your account.",
-      user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-        email_verified: false,
-      },
+      message: "Please check your email and click the verification link to complete your registration.",
+      email,
     };
   },
 
@@ -112,6 +145,7 @@ export const authService = {
     if (!user) {
       // Don't reveal if user exists or not
       return {
+        success: false,
         message: "If an account exists with this email, you will receive a password reset link.",
       };
     }
@@ -122,18 +156,19 @@ export const authService = {
     // Save token to user record
     await userModel.setPasswordResetToken(email, resetToken);
 
-    // Send reset email via Resend API
+    // Send reset email via MailerSend API
     try {
       await emailService.sendPasswordResetEmail(email, resetToken, user.name);
+      console.log('[AuthService] Password reset email sent successfully to:', email);
+      return {
+        success: true,
+        message: "Password reset link has been sent to your email.",
+      };
     } catch (err: any) {
-      console.error('Failed to send password reset email:', err.message);
-      // Still return success message but log the actual error
-      // This prevents 500 errors when email service fails
+      console.error('[AuthService] Failed to send password reset email:', err.message);
+      // Return error so user knows email wasn't sent
+      throw new Error('Failed to send password reset email. Please try again later.');
     }
-
-    return {
-      message: "If an account exists with this email, you will receive a password reset link.",
-    };
   },
 
   async verifyResetToken(token: string) {
@@ -175,6 +210,48 @@ export const authService = {
   },
 
   async verifyEmail(token: string) {
+    // Check pending signups first
+    const pendingSignup = pendingSignups.get(token);
+
+    if (pendingSignup) {
+      // Check if expired
+      if (pendingSignup.expiresAt < new Date()) {
+        pendingSignups.delete(token);
+        throw new Error("Verification link has expired. Please sign up again.");
+      }
+
+      // Create user now that email is verified (marked as verified immediately)
+      try {
+        await userModel.create(
+          pendingSignup.name,
+          pendingSignup.email,
+          pendingSignup.hashedPassword,
+          "student", // default role
+          "active",  // default status
+          null, // no verification token needed
+          true // email is already verified
+        );
+
+        // Remove from pending
+        pendingSignups.delete(token);
+
+        // Send welcome email
+        try {
+          await emailService.sendWelcomeEmail(pendingSignup.email, pendingSignup.name);
+        } catch (err) {
+          console.error('Failed to send welcome email:', err);
+        }
+
+        return {
+          message: "Email verified successfully! Your account has been created. You can now log in.",
+        };
+      } catch (err) {
+        console.error('Failed to create user after verification:', err);
+        throw new Error("Failed to create account. Please try signing up again.");
+      }
+    }
+
+    // Check if this is a re-verification request for existing user
     const user = await userModel.findByEmailVerificationToken(token);
 
     if (!user) {
@@ -197,33 +274,56 @@ export const authService = {
   },
 
   async resendVerificationEmail(email: string) {
+    // Check if there's a pending signup for this email
+    for (const [token, signup] of pendingSignups.entries()) {
+      if (signup.email === email) {
+        // Check if we can resend (prevent spam - minimum 60 seconds between resends)
+        const timeSinceLastSend = Date.now() - (signup.expiresAt.getTime() - 24 * 60 * 60 * 1000);
+        if (timeSinceLastSend < 60000) {
+          throw new Error("Please wait a minute before requesting another verification email.");
+        }
+
+        // Send again with same token
+        try {
+          await emailService.sendVerificationEmail(email, token, signup.name);
+        } catch (err) {
+          console.error('Failed to resend verification email:', err);
+          throw new Error('Failed to send verification email. Please try again later.');
+        }
+
+        return {
+          message: "Verification email has been resent. Please check your inbox.",
+        };
+      }
+    }
+
+    // Check if user exists and is already verified
     const user = await userModel.findByEmail(email);
 
-    if (!user) {
-      // Don't reveal if user exists
+    if (user) {
+      if (user.email_verified) {
+        throw new Error("Email is already verified. Please log in.");
+      }
+
+      // User exists but not verified - update token and resend
+      const verificationToken = uuidv4();
+      await userModel.setEmailVerificationToken(email, verificationToken);
+
+      try {
+        await emailService.sendVerificationEmail(email, verificationToken, user.name);
+      } catch (err) {
+        console.error('Failed to resend verification email:', err);
+        throw new Error('Failed to send verification email. Please try again later.');
+      }
+
       return {
-        message: "If an account exists with this email, a verification link has been sent.",
+        message: "Verification email has been resent. Please check your inbox.",
       };
     }
 
-    if (user.email_verified) {
-      throw new Error("Email is already verified");
-    }
-
-    // Generate new verification token
-    const verificationToken = uuidv4();
-    await userModel.setEmailVerificationToken(email, verificationToken);
-
-    // Resend verification email
-    try {
-      await emailService.sendVerificationEmail(email, verificationToken, user.name);
-    } catch (err) {
-      console.error('Failed to resend verification email:', err);
-      throw new Error('Failed to send verification email. Please try again later.');
-    }
-
+    // Don't reveal if user exists
     return {
-      message: "If an account exists with this email, a verification link has been sent.",
+      message: "If a registration is pending for this email, a verification link has been sent.",
     };
   },
 };
