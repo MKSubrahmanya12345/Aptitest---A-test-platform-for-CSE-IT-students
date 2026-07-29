@@ -4,9 +4,9 @@ import Pagination from "../components/common/Pagination";
 import { testApiService } from "../services/test.service";
 import { paymentService } from "../services/payment.service";
 import { testTemplateService } from "../services/testTemplate.service";
-import PaymentModal from "../components/common/PaymentModal";
+import RazorpayPayment from "../components/RazorpayPayment";
 import "../styles/student.css";
-import "../styles/payment.css";
+import "../styles/razorpay-payment.css";
 
 
 // Helper to render markdown table into HTML table
@@ -1751,15 +1751,14 @@ function StudentDashboard() {
         </div>
       </div>
       {showPaymentModal && (
-        <PaymentModal
+        <RazorpayPayment
           templateId={paymentTemplateId}
-          templateName={paymentTemplateId && testTemplates.find(t => t.id == paymentTemplateId)?.name}
-          pricePaise={paymentTemplateId && testTemplates.find(t => t.id == paymentTemplateId)?.price_paise}
+          testType={paymentTemplateId === 'hard_60' ? 'hard_60' : `template_${paymentTemplateId}`}
           onClose={() => {
             setShowPaymentModal(false);
             setPaymentTemplateId(null);
           }}
-          onPaymentSuccess={() => {
+          onSuccess={() => {
             setHasPaidHard60(true);
             // Refresh paid templates map
             testTemplateService.getMyTemplateAccess().then(data => {

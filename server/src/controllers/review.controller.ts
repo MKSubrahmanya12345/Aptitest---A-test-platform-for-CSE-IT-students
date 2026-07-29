@@ -2,6 +2,7 @@ import type { Response } from 'express';
 import type { AuthenticatedRequest } from '../middleware/auth';
 import pool from '../config/db';
 import { userModel } from '../models/user.model';
+import { reviewModel } from '../models/review.model';
 import { stringifyJson } from '../utils/jsonHelpers';
 
 export const reviewController = {
@@ -12,32 +13,14 @@ export const reviewController = {
       const pageNum = parseInt(page as string) || 1;
       const limitNum = Math.min(parseInt(limit as string) || 10, 50); // Max 50 per page
       const offset = (pageNum - 1) * limitNum;
-      
-      let whereClause = "WHERE status = 'pending'";
-      const params: any[] = [];
 
-      if (category) {
-        whereClause += " AND category = ?";
-        params.push(category);
-      }
-      if (type) {
-        whereClause += " AND (detected_question_type = ? OR final_question_type = ?)";
-        params.push(type, type);
-      }
-
-      // Get total count
-      const [countResult]: any = await pool.query(
-        `SELECT COUNT(*) as total FROM review_pending_questions ${whereClause}`,
-        params
+      const { questions, total } = await reviewModel.getPendingPaginated(
+        { category: category as string, type: type as string },
+        { page: pageNum, limit: limitNum, offset }
       );
-      const total = countResult[0].total;
 
-      // Get paginated results
-      const query = `SELECT * FROM review_pending_questions ${whereClause} ORDER BY id ASC LIMIT ? OFFSET ?`;
-      const [rows] = await pool.query(query, [...params, limitNum, offset]);
-      
       return res.json({
-        questions: rows,
+        questions,
         pagination: {
           page: pageNum,
           limit: limitNum,
@@ -69,38 +52,20 @@ export const reviewController = {
         solution
       } = req.body;
 
-      const query = `
-        UPDATE review_pending_questions SET
-          category = ?,
-          subcategory = ?,
-          difficulty = ?,
-          final_question_type = ?,
-          question_text = ?,
-          passage = ?,
-          data_block = ?,
-          options = ?,
-          correct_answer = ?,
-          grading_config = ?,
-          solution = ?
-        WHERE id = ?
-      `;
-
-      const values = [
+      await reviewModel.updatePending(Number(id), {
         category,
         subcategory,
         difficulty,
-        detected_question_type, // set final_question_type to this value
+        detected_question_type,
         question_text,
         passage,
-        stringifyJson(data_block),
-        stringifyJson(options),
-        stringifyJson(correct_answer),
-        stringifyJson(grading_config),
-        solution,
-        id
-      ];
+        data_block: stringifyJson(data_block),
+        options: stringifyJson(options),
+        correct_answer: stringifyJson(correct_answer),
+        grading_config: stringifyJson(grading_config),
+        solution
+      });
 
-      await pool.query(query, values);
       return res.json({ message: "Question updated successfully" });
     } catch (error: any) {
       console.error("Error in updatePending:", error);
@@ -110,133 +75,125 @@ export const reviewController = {
 
   // POST /api/review-pending/:id/approve
   async approvePending(req: AuthenticatedRequest, res: Response) {
+    let connection: any;
     try {
       const { id } = req.params;
 
-      // Check if they also sent updated question details (save & approve flow)
-      if (req.body && Object.keys(req.body).length > 0) {
-        const {
-          category,
-          subcategory,
-          difficulty,
-          detected_question_type,
-          question_text,
-          passage,
-          data_block,
-          options,
-          correct_answer,
-          grading_config,
-          solution,
-          source_file,
-          source_question_no
-        } = req.body;
+      // Get a connection from the pool for transaction
+      connection = await pool.getConnection();
+      await connection.beginTransaction();
 
-        // 1. Insert into live questions
-        const insertQuery = `
-          INSERT INTO questions (
-            category, subcategory, difficulty, question_type,
-            question_text, passage, data_block, options,
-            correct_answer, grading_config, solution,
-            source_file, source_question_no, status
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
-        `;
+      try {
+        // Check if they also sent updated question details (save & approve flow)
+        if (req.body && Object.keys(req.body).length > 0) {
+          const {
+            category,
+            subcategory,
+            difficulty,
+            detected_question_type,
+            question_text,
+            passage,
+            data_block,
+            options,
+            correct_answer,
+            grading_config,
+            solution,
+            source_file,
+            source_question_no
+          } = req.body;
 
-        const qType = detected_question_type;
-        const diffVal = (difficulty || 'basic').toLowerCase().includes('advance') ? 'advanced' : (difficulty || 'basic').toLowerCase();
+          const qType = detected_question_type;
+          const diffVal = (difficulty || 'basic').toLowerCase().includes('advance') ? 'advanced' : (difficulty || 'basic').toLowerCase();
 
-        const insertValues = [
-          category,
-          subcategory,
-          diffVal,
-          qType,
-          question_text,
-          passage,
-          stringifyJson(data_block),
-          stringifyJson(options),
-          stringifyJson(correct_answer),
-          stringifyJson(grading_config),
-          solution,
-          source_file,
-          source_question_no
-        ];
+          // 1. Update the pending question first with status check (prevents duplicate approvals)
+          const affectedRows = await reviewModel.approvePending(Number(id), {
+            category,
+            subcategory,
+            difficulty,
+            detected_question_type,
+            question_text,
+            passage,
+            data_block: stringifyJson(data_block),
+            options: stringifyJson(options),
+            correct_answer: stringifyJson(correct_answer),
+            grading_config: stringifyJson(grading_config),
+            solution
+          }, connection);
 
-        await pool.query(insertQuery, insertValues);
+          // Check if update actually happened (affectedRows === 0 means already approved/rejected or not found)
+          if (affectedRows === 0) {
+            await connection.rollback();
+            connection.release();
+            return res.status(409).json({ message: "Question is not in pending status or does not exist" });
+          }
 
-        // 2. Update status in review_pending_questions
-        const updateQuery = `
-          UPDATE review_pending_questions SET
-            category = ?,
-            subcategory = ?,
-            difficulty = ?,
-            final_question_type = ?,
-            question_text = ?,
-            passage = ?,
-            data_block = ?,
-            options = ?,
-            correct_answer = ?,
-            grading_config = ?,
-            solution = ?,
-            status = 'approved'
-          WHERE id = ?
-        `;
+          // 2. Insert into live questions
+          await reviewModel.insertQuestion({
+            category,
+            subcategory,
+            difficulty: diffVal,
+            question_type: qType,
+            question_text,
+            passage,
+            data_block: stringifyJson(data_block),
+            options: stringifyJson(options),
+            correct_answer: stringifyJson(correct_answer),
+            grading_config: stringifyJson(grading_config),
+            solution,
+            source_file,
+            source_question_no
+          }, connection);
 
-        const updateValues = [
-          category,
-          subcategory,
-          difficulty,
-          detected_question_type,
-          question_text,
-          passage,
-          stringifyJson(data_block),
-          stringifyJson(options),
-          stringifyJson(correct_answer),
-          stringifyJson(grading_config),
-          solution,
-          id
-        ];
+          await connection.commit();
+          connection.release();
+          return res.json({ message: "Question saved and approved successfully" });
+        } else {
+          // Simple approve flow: read from review table and insert into live table
+          const q = await reviewModel.getPendingByIdWithStatus(Number(id), 'pending', connection);
 
-        await pool.query(updateQuery, updateValues);
-        return res.json({ message: "Question saved and approved successfully" });
-      } else {
-        // Simple approve flow: read from review table and insert into live table
-        const [pendingRows]: any = await pool.query("SELECT * FROM review_pending_questions WHERE id = ?", [id]);
-        if (!pendingRows || pendingRows.length === 0) {
-          return res.status(404).json({ message: "Pending question not found" });
+          if (!q) {
+            await connection.rollback();
+            connection.release();
+            return res.status(404).json({ message: "Pending question not found or already processed" });
+          }
+
+          const qType = q.final_question_type || q.detected_question_type;
+          const diffVal = (q.difficulty || 'basic').toLowerCase().includes('advance') ? 'advanced' : (q.difficulty || 'basic').toLowerCase();
+
+          // Insert into questions table
+          await reviewModel.insertQuestion({
+            category: q.category,
+            subcategory: q.subcategory,
+            difficulty: diffVal,
+            question_type: qType,
+            question_text: q.question_text,
+            passage: q.passage,
+            data_block: stringifyJson(q.data_block),
+            options: stringifyJson(q.options),
+            correct_answer: stringifyJson(q.correct_answer),
+            grading_config: stringifyJson(q.grading_config),
+            solution: q.solution,
+            source_file: q.source_file,
+            source_question_no: q.source_question_no
+          }, connection);
+
+          // Update status with check to prevent race conditions
+          const affectedRows = await reviewModel.setPendingStatus(Number(id), 'approved', connection);
+
+          if (affectedRows === 0) {
+            await connection.rollback();
+            connection.release();
+            return res.status(409).json({ message: "Question already processed" });
+          }
+
+          await connection.commit();
+          connection.release();
+          return res.json({ message: "Question approved successfully" });
         }
-
-        const q = pendingRows[0];
-        const insertQuery = `
-          INSERT INTO questions (
-            category, subcategory, difficulty, question_type,
-            question_text, passage, data_block, options,
-            correct_answer, grading_config, solution,
-            source_file, source_question_no, status
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
-        `;
-
-        const qType = q.final_question_type || q.detected_question_type;
-        const diffVal = (q.difficulty || 'basic').toLowerCase().includes('advance') ? 'advanced' : (q.difficulty || 'basic').toLowerCase();
-
-        const insertValues = [
-          q.category,
-          q.subcategory,
-          diffVal,
-          qType,
-          q.question_text,
-          q.passage,
-          stringifyJson(q.data_block),
-          stringifyJson(q.options),
-          stringifyJson(q.correct_answer),
-          stringifyJson(q.grading_config),
-          q.solution,
-          q.source_file,
-          q.source_question_no
-        ];
-
-        await pool.query(insertQuery, insertValues);
-
-        await pool.query("UPDATE review_pending_questions SET status = 'approved' WHERE id = ?", [id]);
-        return res.json({ message: "Question approved successfully" });
+      } catch (error) {
+        await connection.rollback();
+        connection.release();
+        throw error;
       }
     } catch (error: any) {
       console.error("Error in approvePending:", error);
@@ -248,7 +205,12 @@ export const reviewController = {
   async rejectPending(req: AuthenticatedRequest, res: Response) {
     try {
       const { id } = req.params;
-      await pool.query("UPDATE review_pending_questions SET status = 'rejected' WHERE id = ?", [id]);
+      const affectedRows = await reviewModel.setPendingStatus(Number(id), 'rejected');
+
+      if (affectedRows === 0) {
+        return res.status(409).json({ message: "Question is not in pending status or does not exist" });
+      }
+
       return res.json({ message: "Question rejected successfully" });
     } catch (error: any) {
       console.error("Error in rejectPending:", error);
@@ -263,32 +225,14 @@ export const reviewController = {
       const pageNum = parseInt(page as string) || 1;
       const limitNum = Math.min(parseInt(limit as string) || 10, 50);
       const offset = (pageNum - 1) * limitNum;
-      
-      let whereClause = "WHERE status = 'active'";
-      const params: any[] = [];
 
-      if (category) {
-        whereClause += " AND category = ?";
-        params.push(category);
-      }
-      if (type) {
-        whereClause += " AND question_type = ?";
-        params.push(type);
-      }
-
-      // Get total count
-      const [countResult]: any = await pool.query(
-        `SELECT COUNT(*) as total FROM questions ${whereClause}`,
-        params
+      const { questions, total } = await reviewModel.getQuestionsPaginated(
+        { category: category as string, type: type as string },
+        { page: pageNum, limit: limitNum, offset }
       );
-      const total = countResult[0].total;
 
-      // Get paginated results
-      const query = `SELECT * FROM questions ${whereClause} ORDER BY id ASC LIMIT ? OFFSET ?`;
-      const [rows] = await pool.query(query, [...params, limitNum, offset]);
-      
       return res.json({
-        questions: rows,
+        questions,
         pagination: {
           page: pageNum,
           limit: limitNum,
@@ -326,41 +270,23 @@ export const reviewController = {
         return res.status(400).json({ message: "question_text, category, and type are required" });
       }
 
-      // Insert into review_pending_questions (marked as admin-created)
-      const insertQuery = `
-        INSERT INTO review_pending_questions (
-          category, subcategory, difficulty, detected_question_type, final_question_type,
-          question_text, passage, data_block, options, correct_answer, grading_config,
-          solution, status, parser_confidence, source_file, source_question_no, warnings,
-          created_by_admin
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-
-      const values = [
+      const insertId = await reviewModel.createPendingQuestion({
         category,
-        subcategory || null,
-        difficulty || 'Basic',
-        type,
-        type,
+        subcategory,
+        difficulty: difficulty || 'Basic',
+        detected_question_type: type,
+        final_question_type: type,
         question_text,
-        passage || null,
-        stringifyJson(data_block) || null,
-        stringifyJson(options) || null,
-        stringifyJson(correct_answer),
-        stringifyJson(grading_config),
-        solution || null,
-        'pending', // Start in pending (admin can then approve their own)
-        1.0, // High confidence since admin created it
-        'admin-created', // Mark source as admin
-        null,
-        JSON.stringify([]), // No warnings for admin-created
-        true // Mark as created by admin
-      ];
-
-      const [result]: any = await pool.query(insertQuery, values);
+        passage: passage || null,
+        data_block: stringifyJson(data_block),
+        options: stringifyJson(options),
+        correct_answer: stringifyJson(correct_answer),
+        grading_config: stringifyJson(grading_config),
+        solution: solution || null
+      });
 
       return res.status(201).json({
-        id: result.insertId,
+        id: insertId,
         ...req.body,
         status: 'pending',
         created_by_admin: true,
@@ -395,41 +321,21 @@ export const reviewController = {
         return res.status(400).json({ message: "question_text, category, and question_type are required" });
       }
 
-      const query = `
-        UPDATE questions SET
-          category = ?,
-          subcategory = ?,
-          difficulty = ?,
-          question_type = ?,
-          question_text = ?,
-          passage = ?,
-          data_block = ?,
-          options = ?,
-          correct_answer = ?,
-          grading_config = ?,
-          solution = ?,
-          updated_at = NOW()
-        WHERE id = ?
-      `;
-
-      const values = [
+      const affectedRows = await reviewModel.updateQuestion(Number(id), {
         category,
-        subcategory || null,
-        difficulty || 'basic',
+        subcategory,
+        difficulty,
         question_type,
         question_text,
-        passage || null,
-        stringifyJson(data_block) || null,
-        stringifyJson(options) || null,
-        stringifyJson(correct_answer),
-        stringifyJson(grading_config),
-        solution || null,
-        id
-      ];
+        passage,
+        data_block: stringifyJson(data_block),
+        options: stringifyJson(options),
+        correct_answer: stringifyJson(correct_answer),
+        grading_config: stringifyJson(grading_config),
+        solution
+      });
 
-      const [result]: any = await pool.query(query, values);
-
-      if (result.affectedRows === 0) {
+      if (affectedRows === 0) {
         return res.status(404).json({ message: "Question not found" });
       }
 
@@ -442,32 +348,8 @@ export const reviewController = {
 
   async getStats(req: AuthenticatedRequest, res: Response) {
     try {
-      // 1. Get counts
-      const [pendingCountRows]: any = await pool.query("SELECT COUNT(*) as count FROM review_pending_questions WHERE status = 'pending'");
-      const [approvedCountRows]: any = await pool.query("SELECT COUNT(*) as count FROM questions WHERE status = 'active'");
-      const [studentCountRows]: any = await pool.query("SELECT COUNT(*) as count FROM users WHERE role = 'student'");
-
-      // 2. Get category distribution for approved questions
-      const [categoryRows]: any = await pool.query("SELECT category, COUNT(*) as count FROM questions WHERE status = 'active' GROUP BY category");
-
-      // 3. Get test attempt ingestion & daily trends (C for admin)
-      const [dailyTrendRows]: any = await pool.query(`
-        SELECT 
-          DATE_FORMAT(submitted_at, '%Y-%m-%d') as date, 
-          COUNT(id) as count
-        FROM test_sessions
-        WHERE status = 'completed' AND submitted_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-        GROUP BY DATE_FORMAT(submitted_at, '%Y-%m-%d')
-        ORDER BY date ASC
-      `);
-
-      return res.json({
-        pendingCount: pendingCountRows[0]?.count || 0,
-        approvedCount: approvedCountRows[0]?.count || 0,
-        studentCount: studentCountRows[0]?.count || 0,
-        categories: categoryRows || [],
-        dailyTrends: dailyTrendRows || []
-      });
+      const stats = await reviewModel.getStats();
+      return res.json(stats);
     } catch (error: any) {
       console.error("Error in getStats:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch statistics" });
@@ -477,58 +359,8 @@ export const reviewController = {
   // GET /api/questions/categories - Get unique categories and subcategories from DB
   async getCategories(req: AuthenticatedRequest, res: Response) {
     try {
-      // Get unique categories from both approved questions and pending questions
-      const [approvedCategories]: any = await pool.query(
-        `SELECT DISTINCT category FROM questions WHERE status = 'active' AND category IS NOT NULL ORDER BY category`
-      );
-      
-      const [pendingCategories]: any = await pool.query(
-        `SELECT DISTINCT category FROM review_pending_questions WHERE category IS NOT NULL ORDER BY category`
-      );
-
-      // Merge and deduplicate categories
-      const allCategories = new Set([
-        ...approvedCategories.map((r: any) => r.category),
-        ...pendingCategories.map((r: any) => r.category)
-      ]);
-
-      // Get subcategories for each category
-      const categoryMap: Record<string, Set<string>> = {};
-      
-      for (const category of allCategories) {
-        if (!category) continue;
-        categoryMap[category] = new Set();
-        
-        // Get subcategories from approved questions
-        const [approvedSubs]: any = await pool.query(
-          `SELECT DISTINCT subcategory FROM questions 
-           WHERE category = ? AND subcategory IS NOT NULL AND status = 'active' 
-           ORDER BY subcategory`,
-          [category]
-        );
-        approvedSubs.forEach((r: any) => { if (r.subcategory) categoryMap[category].add(r.subcategory); });
-        
-        // Get subcategories from pending questions
-        const [pendingSubs]: any = await pool.query(
-          `SELECT DISTINCT subcategory FROM review_pending_questions 
-           WHERE category = ? AND subcategory IS NOT NULL 
-           ORDER BY subcategory`,
-          [category]
-        );
-        pendingSubs.forEach((r: any) => { if (r.subcategory) categoryMap[category].add(r.subcategory); });
-      }
-
-      // Convert to array format
-      const result = Array.from(allCategories)
-        .filter(c => c) // Remove null/empty
-        .map(category => ({
-          id: category,
-          label: category,
-          subcategories: Array.from(categoryMap[category] || [])
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-
-      return res.json({ categories: result });
+      const categories = await reviewModel.getCategories();
+      return res.json({ categories });
     } catch (error: any) {
       console.error("Error in getCategories:", error);
       return res.status(500).json({ message: error.message || "Failed to fetch categories" });
