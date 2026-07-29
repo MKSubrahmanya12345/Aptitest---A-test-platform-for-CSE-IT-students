@@ -251,16 +251,6 @@
   flex-shrink: 0;
 }
 
-.resend-link {
-  color: #6366f1;
-  text-decoration: none;
-  margin-left: 8px;
-}
-
-.resend-link:hover {
-  text-decoration: underline;
-}
-
 /* Forgot Password Link */
 .forgot-password-link {
   text-align: right;

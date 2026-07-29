@@ -12,20 +12,29 @@ import { testService } from "./services/test.service";
 
 const app = express();
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 app.use(cors());
+app.use(express.json());
+
 
 app.use((req, res, next) => {
   console.log(req.method, req.url, req.headers.origin);
   next();
 });
 
-app.use(express.json());
+app.get('/api/health', async (req, res) => {
+  try {
+    // For MySQL, a simple query to check the connection
+    const [rows] = await pool.query('SELECT 1');
+    res.json({ status: 'ok', db: 'connected' });
+  } catch (err: any) {
+    res.status(500).json({ status: 'error', db: 'disconnected', error: err.message });
+  }
+});
+
 
 // Student-specific routes should be checked before the more restrictive admin routes.
-app.use("/api/auth", authRoutes); // Auth routes have no protection.
-app.use("/api/test-templates", testTemplateRoutes); // Test template routes - PUBLIC, must come before auth routes
+app.use("/api/auth", authRoutes); // Auth routes have no protection cause anyone should be able to register and login.
+app.use("/api/test-templates", testTemplateRoutes); 
 app.use("/api", testRoutes);      // Student test routes require authentication.
 app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
@@ -37,15 +46,6 @@ setInterval(() => {
   testService.autoSubmitExpiredSessions();
 }, 60000);
 
-app.get('/api/health', async (req, res) => {
-  try {
-    // For MySQL, a simple query to check the connection
-    const [rows] = await pool.query('SELECT 1');
-    res.json({ status: 'ok', db: 'connected' });
-  } catch (err: any) {
-    res.status(500).json({ status: 'error', db: 'disconnected', error: err.message });
-  }
-});
 
 
 

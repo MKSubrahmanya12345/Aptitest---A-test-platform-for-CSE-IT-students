@@ -8,7 +8,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showResendLink, setShowResendLink] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
 
@@ -41,7 +40,6 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setShowResendLink(false);
 
     if (!validateForm()) return;
 
@@ -62,10 +60,6 @@ function Login() {
         console.error(err);
         const errorMsg = err.response?.data?.message || "Login failed. Please check your credentials.";
         setError(errorMsg);
-        
-        if (errorMsg.toLowerCase().includes("verify your email")) {
-          setShowResendLink(true);
-        }
     } finally {
         setLoading(false);
     }
@@ -125,11 +119,6 @@ function Login() {
                 <line x1="12" y1="16" x2="12.01" y2="16"/>
               </svg>
               <span>{error}</span>
-              {showResendLink && (
-                <Link to="/resend-verification" className="resend-link">
-                  Resend verification email →
-                </Link>
-              )}
             </div>
           )}
 

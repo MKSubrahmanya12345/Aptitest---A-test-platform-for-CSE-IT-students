@@ -424,7 +424,7 @@ function TestTemplates() {
                     name="duration_minutes"
                     value={formData.duration_minutes}
                     onChange={handleChange}
-                    min="5"
+                    min="1"
                     max="300"
                     required
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #d1d5db' }}

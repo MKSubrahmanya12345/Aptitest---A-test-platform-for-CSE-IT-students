@@ -11,10 +11,10 @@ import {
 
 const router = Router();
 
-// Public routes
-router.get("/", getAllTemplates);
+// All routes require authentication
+router.get("/", authenticateToken, getAllTemplates);
 router.get("/my-access", authenticateToken, getMyTemplateAccess);
-router.get("/:id", getTemplateById);
+router.get("/:id", authenticateToken, getTemplateById);
 
 // Admin only routes
 router.post("/", authenticateToken, createTemplate);

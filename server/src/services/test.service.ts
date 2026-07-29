@@ -964,7 +964,7 @@ export const testService = {
       const [expired]: any = await connection.query(
         `SELECT id, user_id FROM test_sessions 
          WHERE status = 'in_progress' AND server_expires_at < NOW() 
-         LIMIT 10 
+         LIMIT 100 
          FOR UPDATE SKIP LOCKED`
       );
 
