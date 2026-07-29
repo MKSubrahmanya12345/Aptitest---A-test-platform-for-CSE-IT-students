@@ -42,7 +42,7 @@ export const reviewController = {
         category,
         subcategory,
         difficulty,
-        detected_question_type,
+        type,  // Frontend sends 'type' which should become 'final_question_type'
         question_text,
         passage,
         data_block,
@@ -56,7 +56,7 @@ export const reviewController = {
         category,
         subcategory,
         difficulty,
-        detected_question_type,
+        final_question_type: type,  // Admin edits update the final_question_type
         question_text,
         passage,
         data_block: stringifyJson(data_block),
@@ -99,10 +99,11 @@ export const reviewController = {
             grading_config,
             solution,
             source_file,
-            source_question_no
+            source_question_no,
+            type  // Frontend sends 'type' which is the final question type
           } = req.body;
 
-          const qType = detected_question_type;
+          const qType = type;  // Use the admin-selected type
           const diffVal = (difficulty || 'basic').toLowerCase().includes('advance') ? 'advanced' : (difficulty || 'basic').toLowerCase();
 
           // 1. Update the pending question first with status check (prevents duplicate approvals)
@@ -110,7 +111,7 @@ export const reviewController = {
             category,
             subcategory,
             difficulty,
-            detected_question_type,
+            final_question_type: type,  // Save to final_question_type
             question_text,
             passage,
             data_block: stringifyJson(data_block),

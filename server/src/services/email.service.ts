@@ -1,9 +1,19 @@
-// Email service using MailerSend API (HTTP-based, works on Render)
-// Sign up at https://mailersend.com, get API key, verify your domain
+// Email service using SendGrid API (HTTP-based, works on Render)
+// 100 emails/day free forever
+// 1. Sign up at https://signup.sendgrid.com
+// 2. Verify your sender email (Settings > Sender Authentication > Single Sender Verification)
+// 3. Create API key (Settings > API Keys)
 
-const MAILERSEND_API_KEY = process.env.MAILERSEND_API_KEY;
-const MAILERSEND_FROM_EMAIL = process.env.MAILERSEND_FROM_EMAIL || 'noreply@yourdomain.com';
-const MAILERSEND_FROM_NAME = process.env.MAILERSEND_FROM_NAME || 'AptiTest';
+import sgMail from '@sendgrid/mail';
+
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'your-verified@gmail.com';
+const SENDGRID_FROM_NAME = process.env.SENDGRID_FROM_NAME || 'AptiTest';
+
+// Initialize SendGrid with API key
+if (SENDGRID_API_KEY) {
+  sgMail.setApiKey(SENDGRID_API_KEY);
+}
 
 interface EmailConfig {
   to: string;
@@ -12,68 +22,38 @@ interface EmailConfig {
   text?: string;
 }
 
-// Send email via MailerSend HTTP API
-const sendViaMailerSend = async (config: EmailConfig): Promise<void> => {
-  console.log('[EmailService] Attempting to send email via MailerSend...');
-  console.log('[EmailService] MAILERSEND_API_KEY exists:', !!MAILERSEND_API_KEY);
-  console.log('[EmailService] MAILERSEND_FROM_EMAIL:', MAILERSEND_FROM_EMAIL);
+// Send email via SendGrid API
+const sendViaSendGrid = async (config: EmailConfig): Promise<void> => {
+  console.log('[EmailService] Attempting to send email via SendGrid...');
+  console.log('[EmailService] SENDGRID_API_KEY exists:', !!SENDGRID_API_KEY);
+  console.log('[EmailService] SENDGRID_FROM_EMAIL:', SENDGRID_FROM_EMAIL);
   console.log('[EmailService] To:', config.to);
   console.log('[EmailService] Subject:', config.subject);
 
-  if (!MAILERSEND_API_KEY) {
-    console.error('[EmailService] MAILERSEND_API_KEY not configured!');
-    throw new Error('MAILERSEND_API_KEY not configured');
+  if (!SENDGRID_API_KEY) {
+    console.error('[EmailService] SENDGRID_API_KEY not configured!');
+    throw new Error('SENDGRID_API_KEY not configured');
   }
 
-  const payload = {
+  const msg = {
+    to: config.to,
     from: {
-      email: MAILERSEND_FROM_EMAIL,
-      name: MAILERSEND_FROM_NAME,
+      email: SENDGRID_FROM_EMAIL,
+      name: SENDGRID_FROM_NAME,
     },
-    to: [
-      {
-        email: config.to,
-      },
-    ],
     subject: config.subject,
     html: config.html,
     text: config.text,
   };
 
-  console.log('[EmailService] Request payload:', JSON.stringify(payload, null, 2));
+  console.log('[EmailService] Request payload:', JSON.stringify(msg, null, 2));
 
   try {
-    const response = await fetch('https://api.mailersend.com/v1/email', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${MAILERSEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    console.log('[EmailService] Response status:', response.status);
-    console.log('[EmailService] Response statusText:', response.statusText);
-
-    // MailerSend returns 202 Accepted on success
-    if (response.status !== 202 && !response.ok) {
-      const errorText = await response.text();
-      console.error('[EmailService] MailerSend API error response:', errorText);
-      throw new Error(`MailerSend API error: ${response.status} - ${errorText}`);
-    }
-
-    // 202 means accepted - email is queued
-    if (response.status === 202) {
-      console.log('[EmailService] Email accepted by MailerSend (queued for delivery)');
-    }
-
-    // Try to parse response body (may be empty)
-    const responseText = await response.text();
-    console.log('[EmailService] Response body:', responseText || '(empty)');
-
+    await sgMail.send(msg);
+    console.log('[EmailService] Email sent successfully via SendGrid');
   } catch (err: any) {
-    console.error('[EmailService] Exception during send:', err.message);
-    throw err;
+    console.error('[EmailService] SendGrid API error:', err.response?.body || err.message);
+    throw new Error(`SendGrid API error: ${err.response?.body?.errors?.[0]?.message || err.message}`);
   }
 };
 
@@ -177,7 +157,8 @@ export const emailService = {
   async sendPasswordResetEmail(email: string, resetToken: string, name: string): Promise<void> {
     console.log('Sending password reset email to:', email);
 
-    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    const baseUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
 
     const content = `
       <h2>Hello ${name || 'there'},</h2>
@@ -200,16 +181,16 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYou requested to reset your password. Visit this link: ${resetUrl}\n\nThis link expires in 1 hour.`,
     };
 
-    if (!MAILERSEND_API_KEY) {
-      console.error('MAILERSEND_API_KEY not configured. Cannot send email.');
+    if (!SENDGRID_API_KEY) {
+      console.error('SENDGRID_API_KEY not configured. Cannot send email.');
       console.log('Password reset token for', email, ':', resetToken);
       console.log('Reset URL:', resetUrl);
       return;
     }
 
     try {
-      await sendViaMailerSend(mailOptions);
-      console.log('Password reset email sent successfully via MailerSend');
+      await sendViaSendGrid(mailOptions);
+      console.log('Password reset email sent successfully via SendGrid');
     } catch (err: any) {
       console.error('Failed to send password reset email:', err.message);
       // Log token so admin can manually provide it
@@ -221,9 +202,10 @@ export const emailService = {
   // Send email verification email
   async sendVerificationEmail(email: string, verificationToken: string, name: string): Promise<void> {
     console.log('[EmailService] sendVerificationEmail called for:', email);
-    console.log('[EmailService] MAILERSEND_API_KEY exists:', !!MAILERSEND_API_KEY);
+    console.log('[EmailService] SENDGRID_API_KEY exists:', !!SENDGRID_API_KEY);
 
-    const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/verify-email?token=${verificationToken}`;
+    const baseUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
+    const verifyUrl = `${baseUrl}/verify-email?token=${verificationToken}`;
     console.log('[EmailService] Verify URL:', verifyUrl);
 
     const content = `
@@ -247,16 +229,16 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}!\n\nPlease verify your email by visiting: ${verifyUrl}\n\nThis link expires in 24 hours.`,
     };
 
-    if (!MAILERSEND_API_KEY) {
-      console.error('MAILERSEND_API_KEY not configured. Cannot send email.');
+    if (!SENDGRID_API_KEY) {
+      console.error('SENDGRID_API_KEY not configured. Cannot send email.');
       console.log('Email verification token for', email, ':', verificationToken);
       console.log('Verify URL:', verifyUrl);
       return;
     }
 
     try {
-      await sendViaMailerSend(mailOptions);
-      console.log('Verification email sent successfully via MailerSend');
+      await sendViaSendGrid(mailOptions);
+      console.log('Verification email sent successfully via SendGrid');
     } catch (err: any) {
       console.error('Failed to send verification email:', err.message);
       throw err;
@@ -265,6 +247,7 @@ export const emailService = {
 
   // Send welcome email after verification
   async sendWelcomeEmail(email: string, name: string): Promise<void> {
+    const baseUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
     const content = `
       <h2>Welcome aboard, ${name || 'there'}! 🎉</h2>
       <p>Your email has been successfully verified and your AptiTest account is now active!</p>
@@ -276,7 +259,7 @@ export const emailService = {
         <li>🎯 Improve in specific categories</li>
       </ul>
       <p style="text-align: center;">
-        <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/dashboard" class="button">Start Testing</a>
+        <a href="${baseUrl}/dashboard" class="button">Start Testing</a>
       </p>
       <p>Good luck with your preparation!</p>
     `;
@@ -285,17 +268,17 @@ export const emailService = {
       to: email,
       subject: '🎉 Welcome to AptiTest!',
       html: getEmailTemplate(content, 'Welcome'),
-      text: `Welcome to AptiTest, ${name || 'there'}! Your account is now verified. Visit ${process.env.CLIENT_URL || 'http://localhost:5173'}/dashboard to start testing.`,
+      text: `Welcome to AptiTest, ${name || 'there'}! Your account is now verified. Visit ${baseUrl}/dashboard to start testing.`,
     };
 
-    if (!MAILERSEND_API_KEY) {
-      console.log('MAILERSEND_API_KEY not configured. Welcome email would be sent to:', email);
+    if (!SENDGRID_API_KEY) {
+      console.log('SENDGRID_API_KEY not configured. Welcome email would be sent to:', email);
       return;
     }
 
     try {
-      await sendViaMailerSend(mailOptions);
-      console.log('Welcome email sent successfully via MailerSend');
+      await sendViaSendGrid(mailOptions);
+      console.log('Welcome email sent successfully via SendGrid');
     } catch (err: any) {
       console.error('Failed to send welcome email:', err.message);
     }
@@ -321,14 +304,14 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYour AptiTest password has been changed. If you didn't make this change, please contact support.`,
     };
 
-    if (!MAILERSEND_API_KEY) {
-      console.log('MAILERSEND_API_KEY not configured. Password changed email would be sent to:', email);
+    if (!SENDGRID_API_KEY) {
+      console.log('SENDGRID_API_KEY not configured. Password changed email would be sent to:', email);
       return;
     }
 
     try {
-      await sendViaMailerSend(mailOptions);
-      console.log('Password changed email sent successfully via MailerSend');
+      await sendViaSendGrid(mailOptions);
+      console.log('Password changed email sent successfully via SendGrid');
     } catch (err: any) {
       console.error('Failed to send password changed email:', err.message);
     }
