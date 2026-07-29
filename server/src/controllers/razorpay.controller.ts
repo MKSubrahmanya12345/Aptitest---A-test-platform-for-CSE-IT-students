@@ -66,11 +66,12 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response) => {
     const order = await razorpay.orders.create(options);
 
     // Store order in database
+    const idempotencyKey = `razorpay_${Date.now()}_${userId}`;
     await conn.execute(
-      `INSERT INTO payments (user_id, razorpay_order_id, amount_paise, currency, test_type, status, payment_method)
-       VALUES (?, ?, ?, 'INR', ?, 'pending', ?)
-       ON DUPLICATE KEY UPDATE razorpay_order_id = VALUES(razorpay_order_id), status = 'pending'`,
-      [userId, order.id, pricePaise, actualTestType, paymentMethod || 'upi']
+      `INSERT INTO payments (user_id, razorpay_order_id, amount_paise, currency, test_type, status, payment_method, idempotency_key)
+       VALUES (?, ?, ?, 'INR', ?, 'pending', ?, ?)
+       ON DUPLICATE KEY UPDATE razorpay_order_id = VALUES(razorpay_order_id), status = 'pending', idempotency_key = VALUES(idempotency_key)`,
+      [userId, order.id, pricePaise, actualTestType, paymentMethod || 'upi', idempotencyKey]
     );
 
     return res.json({
