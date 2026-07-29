@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-06-30.basil' as any,
 });
 
-const HARD_60_PRICE_PAISE = 5000;
+const HARD_60_PRICE_PAISE = 100; // ₹1.00 minimum for Stripe India
 const HARD_60_TEST_TYPE = 'hard_60';
 
 export const createPaymentIntent = async (req: AuthenticatedRequest, res: Response) => {

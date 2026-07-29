@@ -5,6 +5,7 @@ import pool from "./config/db";
 import authRoutes from "./routes/auth.route";
 import reviewRoutes from "./routes/review.route";
 import paymentRoutes from "./routes/payment.route";
+import razorpayRoutes from "./routes/razorpay.route";
 import testRoutes from "./routes/test.route";
 import testTemplateRoutes from "./routes/testTemplate.routes";
 import { testService } from "./services/test.service";
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes); // Auth routes have no protection cause anyone
 app.use("/api/test-templates", testTemplateRoutes); 
 app.use("/api", testRoutes);      // Student test routes require authentication.
 app.use("/api", paymentRoutes);
+app.use("/api", razorpayRoutes);
 app.use("/api", reviewRoutes);
 
 // Start the auto-submit safety net check every minute.

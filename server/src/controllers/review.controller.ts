@@ -2,6 +2,7 @@ import type { Response } from 'express';
 import type { AuthenticatedRequest } from '../middleware/auth';
 import pool from '../config/db';
 import { userModel } from '../models/user.model';
+import { stringifyJson } from '../utils/jsonHelpers';
 
 export const reviewController = {
   // GET /api/review-pending
@@ -91,10 +92,10 @@ export const reviewController = {
         detected_question_type, // set final_question_type to this value
         question_text,
         passage,
-        typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block,
-        typeof options === 'object' && options !== null ? JSON.stringify(options) : options,
-        typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
-        typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+        stringifyJson(data_block),
+        stringifyJson(options),
+        stringifyJson(correct_answer),
+        stringifyJson(grading_config),
         solution,
         id
       ];
@@ -150,10 +151,10 @@ export const reviewController = {
           qType,
           question_text,
           passage,
-          typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block,
-          typeof options === 'object' && options !== null ? JSON.stringify(options) : options,
-          typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
-          typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+          stringifyJson(data_block),
+          stringifyJson(options),
+          stringifyJson(correct_answer),
+          stringifyJson(grading_config),
           solution,
           source_file,
           source_question_no
@@ -186,10 +187,10 @@ export const reviewController = {
           detected_question_type,
           question_text,
           passage,
-          typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block,
-          typeof options === 'object' && options !== null ? JSON.stringify(options) : options,
-          typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
-          typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+          stringifyJson(data_block),
+          stringifyJson(options),
+          stringifyJson(correct_answer),
+          stringifyJson(grading_config),
           solution,
           id
         ];
@@ -223,10 +224,10 @@ export const reviewController = {
           qType,
           q.question_text,
           q.passage,
-          typeof q.data_block === 'object' && q.data_block !== null ? JSON.stringify(q.data_block) : q.data_block,
-          typeof q.options === 'object' && q.options !== null ? JSON.stringify(q.options) : q.options,
-          typeof q.correct_answer === 'object' && q.correct_answer !== null ? JSON.stringify(q.correct_answer) : q.correct_answer,
-          typeof q.grading_config === 'object' && q.grading_config !== null ? JSON.stringify(q.grading_config) : q.grading_config,
+          stringifyJson(q.data_block),
+          stringifyJson(q.options),
+          stringifyJson(q.correct_answer),
+          stringifyJson(q.grading_config),
           q.solution,
           q.source_file,
           q.source_question_no
@@ -343,10 +344,10 @@ export const reviewController = {
         type,
         question_text,
         passage || null,
-        typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block || null,
-        typeof options === 'object' && options !== null ? JSON.stringify(options) : options || null,
-        typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
-        typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+        stringifyJson(data_block) || null,
+        stringifyJson(options) || null,
+        stringifyJson(correct_answer),
+        stringifyJson(grading_config),
         solution || null,
         'pending', // Start in pending (admin can then approve their own)
         1.0, // High confidence since admin created it
@@ -418,10 +419,10 @@ export const reviewController = {
         question_type,
         question_text,
         passage || null,
-        typeof data_block === 'object' && data_block !== null ? JSON.stringify(data_block) : data_block || null,
-        typeof options === 'object' && options !== null ? JSON.stringify(options) : options || null,
-        typeof correct_answer === 'object' && correct_answer !== null ? JSON.stringify(correct_answer) : correct_answer,
-        typeof grading_config === 'object' && grading_config !== null ? JSON.stringify(grading_config) : grading_config,
+        stringifyJson(data_block) || null,
+        stringifyJson(options) || null,
+        stringifyJson(correct_answer),
+        stringifyJson(grading_config),
         solution || null,
         id
       ];
