@@ -1,9 +1,11 @@
-// Email service using Resend API (HTTP-based, works on Render)
-// Sign up at https://resend.com, get API key, verify your domain
-// For testing without domain, use 'onboarding@resend.dev' as sender
+// Email service using Nodemailer with Gmail
+// Uses Gmail App Password for authentication
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+import nodemailer from 'nodemailer';
+
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || GMAIL_USER || 'noreply@aptitest.com';
 
 interface EmailConfig {
   to: string;
@@ -12,34 +14,34 @@ interface EmailConfig {
   text?: string;
 }
 
-// Send email via Resend HTTP API
-const sendViaResend = async (config: EmailConfig): Promise<void> => {
-  if (!RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY not configured');
+// Create Gmail transporter
+const createTransporter = () => {
+  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+    throw new Error('GMAIL_USER and GMAIL_APP_PASSWORD must be configured in environment variables');
   }
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: GMAIL_USER,
+      pass: GMAIL_APP_PASSWORD,
     },
-    body: JSON.stringify({
-      from: `AptiTest <${RESEND_FROM_EMAIL}>`,
-      to: config.to,
-      subject: config.subject,
-      html: config.html,
-      text: config.text,
-    }),
+  });
+};
+
+// Send email via Gmail/Nodemailer
+const sendViaGmail = async (config: EmailConfig): Promise<void> => {
+  const transporter = createTransporter();
+
+  const info = await transporter.sendMail({
+    from: `AptiTest <${FROM_EMAIL}>`,
+    to: config.to,
+    subject: config.subject,
+    html: config.html,
+    text: config.text,
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`Resend API error: ${JSON.stringify(error)}`);
-  }
-
-  const data = await response.json();
-  console.log('Email sent via Resend:', data.id);
+  console.log('Email sent via Gmail:', info.messageId);
 };
 
 // Base email template
@@ -165,16 +167,16 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYou requested to reset your password. Visit this link: ${resetUrl}\n\nThis link expires in 1 hour.`,
     };
 
-    if (!RESEND_API_KEY) {
-      console.error('RESEND_API_KEY not configured. Cannot send email.');
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.error('Gmail credentials not configured. Cannot send email.');
       console.log('Password reset token for', email, ':', resetToken);
       console.log('Reset URL:', resetUrl);
       return;
     }
 
     try {
-      await sendViaResend(mailOptions);
-      console.log('Password reset email sent successfully via Resend');
+      await sendViaGmail(mailOptions);
+      console.log('Password reset email sent successfully via Gmail');
     } catch (err: any) {
       console.error('Failed to send password reset email:', err.message);
       // Log token so admin can manually provide it
@@ -208,16 +210,16 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}!\n\nPlease verify your email by visiting: ${verifyUrl}\n\nThis link expires in 24 hours.`,
     };
 
-    if (!RESEND_API_KEY) {
-      console.error('RESEND_API_KEY not configured. Cannot send email.');
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.error('Gmail credentials not configured. Cannot send email.');
       console.log('Email verification token for', email, ':', verificationToken);
       console.log('Verify URL:', verifyUrl);
       return;
     }
 
     try {
-      await sendViaResend(mailOptions);
-      console.log('Verification email sent successfully');
+      await sendViaGmail(mailOptions);
+      console.log('Verification email sent successfully via Gmail');
     } catch (err: any) {
       console.error('Failed to send verification email:', err.message);
       throw err;
@@ -249,14 +251,14 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}! Your account is now verified. Visit ${process.env.CLIENT_URL || 'http://localhost:5173'}/dashboard to start testing.`,
     };
 
-    if (!RESEND_API_KEY) {
-      console.log('RESEND_API_KEY not configured. Welcome email would be sent to:', email);
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.log('Gmail credentials not configured. Welcome email would be sent to:', email);
       return;
     }
 
     try {
-      await sendViaResend(mailOptions);
-      console.log('Welcome email sent successfully');
+      await sendViaGmail(mailOptions);
+      console.log('Welcome email sent successfully via Gmail');
     } catch (err: any) {
       console.error('Failed to send welcome email:', err.message);
     }
@@ -282,14 +284,14 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYour AptiTest password has been changed. If you didn't make this change, please contact support.`,
     };
 
-    if (!RESEND_API_KEY) {
-      console.log('RESEND_API_KEY not configured. Password changed email would be sent to:', email);
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      console.log('Gmail credentials not configured. Password changed email would be sent to:', email);
       return;
     }
 
     try {
-      await sendViaResend(mailOptions);
-      console.log('Password changed email sent successfully');
+      await sendViaGmail(mailOptions);
+      console.log('Password changed email sent successfully via Gmail');
     } catch (err: any) {
       console.error('Failed to send password changed email:', err.message);
     }

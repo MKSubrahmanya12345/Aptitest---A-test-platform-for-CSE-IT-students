@@ -359,7 +359,8 @@ function ManageQuestions() {
         setError('');
       } else {
         // Update existing question
-        if (!editingQuestion.id || editingQuestion.id.startsWith('temp_')) {
+        const idStr = String(editingQuestion.id);
+        if (!editingQuestion.id || idStr.startsWith('temp_')) {
           setError('Invalid question ID');
           return;
         }
@@ -387,8 +388,9 @@ function ManageQuestions() {
     try {
       await reviewService.approve(questionId);
       setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+      // Update pagination total to reflect removed question
+      setPendingPagination(prev => ({ ...prev, total: Math.max(0, prev.total - 1) }));
       toast.success('Question approved successfully!');
-      await fetchQuestions();
     } catch (err) {
       console.error('Error approving question:', err);
       toast.error('Failed to approve question.');
@@ -400,6 +402,8 @@ function ManageQuestions() {
     try {
       await reviewService.reject(questionId);
       setPendingQuestions(prev => prev.filter(q => q.id !== questionId));
+      // Update pagination total to reflect removed question
+      setPendingPagination(prev => ({ ...prev, total: Math.max(0, prev.total - 1) }));
       toast.success('Question rejected.');
     } catch (err) {
       console.error('Error rejecting question:', err);
@@ -606,7 +610,9 @@ function ManageQuestions() {
                 {/* Options for MCQ types */}
                 {['mcq_single', 'mcq_multiple', 'comprehension'].includes(questionType) && question.options && (
                   <div className="options-grid">
-                    {(typeof question.options === 'string' ? JSON.parse(question.options) : question.options).map((opt, idx) => (
+                    {(typeof question.options === 'string' ? (() => {
+                      try { return JSON.parse(question.options); } catch { return []; }
+                    })() : question.options).map((opt, idx) => (
                       <div key={idx} className="option-item">
                         <span className="option-key">{opt.key}.</span>
                         <span>{opt.text}</span>
