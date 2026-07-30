@@ -40,7 +40,7 @@ export const reviewService = {
   async createQuestion(data) {
     const response = await api.post('/questions/create', data);
     return response.data;
-  }
+  },
 
   // ??$$$
   async getStats() {
