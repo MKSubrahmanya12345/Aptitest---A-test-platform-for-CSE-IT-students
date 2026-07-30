@@ -9,6 +9,28 @@ export function safeJsonParse(val: any): any {
   }
 }
 
+// Helper to calculate GCD (Greatest Common Divisor) for fraction simplification
+function gcd(a: number, b: number): number {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b !== 0) {
+    const temp = b;
+    b = a % b;
+    a = temp;
+  }
+  return a;
+}
+
+// Helper to simplify a fraction to its lowest terms
+function simplifyFraction(numerator: number, denominator: number): { num: number, den: number } {
+  if (denominator === 0) return { num: numerator, den: denominator };
+  const commonDivisor = gcd(numerator, denominator);
+  return {
+    num: numerator / commonDivisor,
+    den: denominator / commonDivisor
+  };
+}
+
 // Helper function to grade question answers based on question type and config
 export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
   if (userAnswer === undefined || userAnswer === null) {
@@ -29,7 +51,8 @@ export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
     }
   }
 
-  const type = question.question_type;
+  // Normalize question type to lowercase for case-insensitive matching
+  const type = String(question.question_type || '').toLowerCase();
 
   switch (type) {
     case 'mcq_single': {
@@ -52,32 +75,54 @@ export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
       const corrNum = Number(correctAnswer?.numerator);
       const corrDen = Number(correctAnswer?.denominator);
 
+      // Validate correct answer has valid numbers
+      if (isNaN(corrNum) || isNaN(corrDen) || corrDen === 0) {
+        return false;
+      }
+
+      let uNum: number, uDen: number;
+
       if (typeof uVal === 'object' && uVal !== null) {
-        const uNum = Number(uVal.numerator);
-        const uDen = Number(uVal.denominator);
-        if (corrNum === uNum && corrDen === uDen) return true;
+        uNum = Number(uVal.numerator);
+        uDen = Number(uVal.denominator);
       } else {
         const s = String(uVal || '').trim();
         const match = s.match(/^(\d+)\s*\/\s*(\d+)$/);
-        /* old code
         if (match) {
-          const uNum = parseInt(match[1]);
-          const uDen = parseInt(match[2]);
-          if (corrNum === uNum && corrDen === uDen) return true;
-        }
-        */
-        // ??$$$
-        if (match) {
-          const uNum = parseInt(match[1] as string);
-          const uDen = parseInt(match[2] as string);
-          if (corrNum === uNum && corrDen === uDen) return true;
+          uNum = parseInt(match[1] as string);
+          uDen = parseInt(match[2] as string);
+        } else {
+          // Not in fraction format, try decimal if allowed
+          if (gradingConfig.allow_decimal_equivalent) {
+            const corrDec = corrNum / corrDen;
+            const uDec = parseFloat(String(uVal).replace(/,/g, '').trim());
+            if (!isNaN(uDec) && Math.abs(corrDec - uDec) <= 0.01) {
+              return true;
+            }
+          }
+          return false;
         }
       }
 
+      // Validate user input
+      if (isNaN(uNum) || isNaN(uDen) || uDen === 0) {
+        return false;
+      }
+
+      // Compare simplified fractions (handles 2/4 == 1/2)
+      const simplifiedCorrect = simplifyFraction(corrNum, corrDen);
+      const simplifiedUser = simplifyFraction(uNum, uDen);
+
+      if (simplifiedCorrect.num === simplifiedUser.num && 
+          simplifiedCorrect.den === simplifiedUser.den) {
+        return true;
+      }
+
+      // Fallback: allow decimal equivalent if configured
       if (gradingConfig.allow_decimal_equivalent) {
         const corrDec = corrNum / corrDen;
-        const uDec = parseFloat(String(uVal).replace(/,/g, '').trim());
-        if (!isNaN(uDec) && Math.abs(corrDec - uDec) <= 0.01) {
+        const userDec = uNum / uDen;
+        if (Math.abs(corrDec - userDec) <= 0.01) {
           return true;
         }
       }
@@ -134,14 +179,8 @@ export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
         uUnitVal = String(uVal.unit || '').trim();
       } else {
         const s = String(uVal || '').trim().replace(/,/g, '');
-        const suffixMatch = s.match(/^(\d+(?:\.\d+)?)\s*(.*)/);
-        /* old code
-        if (suffixMatch) {
-          uNumVal = parseFloat(suffixMatch[1]);
-          uUnitVal = suffixMatch[2].trim();
-        }
-        */
-        // ??$$$
+        // Match negative numbers, decimals, and scientific notation
+        const suffixMatch = s.match(/^(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\s*(.*)/);
         if (suffixMatch) {
           uNumVal = parseFloat(suffixMatch[1] as string);
           uUnitVal = (suffixMatch[2] || '').trim();
@@ -169,7 +208,27 @@ export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
 
       return true;
     }
+    case 'mcq_multiple': {
+      // Multiple select - user answer should be array of selected options
+      const correctVals = (correctAnswer?.values || correctAnswer?.value || []);
+      const correctArray = Array.isArray(correctVals) ? correctVals : [correctVals];
+      const userArray = Array.isArray(uVal) ? uVal : [uVal];
+      
+      // Normalize to uppercase strings for comparison
+      const correctSet = new Set(correctArray.map((v: any) => String(v).toUpperCase()));
+      const userSet = new Set(userArray.map((v: any) => String(v).toUpperCase()));
+      
+      // Must have exact same selections
+      if (correctSet.size !== userSet.size) return false;
+      for (const val of correctSet) {
+        if (!userSet.has(val)) return false;
+      }
+      return true;
+    }
+    case 'fill_in_blank':
+    case 'short_text':
     default: {
+      // Text-based answers with various cleaning options
       let correctAnswers: string[] = [];
       if (correctAnswer && typeof correctAnswer === 'object') {
         if (Array.isArray(correctAnswer.answers)) {
@@ -179,7 +238,7 @@ export function gradeQuestionAnswer(question: any, userAnswer: any): boolean {
         }
       }
       if (correctAnswers.length === 0) {
-        correctAnswers = [String(correctAnswer)];
+        correctAnswers = [String(correctAnswer || '')];
       }
 
       const userStr = String(uVal || '');
