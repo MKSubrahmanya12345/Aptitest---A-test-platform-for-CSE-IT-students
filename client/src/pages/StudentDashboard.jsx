@@ -85,8 +85,10 @@ function renderUserAnswer(q) {
   switch (q.question_type) {
     case "mcq_single":
       return `Option ${ans}`;
-    case "boolean":
-      return ans === true ? "Yes / True" : "No / False";
+    case "boolean": {
+      const isTrue = ans === true || ans === "true" || ans === "yes" || ans === "Yes" || ans === "Y" || ans === "y";
+      return isTrue ? "Yes / True" : "No / False";
+    }
     case "fraction":
       return `${ans.numerator || 0}/${ans.denominator || 0}`;
     case "ratio":

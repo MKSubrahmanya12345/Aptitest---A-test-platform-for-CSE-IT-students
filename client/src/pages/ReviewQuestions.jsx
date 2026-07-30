@@ -13,7 +13,9 @@ function renderUserAnswer(question) {
     case "mcq_single":
       return `Option ${ans}`;
     case "boolean":
-      return ans === true ? "Yes / True" : "No / False";
+      // Handle both boolean and string representations
+      const isTrue = ans === true || ans === "true" || ans === "yes" || ans === "Yes" || ans === "Y" || ans === "y";
+      return isTrue ? "Yes / True" : "No / False";
     case "fraction":
       return `${ans.numerator || 0}/${ans.denominator || 0}`;
     case "ratio":
@@ -121,7 +123,7 @@ function ReviewQuestions() {
   }
 
   function handleBack() {
-    navigate("/student");
+    navigate("/dashboard");
   }
 
   return (
