@@ -342,7 +342,7 @@ function ManageQuestions() {
         const newQuestion = await reviewService.createQuestion(questionData);
         setPendingQuestions(prev => [newQuestion, ...prev]);
         setError('');
-        // Update existing question
+      } else {
         const idStr = String(editingQuestion.id);
         if (!editingQuestion.id || idStr.startsWith('temp_')) {
           setError('Invalid question ID');
