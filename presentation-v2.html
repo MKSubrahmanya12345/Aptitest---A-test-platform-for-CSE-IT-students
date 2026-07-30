@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; overflow-x: hidden; }
         .presentation-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .slide { background: white; border-radius: 20px; padding: 50px 60px; margin-bottom: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-height: 650px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .slide { background: white; border-radius: 20px; padding: 50px 60px; margin-bottom: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 1280px; height: 720px; min-height: 720px; max-height: 720px; display: flex; flex-direction: column; position: relative; overflow: hidden; margin-left: auto; margin-right: auto; }
         .slide::before { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%); border-radius: 0 0 0 100%; }
         .slide-number { position: absolute; bottom: 20px; right: 30px; color: #667eea; font-weight: bold; font-size: 14px; }
         .title-slide { justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
@@ -66,7 +66,11 @@
         .hosting-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin: 15px 0; }
         .hosting-card h4 { color: white; margin-top: 0; }
         .hosting-card p { color: rgba(255,255,255,0.9); }
-        @media print { .slide { page-break-after: always; margin: 0; box-shadow: none; } .nav-hint { display: none; } }
+        @media print { 
+    .slide { page-break-after: always; margin: 0; box-shadow: none; width: 1280px; height: 720px; min-height: 720px; max-height: 720px; } 
+    .nav-hint { display: none; } 
+    body { background: white; }
+}
         @media (max-width: 768px) { .slide { padding: 30px; } .tech-grid, .feature-grid, .stats-grid, .question-types, .two-column, .three-column { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -177,20 +181,20 @@
             <div class="folder-tree">
 <span class="folder">client/src/</span><br/>
 +-- <span class="folder">components/</span><br/>
-¶   +-- <span class="folder">admin/</span> - AdminLayout<br/>
-¶   +-- <span class="folder">common/</span> - Pagination<br/>
-¶   +-- RazorpayPayment.jsx<br/>
+ÔøΩ   +-- <span class="folder">admin/</span> - AdminLayout<br/>
+ÔøΩ   +-- <span class="folder">common/</span> - Pagination<br/>
+ÔøΩ   +-- RazorpayPayment.jsx<br/>
 +-- <span class="folder">contexts/</span><br/>
-¶   +-- ThemeContext.jsx<br/>
-¶   +-- ToastContext.jsx<br/>
+ÔøΩ   +-- ThemeContext.jsx<br/>
+ÔøΩ   +-- ToastContext.jsx<br/>
 +-- <span class="folder">pages/</span><br/>
-¶   +-- Login.jsx, Signup.jsx<br/>
-¶   +-- StudentDashboard.jsx<br/>
-¶   +-- AdminDashboard.jsx<br/>
+ÔøΩ   +-- Login.jsx, Signup.jsx<br/>
+ÔøΩ   +-- StudentDashboard.jsx<br/>
+ÔøΩ   +-- AdminDashboard.jsx<br/>
 +-- <span class="folder">services/</span><br/>
-¶   +-- api.js, auth.service.js<br/>
-¶   +-- test.service.js<br/>
-¶   +-- payment.service.js<br/>
+ÔøΩ   +-- api.js, auth.service.js<br/>
+ÔøΩ   +-- test.service.js<br/>
+ÔøΩ   +-- payment.service.js<br/>
 +-- <span class="folder">styles/</span> - CSS modules
             </div>
         </div>
@@ -199,14 +203,14 @@
             <div class="folder-tree">
 <span class="folder">server/src/</span><br/>
 +-- <span class="folder">config/</span><br/>
-¶   +-- db.ts - Database<br/>
-¶   +-- seed.ts - Initial data<br/>
+ÔøΩ   +-- db.ts - Database<br/>
+ÔøΩ   +-- seed.ts - Initial data<br/>
 +-- <span class="folder">controllers/</span><br/>
-¶   +-- auth.controller.ts<br/>
-¶   +-- test.controller.ts<br/>
-¶   +-- payment.controller.ts<br/>
+ÔøΩ   +-- auth.controller.ts<br/>
+ÔøΩ   +-- test.controller.ts<br/>
+ÔøΩ   +-- payment.controller.ts<br/>
 +-- <span class="folder">middleware/</span><br/>
-¶   +-- auth.ts - JWT verify<br/>
+ÔøΩ   +-- auth.ts - JWT verify<br/>
 +-- <span class="folder">models/</span> - Data models<br/>
 +-- <span class="folder">routes/</span> - API routes<br/>
 +-- <span class="folder">services/</span> - Business logic<br/>
@@ -767,7 +771,8 @@
 
 </div>
 
-<div class="nav-hint">Scroll down for all slides | Ctrl+P to print as PDF</div>
+<div class="nav-hint">Scroll down for all slides | Ctrl+P to print as PDF | Optimal for PowerPoint: 16:9 Widescreen</div>
+<button onclick="window.print()" style="position:fixed; top:20px; right:20px; background:#667eea; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; z-index:1000;">üñ®Ô∏è Print to PDF</button>
 
 </body>
 </html>

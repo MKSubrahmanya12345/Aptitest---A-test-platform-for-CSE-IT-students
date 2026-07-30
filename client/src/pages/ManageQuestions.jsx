@@ -339,7 +339,7 @@ function ManageQuestions() {
 
       if (isAddMode) {
         // Create new question
-        const response = await fetch('/api/questions/create', {
+        const response = await fetch('/api/admin/questions/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
