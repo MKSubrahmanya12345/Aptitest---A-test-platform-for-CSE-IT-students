@@ -572,6 +572,53 @@ body.student-sidebar-open {
   transform: rotate(45deg);
 }
 
+/* ---------- Quick Actions ---------- */
+.quick-actions {
+  margin-bottom: 32px;
+}
+
+.btn-review-questions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 14px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.btn-review-questions:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.45);
+}
+
+.btn-review-questions .btn-icon {
+  font-size: 28px;
+}
+
+.btn-review-questions .btn-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.btn-review-questions .btn-text strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.btn-review-questions .btn-text small {
+  font-size: 13px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
 /* ---------- Stat Widgets ---------- */
 .dashboard-stats-grid {
   display: grid;

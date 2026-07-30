@@ -1003,6 +1003,20 @@ function StudentDashboard() {
                 )}
               </div>
 
+              {/* Quick Actions */}
+              <div className="quick-actions">
+                <button 
+                  className="btn-review-questions"
+                  onClick={() => navigate("/review")}
+                >
+                  <span className="btn-icon">📚</span>
+                  <span className="btn-text">
+                    <strong>Review Questions</strong>
+                    <small>View all your solved questions by category</small>
+                  </span>
+                </button>
+              </div>
+
               {/* Practice Test Templates */}
               <h3 className="section-title">🚀 Launch Practice Test Session</h3>
               {templatesLoading ? (
