@@ -36,7 +36,11 @@ export const reviewService = {
     return response.data;
   },
 
-
+  // Create new question directly (admin)
+  async createQuestion(data) {
+    const response = await api.post('/questions/create', data);
+    return response.data;
+  }
 
   // ??$$$
   async getStats() {

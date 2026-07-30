@@ -338,26 +338,10 @@ function ManageQuestions() {
       };
 
       if (isAddMode) {
-        // Create new question
-        const response = await fetch('/api/questions/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify(questionData)
-        });
-
-        if (!response.ok) {
-          const err = await response.json();
-          setError(err.message || 'Failed to create question');
-          return;
-        }
-
-        const newQuestion = await response.json();
+        // Create new question using the review service
+        const newQuestion = await reviewService.createQuestion(questionData);
         setPendingQuestions(prev => [newQuestion, ...prev]);
         setError('');
-      } else {
         // Update existing question
         const idStr = String(editingQuestion.id);
         if (!editingQuestion.id || idStr.startsWith('temp_')) {
