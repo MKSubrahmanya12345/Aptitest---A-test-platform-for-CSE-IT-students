@@ -195,6 +195,64 @@ export const testController = {
     }
   },
 
+  // GET /api/test/dashboard-stats
+  async getDashboardStats(req: AuthenticatedRequest, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const result = await testService.getDashboardStats(userId);
+      return res.json(result);
+    } catch (error: any) {
+      console.error("Error in testController.getDashboardStats:", error);
+      return res.status(500).json({ message: error.message || "Failed to fetch dashboard stats" });
+    }
+  },
+
+  // GET /api/test/solved-questions
+  async getSolvedQuestions(req: AuthenticatedRequest, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const { category, subcategory } = req.query;
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const limit = Math.min(50, parseInt(req.query.limit as string) || 20);
+
+      const result = await testService.getSolvedQuestions(
+        userId,
+        category as string,
+        subcategory as string,
+        page,
+        limit
+      );
+      return res.json(result);
+    } catch (error: any) {
+      console.error("Error in testController.getSolvedQuestions:", error);
+      return res.status(500).json({ message: error.message || "Failed to fetch solved questions" });
+    }
+  },
+
+  // GET /api/test/filter-options
+  async getQuestionFilterOptions(req: AuthenticatedRequest, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const result = await testService.getQuestionFilterOptions(userId);
+      return res.json(result);
+    } catch (error: any) {
+      console.error("Error in testController.getQuestionFilterOptions:", error);
+      return res.status(500).json({ message: error.message || "Failed to fetch filter options" });
+    }
+  },
+
   // POST /api/test/reattempt/:id
   async reattempt(req: AuthenticatedRequest, res: Response) {
     try {

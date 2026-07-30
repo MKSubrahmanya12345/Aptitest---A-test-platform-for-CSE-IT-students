@@ -72,5 +72,26 @@ export const testApiService = {
   async getCategoryPerformance() {
     const res = await api.get("/test/category-performance");
     return res.data;
+  },
+
+  // Get comprehensive dashboard stats
+  async getDashboardStats() {
+    const res = await api.get("/test/dashboard-stats");
+    return res.data;
+  },
+
+  // Get solved questions with filters
+  async getSolvedQuestions(category = 'all', subcategory = 'all', page = 1, limit = 20) {
+    const params = { page, limit };
+    if (category && category !== 'all') params.category = category;
+    if (subcategory && subcategory !== 'all') params.subcategory = subcategory;
+    const res = await api.get("/test/solved-questions", { params });
+    return res.data;
+  },
+
+  // Get filter options (categories and subcategories)
+  async getQuestionFilterOptions() {
+    const res = await api.get("/test/filter-options");
+    return res.data;
   }
 };

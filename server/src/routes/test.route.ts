@@ -14,6 +14,9 @@ router.post('/test/submit', testController.submit);
 router.get('/test/session/:id', testController.getSession);
 router.get('/test/history', testController.getHistory);
 router.get('/test/category-performance', testController.getCategoryPerformance);
+router.get('/test/dashboard-stats', testController.getDashboardStats);
+router.get('/test/solved-questions', testController.getSolvedQuestions);
+router.get('/test/filter-options', testController.getQuestionFilterOptions);
 router.post('/test/reattempt/:id', testController.reattempt);
 router.get('/leaderboard', testController.getLeaderboard);
 

@@ -36,12 +36,7 @@ export const reviewService = {
     return response.data;
   },
 
-  /* old code
-  async getStats() {
-    const response = await api.get('/stats');
-    return response.data;
-  }
-  */
+
 
   // ??$$$
   async getStats() {

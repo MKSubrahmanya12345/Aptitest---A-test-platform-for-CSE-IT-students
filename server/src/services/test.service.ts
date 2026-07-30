@@ -355,8 +355,12 @@ export const testService = {
       throw new Error("Unauthorized access to this test session");
     }
 
+    // Only set viewed_at if not already set (first view)
     await pool.query(
-      "UPDATE test_session_questions SET is_viewed = TRUE WHERE session_id = ? AND question_id = ?",
+      `UPDATE test_session_questions 
+       SET is_viewed = TRUE, 
+           viewed_at = COALESCE(viewed_at, CURRENT_TIMESTAMP)
+       WHERE session_id = ? AND question_id = ?`,
       [sessionId, questionId]
     );
 
@@ -403,27 +407,39 @@ export const testService = {
       throw new Error("Test session time has expired. Your answers have been submitted.");
     }
 
-    // Check if the question is part of this session
+    // Check if the question is part of this session and get viewed_at
     const [sessionQuestions]: any = await pool.query(
-      "SELECT id FROM test_session_questions WHERE session_id = ? AND question_id = ?",
+      "SELECT id, viewed_at FROM test_session_questions WHERE session_id = ? AND question_id = ?",
       [sessionId, questionId]
     );
     if (sessionQuestions.length === 0) {
       throw new Error("Question is not part of this test session");
     }
 
+    // Calculate time taken in seconds (from when question was first viewed)
+    let timeTakenSeconds: number | null = null;
+    if (sessionQuestions[0].viewed_at) {
+      const viewedAt = new Date(sessionQuestions[0].viewed_at).getTime();
+      const answeredAt = Date.now();
+      timeTakenSeconds = Math.round((answeredAt - viewedAt) / 1000);
+      // Cap at session duration to prevent absurd values
+      if (timeTakenSeconds > session.duration_seconds) {
+        timeTakenSeconds = session.duration_seconds;
+      }
+    }
+
     // Stringify answer for database
     const answerJson = JSON.stringify(answer);
 
-    // Upsert answer
+    // Upsert answer with time taken
     await pool.query(
-      `INSERT INTO test_session_answers (session_id, question_id, user_answer, answered_at)
-       VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-       ON DUPLICATE KEY UPDATE user_answer = ?, answered_at = CURRENT_TIMESTAMP`,
-      [sessionId, questionId, answerJson, answerJson]
+      `INSERT INTO test_session_answers (session_id, question_id, user_answer, answered_at, time_taken_seconds)
+       VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)
+       ON DUPLICATE KEY UPDATE user_answer = ?, answered_at = CURRENT_TIMESTAMP, time_taken_seconds = ?`,
+      [sessionId, questionId, answerJson, timeTakenSeconds, answerJson, timeTakenSeconds]
     );
 
-    return { message: "Answer saved successfully" };
+    return { message: "Answer saved successfully", time_taken_seconds: timeTakenSeconds };
   },
 
 
@@ -748,6 +764,218 @@ export const testService = {
         status: accuracy >= 70 ? "strength" : (accuracy < 50 ? "weakness" : "developing")
       };
     });
+  },
+
+  // 5c. Get comprehensive dashboard stats for a student
+  async getDashboardStats(userId: number) {
+    // 1. Current Streak - consecutive days with completed tests
+    const [streakRows]: any = await pool.query(
+      `WITH RECURSIVE dates AS (
+        SELECT DATE(started_at) as dt
+        FROM test_sessions
+        WHERE user_id = ? AND status = 'completed' AND counts_for_stats = TRUE
+        GROUP BY DATE(started_at)
+        ORDER BY dt DESC
+      ),
+      streak_calc AS (
+        SELECT dt, 1 as streak, dt as streak_start
+        FROM dates
+        WHERE dt = CURDATE()
+        UNION ALL
+        SELECT d.dt, sc.streak + 1, sc.streak_start
+        FROM dates d
+        JOIN streak_calc sc ON d.dt = DATE_SUB(sc.dt, INTERVAL 1 DAY)
+      )
+      SELECT MAX(streak) as current_streak FROM streak_calc`,
+      [userId]
+    );
+    const currentStreak = streakRows[0]?.current_streak || 0;
+
+    // 2. Tests This Week
+    const [weeklyRows]: any = await pool.query(
+      `SELECT COUNT(*) as tests_this_week
+       FROM test_sessions
+       WHERE user_id = ?
+         AND status = 'completed'
+         AND counts_for_stats = TRUE
+         AND started_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)`,
+      [userId]
+    );
+    const testsThisWeek = weeklyRows[0]?.tests_this_week || 0;
+
+    // 3. Strongest and Weakest Topics (from category performance)
+    const [categoryRows]: any = await pool.query(
+      `SELECT 
+        q.category,
+        COUNT(sa.question_id) as total_questions,
+        SUM(CASE WHEN sa.is_correct = 1 THEN 1 ELSE 0 END) as correct_count,
+        (SUM(CASE WHEN sa.is_correct = 1 THEN 1 ELSE 0 END) / COUNT(sa.question_id)) * 100 as accuracy
+       FROM test_sessions s
+       JOIN test_session_answers sa ON s.id = sa.session_id
+       JOIN questions q ON sa.question_id = q.id
+       WHERE s.user_id = ?
+         AND s.status = 'completed'
+         AND s.counts_for_stats = TRUE
+         AND q.category IS NOT NULL
+       GROUP BY q.category
+       HAVING COUNT(sa.question_id) >= 5
+       ORDER BY accuracy DESC`,
+      [userId]
+    );
+
+    let strongestTopic = null;
+    let weakestTopic = null;
+    if (categoryRows.length > 0) {
+      strongestTopic = {
+        category: categoryRows[0].category,
+        accuracy: Math.round(categoryRows[0].accuracy)
+      };
+      weakestTopic = {
+        category: categoryRows[categoryRows.length - 1].category,
+        accuracy: Math.round(categoryRows[categoryRows.length - 1].accuracy)
+      };
+    }
+
+    // 4. Total Questions Attempted
+    const [questionsRows]: any = await pool.query(
+      `SELECT COUNT(*) as total_questions
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       WHERE s.user_id = ?
+         AND s.status = 'completed'
+         AND s.counts_for_stats = TRUE`,
+      [userId]
+    );
+    const totalQuestions = questionsRows[0]?.total_questions || 0;
+
+    // 5. Average Time Per Question (overall)
+    const [timeRows]: any = await pool.query(
+      `SELECT AVG(sa.time_taken_seconds) as avg_time
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       WHERE s.user_id = ?
+         AND s.status = 'completed'
+         AND s.counts_for_stats = TRUE
+         AND sa.time_taken_seconds IS NOT NULL
+         AND sa.time_taken_seconds > 0`,
+      [userId]
+    );
+    const avgTimePerQuestion = Math.round(timeRows[0]?.avg_time || 0);
+
+    return {
+      currentStreak,
+      testsThisWeek,
+      strongestTopic,
+      weakestTopic,
+      totalQuestions,
+      avgTimePerQuestion
+    };
+  },
+
+  // 5d. Get all solved questions for a user with filters
+  async getSolvedQuestions(userId: number, category?: string, subcategory?: string, page: number = 1, limit: number = 20) {
+    const offset = (page - 1) * limit;
+    
+    // Build WHERE clause based on filters
+    let whereClause = "WHERE s.user_id = ? AND s.status = 'completed' AND s.counts_for_stats = TRUE";
+    const params: any[] = [userId];
+    
+    if (category && category !== 'all') {
+      whereClause += " AND q.category = ?";
+      params.push(category);
+    }
+    if (subcategory && subcategory !== 'all') {
+      whereClause += " AND q.subcategory = ?";
+      params.push(subcategory);
+    }
+    
+    // Get total count
+    const [countResult]: any = await pool.query(
+      `SELECT COUNT(*) as total 
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       JOIN questions q ON sa.question_id = q.id
+       ${whereClause}`,
+      params
+    );
+    const total = countResult[0].total;
+    
+    // Get paginated questions with details
+    const [questions]: any = await pool.query(
+      `SELECT 
+        q.id as question_id,
+        q.question_text,
+        q.question_type,
+        q.category,
+        q.subcategory,
+        q.difficulty,
+        q.correct_answer,
+        sa.user_answer,
+        sa.is_correct,
+        sa.time_taken_seconds,
+        sa.answered_at,
+        s.started_at as session_date
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       JOIN questions q ON sa.question_id = q.id
+       ${whereClause}
+       ORDER BY sa.answered_at DESC
+       LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
+    
+    // Parse JSON fields
+    const parsedQuestions = questions.map((q: any) => ({
+      ...q,
+      correct_answer: safeJsonParse(q.correct_answer),
+      user_answer: safeJsonParse(q.user_answer)
+    }));
+    
+    return {
+      questions: parsedQuestions,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  },
+
+  // 5e. Get unique categories and subcategories for filter dropdowns
+  async getQuestionFilterOptions(userId: number) {
+    // Get all categories the user has attempted
+    const [categories]: any = await pool.query(
+      `SELECT DISTINCT q.category
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       JOIN questions q ON sa.question_id = q.id
+       WHERE s.user_id = ? 
+         AND s.status = 'completed'
+         AND s.counts_for_stats = TRUE
+         AND q.category IS NOT NULL
+       ORDER BY q.category`,
+      [userId]
+    );
+    
+    // Get all subcategories the user has attempted
+    const [subcategories]: any = await pool.query(
+      `SELECT DISTINCT q.subcategory
+       FROM test_session_answers sa
+       JOIN test_sessions s ON sa.session_id = s.id
+       JOIN questions q ON sa.question_id = q.id
+       WHERE s.user_id = ? 
+         AND s.status = 'completed'
+         AND s.counts_for_stats = TRUE
+         AND q.subcategory IS NOT NULL
+       ORDER BY q.subcategory`,
+      [userId]
+    );
+    
+    return {
+      categories: categories.map((c: any) => c.category),
+      subcategories: subcategories.map((s: any) => s.subcategory)
+    };
   },
 
   // 6. Create a reattempt session from a completed one

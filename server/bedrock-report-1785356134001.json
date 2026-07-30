@@ -1,0 +1,1630 @@
+[
+  {
+    "id": 7228,
+    "originalText": "A job is done by D in 30 days. What fraction of the job is done in 10 days?",
+    "originalAnswer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "newType": "fraction",
+    "newAnswer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7229,
+    "originalText": "If E can build a wall in 25 days, how long will it take to build 2/5 of the wall?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 10
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 10
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7230,
+    "originalText": "A printer prints 200 pages in 4 hours. How many pages does it print in 1 hour?",
+    "originalAnswer": {
+      "unit": "pages",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Question should be converted to MCQ format as it asks 'how many' without providing options",
+      "Missing unit in answer format - should be just numeric value since unit is already specified in question"
+    ]
+  },
+  {
+    "id": 7231,
+    "originalText": "A car travels 300 km in 5 hours. What is its speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 60
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7232,
+    "originalText": "A train covers 120 km at a speed of 40 km/h. How long does it take?",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 3
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7233,
+    "originalText": "A cyclist travels at 15 km/h. How far does she travel in 4 hours?",
+    "originalAnswer": {
+      "unit": "km",
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7234,
+    "originalText": "A bus travels 200 km in 4 hours. What is its speed in km/h?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7236,
+    "originalText": "A car travels at 60 km/h. How long does it take to cover 180 km?",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 3
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7237,
+    "originalText": "A bike travels 50 km at 25 km/h. Find the time taken.",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 2
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 2
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7238,
+    "originalText": "A runner covers 12 km in 2 hours. What is the speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 6
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 6
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7239,
+    "originalText": "A vehicle travels 400 km in 8 hours. What is its speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7240,
+    "originalText": "If a train travels at 80 km/h, how far does it go in 3 hours?",
+    "originalAnswer": {
+      "unit": "km",
+      "value": 240
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 240
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7241,
+    "originalText": "If the ratio of two numbers is 2:3 and their sum is 50, find the numbers.",
+    "originalAnswer": {
+      "unit": "and 30",
+      "value": 20
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 80,
+    "action": "flagged",
+    "flags": [
+      "Question should be converted to MCQ format as it asks for specific values",
+      "Current answer format is inconsistent with expected output format",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7242,
+    "originalText": "Divide $120 in the ratio 3:5.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 45
+    },
+    "newType": "ratio",
+    "newAnswer": {
+      "values": [
+        45,
+        75
+      ],
+      "unit": "$"
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Answer should show both values in the ratio",
+      "Question requires ratio format but current answer shows single value"
+    ]
+  },
+  {
+    "id": 7243,
+    "originalText": "If A:B = 4:7 and B = 14, find A.",
+    "originalAnswer": {
+      "value": 8
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7244,
+    "originalText": "The ratio of ages of two people is 5:6. If the sum of their ages is 44, find their ages.",
+    "originalAnswer": {
+      "unit": "and 24 years",
+      "value": 20
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 75,
+    "action": "flagged",
+    "flags": [
+      "Question should be converted to MCQ format",
+      "Answer format needs correction - should show both values as a pair",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7245,
+    "originalText": "If 2:5 :: x:20, find x.",
+    "originalAnswer": {
+      "value": 8
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 8
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7246,
+    "originalText": "Divide 180 in the ratio 1:2:3.",
+    "originalAnswer": {
+      "unit": "60 90",
+      "value": 30
+    },
+    "newType": "ratio",
+    "newAnswer": {
+      "values": [
+        30,
+        60,
+        90
+      ]
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Incorrect answer format - should show ratio values not unit/value separately",
+      "Answer should be presented as array of values rather than single value"
+    ]
+  },
+  {
+    "id": 7247,
+    "originalText": "If the ratio of two quantities is 3:4 and the smaller quantity is 12, find the larger quantity.",
+    "originalAnswer": {
+      "value": 16
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7248,
+    "originalText": "If A:B = 2:3 and B:C = 4:5, find A:C.",
+    "originalAnswer": {
+      "values": [
+        8,
+        15
+      ]
+    },
+    "newType": "ratio",
+    "newAnswer": {
+      "values": [
+        8,
+        15
+      ]
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7249,
+    "originalText": "If 3:8 :: 12:x, find x.",
+    "originalAnswer": {
+      "value": 32
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 32
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7250,
+    "originalText": "The ratio of two numbers is 7:9 and their difference is 14. Find the numbers.",
+    "originalAnswer": {
+      "value": 49
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 75,
+    "action": "flagged",
+    "flags": [
+      "Incomplete answer - only one number provided instead of both",
+      "Question should be converted to MCQ format as it asks for specific values",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7251,
+    "originalText": "Find the average of 10, 20, 30, 40.",
+    "originalAnswer": {
+      "value": 25
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 25
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7252,
+    "originalText": "The average of 5 numbers is 50. Find their sum.",
+    "originalAnswer": {
+      "value": 250
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 250
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7253,
+    "originalText": "The average of 3 numbers is 15. What is their sum?",
+    "originalAnswer": {
+      "value": 45
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 45
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7254,
+    "originalText": "Find the average of 12, 18, 24.",
+    "originalAnswer": {
+      "value": 18
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 18
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7255,
+    "originalText": "If the average of 4 numbers is 25, what is the sum of the numbers?",
+    "originalAnswer": {
+      "value": 100
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7256,
+    "originalText": "The average of 7, 14, and 21 is what?",
+    "originalAnswer": {
+      "value": 14
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7257,
+    "originalText": "The average of 5 scores is 20. If one score is 30, what is the sum of the other 4 scores?",
+    "originalAnswer": {
+      "value": 70
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7258,
+    "originalText": "Find the average of 5, 10, 15, 20, 25.",
+    "originalAnswer": {
+      "value": 15
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 15
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7259,
+    "originalText": "The average of 6 numbers is 12. If one number is 18, what is the average of the remaining 5 numbers?",
+    "originalAnswer": {
+      "value": 10.8
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7260,
+    "originalText": "The average of 4 weights is 50 kg. What is their total weight?",
+    "originalAnswer": {
+      "unit": "kg",
+      "value": 200
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 200
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7261,
+    "originalText": "Find the simple interest on $1000 at 5% per annum for 2 years.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 100
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 100
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7262,
+    "originalText": "Calculate the simple interest on $500 at 4% for 3 years.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7263,
+    "originalText": "If the simple interest on a sum is $120 at 6% for 2 years, find the principal.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 1000
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7264,
+    "originalText": "Find the simple interest on $2000 at 3% per annum for 5 years.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 300
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 300
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7265,
+    "originalText": "What is the rate if simple interest on $400 is $80 for 4 years?",
+    "originalAnswer": {
+      "unit": "%",
+      "value": 5
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Question should be converted to MCQ format",
+      "Missing percentage unit in original answer",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7266,
+    "originalText": "Find the time if simple interest on $600 is $90 at 5% per annum.",
+    "originalAnswer": {
+      "unit": "years",
+      "value": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 3
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7267,
+    "originalText": "Calculate simple interest on $1500 at 7% for 2 years.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 210
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 210
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7268,
+    "originalText": "If simple interest is $200 on a sum at 8% for 5 years, find the principal.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 500
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7269,
+    "originalText": "Find the simple interest on $800 at 2.5% for 4 years.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 80
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 80
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7270,
+    "originalText": "What is the principal if simple interest is $75 at 3% for 5 years?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 500
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7271,
+    "originalText": "What is the sum of the first 5 odd numbers?",
+    "originalAnswer": {
+      "value": 25
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7272,
+    "originalText": "Find the product of 12 and 5.",
+    "originalAnswer": {
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7273,
+    "originalText": "What is the square of 7?",
+    "originalAnswer": {
+      "value": 49
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 49
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7274,
+    "originalText": "Find the cube of 4.",
+    "originalAnswer": {
+      "value": 64
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 64
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7275,
+    "originalText": "What is the sum of the first 4 even numbers?",
+    "originalAnswer": {
+      "value": 20
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7276,
+    "originalText": "If a number is divisible by both 2 and 3, is it divisible by 6?",
+    "originalAnswer": {
+      "value": true
+    },
+    "newType": "boolean",
+    "newAnswer": {
+      "value": true
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7277,
+    "originalText": "Find the square root of 16.",
+    "originalAnswer": {
+      "value": 4
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 4
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7278,
+    "originalText": "What is 15 divided by 3?",
+    "originalAnswer": {
+      "value": 5
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 5
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7279,
+    "originalText": "Find the sum of 7, 14, and 21.",
+    "originalAnswer": {
+      "value": 42
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 42
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7280,
+    "originalText": "What is the product of 8 and 6?",
+    "originalAnswer": {
+      "value": 48
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 48
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7281,
+    "originalText": "If a rectangle has length 10 cm and width 5 cm, find its area.",
+    "originalAnswer": {
+      "unit": "cm²",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7282,
+    "originalText": "A tank holds 100 liters. If 20 liters are used, how much is left?",
+    "originalAnswer": {
+      "unit": "liters",
+      "value": 80
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 80
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7283,
+    "originalText": "If 1 kg of apples costs $50, what is the cost of 3 kg?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 150
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7284,
+    "originalText": "A clock shows 3:00. What time is it after 2 hours?",
+    "originalAnswer": {
+      "values": [
+        5,
+        0
+      ]
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 5
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Answer format should be numeric value only, not array",
+      "Question should be converted to MCQ format with 4 options"
+    ]
+  },
+  {
+    "id": 7285,
+    "originalText": "If a circle has radius 7 cm, find its circumference (use π = 3.14).",
+    "originalAnswer": {
+      "unit": "cm",
+      "value": 43.96
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 43.96
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Question should be converted to MCQ format as it asks for a specific numerical answer without options",
+      "Missing unit in corrected answer (should include 'cm' as per original question)"
+    ]
+  },
+  {
+    "id": 7286,
+    "originalText": "If 5 pens cost $25, what is the cost of 1 pen?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 5
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 5
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7287,
+    "originalText": "A bag contains 60 candies. If 15 are eaten, how many remain?",
+    "originalAnswer": {
+      "unit": "candies",
+      "value": 45
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 45
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7288,
+    "originalText": "If a square has side 6 cm, find its perimeter.",
+    "originalAnswer": {
+      "unit": "cm",
+      "value": 24
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 24
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7289,
+    "originalText": "If 1 meter of cloth costs $30, how much does 4 meters cost?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 120
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 120
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7290,
+    "originalText": "If a bottle contains 500 mL and 200 mL is poured out, how much is left?",
+    "originalAnswer": {
+      "unit": "mL",
+      "value": 300
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 300
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7291,
+    "originalText": "A man can walk 20 km in 4 hours. How far does he walk in 1 hour?",
+    "originalAnswer": {
+      "unit": "km",
+      "value": 5
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 5
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7292,
+    "originalText": "If 2 liters of milk cost $4, what is the cost of 1 liter?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 2
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7293,
+    "originalText": "A box contains 24 chocolates equally shared among 6 children. How many does each get?",
+    "originalAnswer": {
+      "unit": "chocolates",
+      "value": 4
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7294,
+    "originalText": "If a number increased by 10 is 110. equals, what is the original number?",
+    "originalAnswer": {
+      "value": 100
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Missing word 'equals' in original question",
+      "Question structure could be clearer",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7295,
+    "originalText": "A shelf holds 50 books. If 20 are removed, how many remain left?",
+    "originalAnswer": {
+      "unit": "books",
+      "value": 30
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7296,
+    "originalText": "If a train travels 150 km in 3 hours. hours, what is its speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "duplicated_text_in_question",
+      "missing_options_for_mcq",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7297,
+    "originalText": "If a worker earns $120 in 3 days. days, how much does he earn in 1 day?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 40
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 40
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "question had redundant text 'days' after '3 days'",
+      "question could be better phrased for clarity"
+    ]
+  },
+  {
+    "id": 7298,
+    "originalText": "If 3 notebooks cost $15, what is the cost of 1 notebook?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 5
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7299,
+    "originalText": "A car travels at a 30 km/h. How far. does it go in 2 hours?",
+    "originalAnswer": {
+      "unit": "km",
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": [
+      "Missing unit in answer",
+      "Question text has punctuation error",
+      "Question could be converted to MCQ format"
+    ]
+  },
+  {
+    "id": 7300,
+    "originalText": "If a number decreased by 15 equals 85, what is the number?",
+    "originalAnswer": {
+      "unit": "</xaiArtifactEnd>",
+      "value": 100
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Original answer format was incorrect - should be numeric not numeric_with_unit",
+      "Question should be converted to MCQ format as it's asking for a specific value",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7301,
+    "originalText": "A number is increased by 20% and then decreased by 10%. If the final number is 264, find the origina",
+    "originalAnswer": {
+      "value": 244.44
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Question should be converted to MCQ format as per instructions",
+      "Original answer appears to have rounding error - exact value is 244.44",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7302,
+    "originalText": "If 30% of a number is 45, what is 40% of that number?",
+    "originalAnswer": {
+      "value": 60
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7303,
+    "originalText": "A salary of $5000 is increased by 15%. What is the new salary?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 5750
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7304,
+    "originalText": "If a price is reduced by 25% and the new price is $150, what was the original price?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 200
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7305,
+    "originalText": "A number is decreased by 10% and then increased by 20%. If the final result is 264, find the origina",
+    "originalAnswer": {
+      "value": 244.44
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Answer should be converted to exact value",
+      "Original answer appears to have calculation error",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7306,
+    "originalText": "If 40% of a number exceeds 25% of it by 30, find the number.",
+    "originalAnswer": {
+      "value": 200
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7307,
+    "originalText": "A shop offers a 20% discount on an item and still makes a 20% profit. If the cost price is $100, fin",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 150
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7308,
+    "originalText": "If a population increases by 10% annually, what is the population after 2 years if it is 1000 now?",
+    "originalAnswer": {
+      "value": 1210
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7309,
+    "originalText": "A number is increased by 25% and then decreased by 20%. If the result is 300, find the original numb",
+    "originalAnswer": {
+      "value": 300
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "Question should be converted to MCQ format",
+      "Original calculation needs verification",
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7310,
+    "originalText": "If 15% of a number is 60, what is 75% of that number?",
+    "originalAnswer": {
+      "value": 300
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7311,
+    "originalText": "A shopkeeper sells an item at a 10% profit. If the cost price is $200, what is the selling price?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 220
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7312,
+    "originalText": "An article is sold at a 15% loss. If the selling price is $170, find the cost price.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 200
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7313,
+    "originalText": "A man buys an item for $150 and sells it for $180. Find the profit percentage.",
+    "originalAnswer": {
+      "unit": "%",
+      "value": 20
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7314,
+    "originalText": "If a book is sold for $120 at a 20% loss, what is the cost price?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 150
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7315,
+    "originalText": "A trader marks an item 25% above cost price and gives a 10% discount. If the cost price is $200, fin",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 225
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7316,
+    "originalText": "An item is sold at a 5% profit. If the cost price is $400, what is the selling price?",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 420
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7317,
+    "originalText": "A shopkeeper sells a product at a 12% loss. If the cost price is $250, find the selling price.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 220
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7318,
+    "originalText": "If an article is bought for $300 and sold for $360, what is the profit percentage?",
+    "originalAnswer": {
+      "unit": "%",
+      "value": 20
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7319,
+    "originalText": "A vendor marks up an item by 40% and offers a 15% discount. If the cost price is $500, find the sell",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 595
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7320,
+    "originalText": "If the selling price of an item is $180 and the loss is 10%, find the cost price.",
+    "originalAnswer": {
+      "unit": "$",
+      "value": 200
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7321,
+    "originalText": "A can do a work in 12 days, and B can do it in 18 days. How long will they take together?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 7.2
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7322,
+    "originalText": "If 6 workers complete a job in 8 days, how long will 4 workers take?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 12
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7323,
+    "originalText": "A can do a work in 15 days, and B in 20 days. If they work together for 5 days, what fraction of the",
+    "originalAnswer": {
+      "numerator": 5,
+      "denominator": 12
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7324,
+    "originalText": "If 3 men can complete a task in 10 days, how many men are needed to complete it in 6 days?",
+    "originalAnswer": {
+      "unit": "men",
+      "value": 5
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7325,
+    "originalText": "A can do a job in 10 days. After working for 4 days, B joins and they finish in 3 more days. How lon",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 10
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7326,
+    "originalText": "If 8 machines produce 160 units in 5 hours, how many units will 6 machines produce in 4 hours?",
+    "originalAnswer": {
+      "unit": "units",
+      "value": 96
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 96
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7327,
+    "originalText": "A and B together can do a work in 6 days. If A alone takes 10 days, how long does B take?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 15
+    },
+    "newType": "mcq_single",
+    "newAnswer": {
+      "value": "A"
+    },
+    "confidence": 85,
+    "action": "flagged",
+    "flags": [
+      "MCQ answer must be A, B, C, or D"
+    ]
+  },
+  {
+    "id": 7328,
+    "originalText": "If 5 workers build a wall in 12 days, how long will 3 workers take?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 20
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 20
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  }
+]

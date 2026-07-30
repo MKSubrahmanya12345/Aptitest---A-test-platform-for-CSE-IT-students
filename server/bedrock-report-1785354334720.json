@@ -1,0 +1,172 @@
+[
+  {
+    "id": 7228,
+    "originalText": "A job is done by D in 30 days. What fraction of the job is done in 10 days?",
+    "originalAnswer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 1
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7229,
+    "originalText": "If E can build a wall in 25 days, how long will it take to build 2/5 of the wall?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 10
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 10
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7230,
+    "originalText": "A printer prints 200 pages in 4 hours. How many pages does it print in 1 hour?",
+    "originalAnswer": {
+      "unit": "pages",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7231,
+    "originalText": "A car travels 300 km in 5 hours. What is its speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7232,
+    "originalText": "A train covers 120 km at a speed of 40 km/h. How long does it take?",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 3
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7233,
+    "originalText": "A cyclist travels at 15 km/h. How far does she travel in 4 hours?",
+    "originalAnswer": {
+      "unit": "km",
+      "value": 60
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 60
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7234,
+    "originalText": "A bus travels 200 km in 4 hours. What is its speed in km/h?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7236,
+    "originalText": "A car travels at 60 km/h. How long does it take to cover 180 km?",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 3
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 3
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7237,
+    "originalText": "A bike travels 50 km at 25 km/h. Find the time taken.",
+    "originalAnswer": {
+      "unit": "hours",
+      "value": 2
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 2
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  },
+  {
+    "id": 7238,
+    "originalText": "A runner covers 12 km in 2 hours. What is the speed?",
+    "originalAnswer": {
+      "unit": "km/h",
+      "value": 6
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 6
+    },
+    "confidence": 65,
+    "action": "flagged",
+    "flags": [
+      "Low confidence - verify"
+    ]
+  }
+]

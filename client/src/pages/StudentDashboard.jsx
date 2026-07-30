@@ -196,13 +196,16 @@ function StudentDashboard() {
   const historyLimit = 10;
   const leaderboardLimit = 20;
 
-  // Summary widgets state (calculated from history)
-  const [statsSummary, setStatsSummary] = useState({
-    totalTests: 0,
-    avgScore: 0,
-    highScore: 0,
-    reattempts: 0
+  // New dashboard stats from API
+  const [dashboardStats, setDashboardStats] = useState({
+    currentStreak: 0,
+    testsThisWeek: 0,
+    strongestTopic: null,
+    weakestTopic: null,
+    totalQuestions: 0,
+    avgTimePerQuestion: 0
   });
+  const [statsLoading, setStatsLoading] = useState(true);
   const [categoryAnalysis, setCategoryAnalysis] = useState([]);
 
   // Fetch test templates from API on mount
@@ -263,6 +266,7 @@ function StudentDashboard() {
       fetchHistory(1);
     } else if (currentView === "dashboard") {
       fetchHistoryDataSilently();
+      fetchDashboardStats();
     }
   }, [currentView]);
 
@@ -331,11 +335,32 @@ function StudentDashboard() {
       // Handle API response format - could be {history: [], pagination: {}} or just []
       const historyArray = Array.isArray(data) ? data : (data?.history || []);
       setHistoryList(historyArray);
-      computeStatsSummary(historyArray);
       // Fetch category analysis from DB (proper per-category breakdown)
       await fetchCategoryAnalysis();
     } catch (err) {
       console.error("Silent stats fetch failed:", err);
+    }
+  }
+
+  // Fetch new dashboard stats
+  async function fetchDashboardStats() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    setStatsLoading(true);
+    try {
+      const data = await testApiService.getDashboardStats();
+      setDashboardStats({
+        currentStreak: data.currentStreak || 0,
+        testsThisWeek: data.testsThisWeek || 0,
+        strongestTopic: data.strongestTopic,
+        weakestTopic: data.weakestTopic,
+        totalQuestions: data.totalQuestions || 0,
+        avgTimePerQuestion: data.avgTimePerQuestion || 0
+      });
+    } catch (err) {
+      console.error("Failed to fetch dashboard stats:", err);
+    } finally {
+      setStatsLoading(false);
     }
   }
 
@@ -365,18 +390,23 @@ function StudentDashboard() {
     const totalTests = completed.length;
     
     let sumPercentage = 0;
-    let highScore = 0;
+    let highestPercentage = 0;
+    let highestRawScore = 0;
     const reattempts = completed.filter(h => h.is_reattempt).length;
 
     completed.forEach(h => {
       const percent = h.total_marks > 0 ? (h.score / h.total_marks) * 100 : 0;
       sumPercentage += percent;
-      if (h.score > highScore) {
-        highScore = h.score;
+      // Track highest percentage for fair comparison across different test sizes
+      if (percent > highestPercentage) {
+        highestPercentage = percent;
+        highestRawScore = h.score;
       }
     });
 
     const avgScore = totalTests > 0 ? Math.round(sumPercentage / totalTests) : 0;
+    // round to nearest whole number for display consistency
+    const highScore = Math.round(highestPercentage);
 
     setStatsSummary({
       totalTests,
@@ -898,23 +928,79 @@ function StudentDashboard() {
               </div>
 
               {/* Stats Widgets */}
-              <div className="dashboard-stats-grid">
-                <div className="stat-widget">
-                  <span className="stat-widget-label">Total Tests Taken</span>
-                  <span className="stat-widget-val">{statsSummary.totalTests}</span>
+              <div className="dashboard-stats-section">
+                <div className="stats-header">
+                  <h3 className="stats-title">Your Performance</h3>
+                  <div className="stats-info-wrapper">
+                    <button className="stats-info-btn" title="What do these stats mean?">ⓘ</button>
+                    <div className="stats-info-card">
+                      <h4>📊 Stat Guide</h4>
+                      <div className="info-item">
+                        <strong>🔥 Current Streak</strong>
+                        <span>Consecutive days with completed tests. Keep it going!</span>
+                      </div>
+                      <div className="info-item">
+                        <strong>📅 Tests This Week</strong>
+                        <span>How many tests you've completed in the last 7 days</span>
+                      </div>
+                      <div className="info-item">
+                        <strong>⭐ Strongest Topic</strong>
+                        <span>Your highest accuracy category - your confidence area</span>
+                      </div>
+                      <div className="info-item">
+                        <strong>⚠️ Focus Topic</strong>
+                        <span>Your lowest accuracy category - needs more practice</span>
+                      </div>
+                      <div className="info-item">
+                        <strong>📝 Questions Done</strong>
+                        <span>Total questions you've attempted across all tests</span>
+                      </div>
+                      <div className="info-item">
+                        <strong>⏱️ Avg Time/Q</strong>
+                        <span>Average seconds spent per question - aim for balance</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="stat-widget">
-                  <span className="stat-widget-label">Average Score</span>
-                  <span className="stat-widget-val">{statsSummary.avgScore}%</span>
-                </div>
-                <div className="stat-widget">
-                  <span className="stat-widget-label">High Score</span>
-                  <span className="stat-widget-val">{statsSummary.highScore} pts</span>
-                </div>
-                <div className="stat-widget">
-                  <span className="stat-widget-label">Reattempt Count</span>
-                  <span className="stat-widget-val">{statsSummary.reattempts}</span>
-                </div>
+                {statsLoading ? (
+                  <div className="stats-loading">
+                    <div className="loader-small"></div>
+                    <span>Loading stats...</span>
+                  </div>
+                ) : (
+                  <div className="dashboard-stats-grid">
+                    <div className="stat-widget stat-streak">
+                      <span className="stat-widget-label">🔥 Current Streak</span>
+                      <span className="stat-widget-val">{dashboardStats.currentStreak} <small>days</small></span>
+                    </div>
+                    <div className="stat-widget">
+                      <span className="stat-widget-label">📅 Tests This Week</span>
+                      <span className="stat-widget-val">{dashboardStats.testsThisWeek}</span>
+                    </div>
+                    <div className="stat-widget stat-strength">
+                      <span className="stat-widget-label">⭐ Strongest Topic</span>
+                      <span className="stat-widget-val stat-topic">
+                        {dashboardStats.strongestTopic ? dashboardStats.strongestTopic.category : "—"}
+                        {dashboardStats.strongestTopic && <small>{dashboardStats.strongestTopic.accuracy}%</small>}
+                      </span>
+                    </div>
+                    <div className="stat-widget stat-weakness">
+                      <span className="stat-widget-label">⚠️ Focus Topic</span>
+                      <span className="stat-widget-val stat-topic">
+                        {dashboardStats.weakestTopic ? dashboardStats.weakestTopic.category : "—"}
+                        {dashboardStats.weakestTopic && <small>{dashboardStats.weakestTopic.accuracy}%</small>}
+                      </span>
+                    </div>
+                    <div className="stat-widget">
+                      <span className="stat-widget-label">📝 Questions Done</span>
+                      <span className="stat-widget-val">{dashboardStats.totalQuestions.toLocaleString()}</span>
+                    </div>
+                    <div className="stat-widget">
+                      <span className="stat-widget-label">⏱️ Avg Time/Q</span>
+                      <span className="stat-widget-val">{dashboardStats.avgTimePerQuestion}s</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Practice Test Templates */}

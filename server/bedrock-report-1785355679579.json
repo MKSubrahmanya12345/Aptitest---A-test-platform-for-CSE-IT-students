@@ -1,0 +1,48 @@
+[
+  {
+    "id": 7228,
+    "originalText": "A job is done by D in 30 days. What fraction of the job is done in 10 days?",
+    "originalAnswer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "newType": "fraction",
+    "newAnswer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7229,
+    "originalText": "If E can build a wall in 25 days, how long will it take to build 2/5 of the wall?",
+    "originalAnswer": {
+      "unit": "days",
+      "value": 10
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 10
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  },
+  {
+    "id": 7230,
+    "originalText": "A printer prints 200 pages in 4 hours. How many pages does it print in 1 hour?",
+    "originalAnswer": {
+      "unit": "pages",
+      "value": 50
+    },
+    "newType": "numeric",
+    "newAnswer": {
+      "value": 50
+    },
+    "confidence": 95,
+    "action": "approved",
+    "flags": []
+  }
+]

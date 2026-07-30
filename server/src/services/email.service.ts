@@ -6,14 +6,11 @@
 
 import sgMail from '@sendgrid/mail';
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-const SENDGRID_FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'your-verified@gmail.com';
-const SENDGRID_FROM_NAME = process.env.SENDGRID_FROM_NAME || 'AptiTest';
-
-// Initialize SendGrid with API key
-if (SENDGRID_API_KEY) {
-  sgMail.setApiKey(SENDGRID_API_KEY);
-}
+const getSendGridConfig = () => ({
+  apiKey: process.env.SENDGRID_API_KEY,
+  fromEmail: process.env.SENDGRID_FROM_EMAIL || 'your-verified@gmail.com',
+  fromName: process.env.SENDGRID_FROM_NAME || 'AptiTest',
+});
 
 interface EmailConfig {
   to: string;
@@ -24,22 +21,27 @@ interface EmailConfig {
 
 // Send email via SendGrid API
 const sendViaSendGrid = async (config: EmailConfig): Promise<void> => {
+  const { apiKey, fromEmail, fromName } = getSendGridConfig();
+
   console.log('[EmailService] Attempting to send email via SendGrid...');
-  console.log('[EmailService] SENDGRID_API_KEY exists:', !!SENDGRID_API_KEY);
-  console.log('[EmailService] SENDGRID_FROM_EMAIL:', SENDGRID_FROM_EMAIL);
+  console.log('[EmailService] SENDGRID_API_KEY exists:', !!apiKey);
+  console.log('[EmailService] SENDGRID_FROM_EMAIL:', fromEmail);
   console.log('[EmailService] To:', config.to);
   console.log('[EmailService] Subject:', config.subject);
 
-  if (!SENDGRID_API_KEY) {
+  if (!apiKey) {
     console.error('[EmailService] SENDGRID_API_KEY not configured!');
     throw new Error('SENDGRID_API_KEY not configured');
   }
 
+  // Set API key fresh each time (ensures it's set)
+  sgMail.setApiKey(apiKey);
+
   const msg = {
     to: config.to,
     from: {
-      email: SENDGRID_FROM_EMAIL,
-      name: SENDGRID_FROM_NAME,
+      email: fromEmail,
+      name: fromName,
     },
     subject: config.subject,
     html: config.html,
@@ -181,7 +183,7 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYou requested to reset your password. Visit this link: ${resetUrl}\n\nThis link expires in 1 hour.`,
     };
 
-    if (!SENDGRID_API_KEY) {
+    if (!getSendGridConfig().apiKey) {
       console.error('SENDGRID_API_KEY not configured. Cannot send email.');
       console.log('Password reset token for', email, ':', resetToken);
       console.log('Reset URL:', resetUrl);
@@ -202,7 +204,7 @@ export const emailService = {
   // Send email verification email
   async sendVerificationEmail(email: string, verificationToken: string, name: string): Promise<void> {
     console.log('[EmailService] sendVerificationEmail called for:', email);
-    console.log('[EmailService] SENDGRID_API_KEY exists:', !!SENDGRID_API_KEY);
+    console.log('[EmailService] SENDGRID_API_KEY exists:', !!getSendGridConfig().apiKey);
 
     const baseUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
     const verifyUrl = `${baseUrl}/verify-email?token=${verificationToken}`;
@@ -229,7 +231,7 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}!\n\nPlease verify your email by visiting: ${verifyUrl}\n\nThis link expires in 24 hours.`,
     };
 
-    if (!SENDGRID_API_KEY) {
+    if (!getSendGridConfig().apiKey) {
       console.error('SENDGRID_API_KEY not configured. Cannot send email.');
       console.log('Email verification token for', email, ':', verificationToken);
       console.log('Verify URL:', verifyUrl);
@@ -271,7 +273,7 @@ export const emailService = {
       text: `Welcome to AptiTest, ${name || 'there'}! Your account is now verified. Visit ${baseUrl}/dashboard to start testing.`,
     };
 
-    if (!SENDGRID_API_KEY) {
+    if (!getSendGridConfig().apiKey) {
       console.log('SENDGRID_API_KEY not configured. Welcome email would be sent to:', email);
       return;
     }
@@ -304,7 +306,7 @@ export const emailService = {
       text: `Hello ${name || 'there'},\n\nYour AptiTest password has been changed. If you didn't make this change, please contact support.`,
     };
 
-    if (!SENDGRID_API_KEY) {
+    if (!getSendGridConfig().apiKey) {
       console.log('SENDGRID_API_KEY not configured. Password changed email would be sent to:', email);
       return;
     }
