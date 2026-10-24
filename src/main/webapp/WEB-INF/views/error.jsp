@@ -1,0 +1,3 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="fragments/taglibs.jspf" %>
+<t:layout title="Something needs attention"><div class="error-content"><div class="error-code">${empty statusCode ? 'Oops' : statusCode}</div><h1>${statusCode == 404 ? 'A little off track.' : statusCode == 403 ? 'This space is restricted.' : 'Let’s take another look.'}</h1><p><c:out value="${message}"/></p><div class="error-actions"><a class="btn" href="${ctx}/">Back to home <t:icon name="arrow"/></a><c:if test="${not empty currentUser}"><a class="btn btn-secondary" href="${ctx}/profile">My account</a></c:if></div></div></t:layout>

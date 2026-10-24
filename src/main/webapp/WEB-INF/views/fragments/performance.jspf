@@ -1,0 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
+<c:choose><c:when test="${empty performance}"><div class="empty-state"><t:icon name="chart"/><h3>Your insights start here.</h3><p>Complete your first test to discover your strengths and the topics to work on.</p></div></c:when><c:otherwise>
+<c:forEach items="${performance}" var="row"><div class="performance-row"><strong><c:out value="${row.category}"/></strong><span>${row.accuracy}% accuracy</span></div><div class="progress-track"><span style="width:${row.accuracy}%"></span></div><div class="performance-sub">${row.attempted} answered · ${row.correct} correct · ${row.averageSeconds}s average time</div></c:forEach>
+</c:otherwise></c:choose>
