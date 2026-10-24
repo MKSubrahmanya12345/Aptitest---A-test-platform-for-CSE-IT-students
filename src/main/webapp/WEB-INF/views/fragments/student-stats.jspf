@@ -1,0 +1,7 @@
+<%@ page pageEncoding="UTF-8" %>
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-top">Tests completed <span class="stat-icon"><t:icon name="check"/></span></div><div class="stat-value">${stats.totalTests}</div><p>Fresh, completed attempts</p></div>
+    <div class="stat-card"><div class="stat-top">Average score <span class="stat-icon"><t:icon name="chart"/></span></div><div class="stat-value">${stats.averageScore}<small>%</small></div><p>Across your practice tests</p></div>
+    <div class="stat-card"><div class="stat-top">Answer accuracy <span class="stat-icon"><t:icon name="trophy"/></span></div><div class="stat-value">${stats.accuracy}<small>%</small></div><p>${stats.correctAnswers} correct of ${stats.answeredCount} answered</p></div>
+    <div class="stat-card"><div class="stat-top">Practice streak <span class="stat-icon"><t:icon name="clock"/></span></div><div class="stat-value">${stats.streak}<small>${stats.streak == 1 ? ' day' : ' days'}</small></div><p>Keep the momentum going</p></div>
+</div>

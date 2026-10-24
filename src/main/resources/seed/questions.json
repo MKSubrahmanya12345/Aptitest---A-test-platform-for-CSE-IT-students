@@ -1,0 +1,3843 @@
+[
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "A job is done by D in 30 days. What fraction of the job is done in 10 days?",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 3
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Imported from the original repository report. Accepted answer: {\"numerator\": 1, \"denominator\": 3}",
+    "status": "active",
+    "source_ref": "legacy-report-7228"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If E can build a wall in 25 days, how long will it take to build 2/5 of the wall?",
+    "options": {},
+    "correct_answer": {
+      "value": 10
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 10}",
+    "status": "active",
+    "source_ref": "legacy-report-7229"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A printer prints 200 pages in 4 hours. How many pages does it print in 1 hour?",
+    "options": {},
+    "correct_answer": {
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 50}",
+    "status": "active",
+    "source_ref": "legacy-report-7230"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "A car travels 300 km in 5 hours. What is its speed?",
+    "options": {},
+    "correct_answer": {
+      "unit": "km/h",
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"km/h\", \"value\": 60}",
+    "status": "pending",
+    "source_ref": "legacy-report-7231"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A train covers 120 km at a speed of 40 km/h. How long does it take?",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 3}",
+    "status": "active",
+    "source_ref": "legacy-report-7232"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A cyclist travels at 15 km/h. How far does she travel in 4 hours?",
+    "options": {},
+    "correct_answer": {
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 60}",
+    "status": "active",
+    "source_ref": "legacy-report-7233"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A bus travels 200 km in 4 hours. What is its speed in km/h?",
+    "options": {},
+    "correct_answer": {
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 50}",
+    "status": "active",
+    "source_ref": "legacy-report-7234"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A car travels at 60 km/h. How long does it take to cover 180 km?",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 3}",
+    "status": "active",
+    "source_ref": "legacy-report-7236"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A bike travels 50 km at 25 km/h. Find the time taken.",
+    "options": {},
+    "correct_answer": {
+      "value": 2
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 2}",
+    "status": "active",
+    "source_ref": "legacy-report-7237"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A runner covers 12 km in 2 hours. What is the speed?",
+    "options": {},
+    "correct_answer": {
+      "value": 6
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 6}",
+    "status": "active",
+    "source_ref": "legacy-report-7238"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "A vehicle travels 400 km in 8 hours. What is its speed?",
+    "options": {},
+    "correct_answer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"km/h\", \"value\": 50}",
+    "status": "pending",
+    "source_ref": "legacy-report-7239"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a train travels at 80 km/h, how far does it go in 3 hours?",
+    "options": {},
+    "correct_answer": {
+      "value": 240
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 240}",
+    "status": "active",
+    "source_ref": "legacy-report-7240"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If the ratio of two numbers is 2:3 and their sum is 50, find the numbers.",
+    "options": {},
+    "correct_answer": {
+      "unit": "and 30",
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"and 30\", \"value\": 20}",
+    "status": "pending",
+    "source_ref": "legacy-report-7241"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "ratio",
+    "question_text": "Divide $120 in the ratio 3:5.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        45,
+        75
+      ],
+      "unit": "$"
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"values\": [45, 75], \"unit\": \"$\"}",
+    "status": "active",
+    "source_ref": "legacy-report-7242"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If A:B = 4:7 and B = 14, find A.",
+    "options": {},
+    "correct_answer": {
+      "value": 8
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 8}",
+    "status": "pending",
+    "source_ref": "legacy-report-7243"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "The ratio of ages of two people is 5:6. If the sum of their ages is 44, find their ages.",
+    "options": {},
+    "correct_answer": {
+      "unit": "and 24 years",
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"and 24 years\", \"value\": 20}",
+    "status": "pending",
+    "source_ref": "legacy-report-7244"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If 2:5 :: x:20, find x.",
+    "options": {},
+    "correct_answer": {
+      "value": 8
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 8}",
+    "status": "active",
+    "source_ref": "legacy-report-7245"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "ratio",
+    "question_text": "Divide 180 in the ratio 1:2:3.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        30,
+        60,
+        90
+      ]
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"values\": [30, 60, 90]}",
+    "status": "active",
+    "source_ref": "legacy-report-7246"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If the ratio of two quantities is 3:4 and the smaller quantity is 12, find the larger quantity.",
+    "options": {},
+    "correct_answer": {
+      "value": 16
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 16}",
+    "status": "pending",
+    "source_ref": "legacy-report-7247"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "ratio",
+    "question_text": "If A:B = 2:3 and B:C = 4:5, find A:C.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        8,
+        15
+      ]
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"values\": [8, 15]}",
+    "status": "active",
+    "source_ref": "legacy-report-7248"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If 3:8 :: 12:x, find x.",
+    "options": {},
+    "correct_answer": {
+      "value": 32
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 32}",
+    "status": "active",
+    "source_ref": "legacy-report-7249"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "The ratio of two numbers is 7:9 and their difference is 14. Find the numbers.",
+    "options": {},
+    "correct_answer": {
+      "value": 49
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 49}",
+    "status": "pending",
+    "source_ref": "legacy-report-7250"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the average of 10, 20, 30, 40.",
+    "options": {},
+    "correct_answer": {
+      "value": 25
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 25}",
+    "status": "active",
+    "source_ref": "legacy-report-7251"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "The average of 5 numbers is 50. Find their sum.",
+    "options": {},
+    "correct_answer": {
+      "value": 250
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 250}",
+    "status": "active",
+    "source_ref": "legacy-report-7252"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "The average of 3 numbers is 15. What is their sum?",
+    "options": {},
+    "correct_answer": {
+      "value": 45
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 45}",
+    "status": "active",
+    "source_ref": "legacy-report-7253"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the average of 12, 18, 24.",
+    "options": {},
+    "correct_answer": {
+      "value": 18
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 18}",
+    "status": "active",
+    "source_ref": "legacy-report-7254"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If the average of 4 numbers is 25, what is the sum of the numbers?",
+    "options": {},
+    "correct_answer": {
+      "value": 100
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 100}",
+    "status": "pending",
+    "source_ref": "legacy-report-7255"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "The average of 7, 14, and 21 is what?",
+    "options": {},
+    "correct_answer": {
+      "value": 14
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 14}",
+    "status": "pending",
+    "source_ref": "legacy-report-7256"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "The average of 5 scores is 20. If one score is 30, what is the sum of the other 4 scores?",
+    "options": {},
+    "correct_answer": {
+      "value": 70
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 70}",
+    "status": "pending",
+    "source_ref": "legacy-report-7257"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the average of 5, 10, 15, 20, 25.",
+    "options": {},
+    "correct_answer": {
+      "value": 15
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 15}",
+    "status": "active",
+    "source_ref": "legacy-report-7258"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "The average of 6 numbers is 12. If one number is 18, what is the average of the remaining 5 numbers?",
+    "options": {},
+    "correct_answer": {
+      "value": 10.8
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 10.8}",
+    "status": "pending",
+    "source_ref": "legacy-report-7259"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "The average of 4 weights is 50 kg. What is their total weight?",
+    "options": {},
+    "correct_answer": {
+      "value": 200
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 200}",
+    "status": "active",
+    "source_ref": "legacy-report-7260"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the simple interest on $1000 at 5% per annum for 2 years.",
+    "options": {},
+    "correct_answer": {
+      "value": 100
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 100}",
+    "status": "active",
+    "source_ref": "legacy-report-7261"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Calculate the simple interest on $500 at 4% for 3 years.",
+    "options": {},
+    "correct_answer": {
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 60}",
+    "status": "active",
+    "source_ref": "legacy-report-7262"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If the simple interest on a sum is $120 at 6% for 2 years, find the principal.",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 1000
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 1000}",
+    "status": "pending",
+    "source_ref": "legacy-report-7263"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the simple interest on $2000 at 3% per annum for 5 years.",
+    "options": {},
+    "correct_answer": {
+      "value": 300
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 300}",
+    "status": "active",
+    "source_ref": "legacy-report-7264"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What is the rate if simple interest on $400 is $80 for 4 years?",
+    "options": {},
+    "correct_answer": {
+      "unit": "%",
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"%\", \"value\": 5}",
+    "status": "pending",
+    "source_ref": "legacy-report-7265"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the time if simple interest on $600 is $90 at 5% per annum.",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 3}",
+    "status": "active",
+    "source_ref": "legacy-report-7266"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Calculate simple interest on $1500 at 7% for 2 years.",
+    "options": {},
+    "correct_answer": {
+      "value": 210
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 210}",
+    "status": "active",
+    "source_ref": "legacy-report-7267"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If simple interest is $200 on a sum at 8% for 5 years, find the principal.",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 500
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 500}",
+    "status": "pending",
+    "source_ref": "legacy-report-7268"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the simple interest on $800 at 2.5% for 4 years.",
+    "options": {},
+    "correct_answer": {
+      "value": 80
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 80}",
+    "status": "active",
+    "source_ref": "legacy-report-7269"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What is the principal if simple interest is $75 at 3% for 5 years?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 500
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 500}",
+    "status": "pending",
+    "source_ref": "legacy-report-7270"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What is the sum of the first 5 odd numbers?",
+    "options": {},
+    "correct_answer": {
+      "value": 25
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 25}",
+    "status": "pending",
+    "source_ref": "legacy-report-7271"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the product of 12 and 5.",
+    "options": {},
+    "correct_answer": {
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 60}",
+    "status": "active",
+    "source_ref": "legacy-report-7272"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "What is the square of 7?",
+    "options": {},
+    "correct_answer": {
+      "value": 49
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 49}",
+    "status": "active",
+    "source_ref": "legacy-report-7273"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the cube of 4.",
+    "options": {},
+    "correct_answer": {
+      "value": 64
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 64}",
+    "status": "active",
+    "source_ref": "legacy-report-7274"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What is the sum of the first 4 even numbers?",
+    "options": {},
+    "correct_answer": {
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 20}",
+    "status": "pending",
+    "source_ref": "legacy-report-7275"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "boolean",
+    "question_text": "If a number is divisible by both 2 and 3, is it divisible by 6?",
+    "options": {},
+    "correct_answer": {
+      "value": true
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": true}",
+    "status": "active",
+    "source_ref": "legacy-report-7276"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the square root of 16.",
+    "options": {},
+    "correct_answer": {
+      "value": 4
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 4}",
+    "status": "active",
+    "source_ref": "legacy-report-7277"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "What is 15 divided by 3?",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 5}",
+    "status": "active",
+    "source_ref": "legacy-report-7278"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the sum of 7, 14, and 21.",
+    "options": {},
+    "correct_answer": {
+      "value": 42
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 42}",
+    "status": "active",
+    "source_ref": "legacy-report-7279"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "What is the product of 8 and 6?",
+    "options": {},
+    "correct_answer": {
+      "value": 48
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 48}",
+    "status": "active",
+    "source_ref": "legacy-report-7280"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a rectangle has length 10 cm and width 5 cm, find its area.",
+    "options": {},
+    "correct_answer": {
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 50}",
+    "status": "active",
+    "source_ref": "legacy-report-7281"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A tank holds 100 liters. If 20 liters are used, how much is left?",
+    "options": {},
+    "correct_answer": {
+      "value": 80
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 80}",
+    "status": "active",
+    "source_ref": "legacy-report-7282"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If 1 kg of apples costs $50, what is the cost of 3 kg?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 150
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 150}",
+    "status": "pending",
+    "source_ref": "legacy-report-7283"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A clock shows 3:00. What time is it after 2 hours?",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 5}",
+    "status": "active",
+    "source_ref": "legacy-report-7284"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a circle has radius 7 cm, find its circumference (use π = 3.14).",
+    "options": {},
+    "correct_answer": {
+      "value": 43.96
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 43.96}",
+    "status": "active",
+    "source_ref": "legacy-report-7285"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If 5 pens cost $25, what is the cost of 1 pen?",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 5}",
+    "status": "active",
+    "source_ref": "legacy-report-7286"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A bag contains 60 candies. If 15 are eaten, how many remain?",
+    "options": {},
+    "correct_answer": {
+      "value": 45
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 45}",
+    "status": "active",
+    "source_ref": "legacy-report-7287"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a square has side 6 cm, find its perimeter.",
+    "options": {},
+    "correct_answer": {
+      "value": 24
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 24}",
+    "status": "active",
+    "source_ref": "legacy-report-7288"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If 1 meter of cloth costs $30, how much does 4 meters cost?",
+    "options": {},
+    "correct_answer": {
+      "value": 120
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 120}",
+    "status": "active",
+    "source_ref": "legacy-report-7289"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a bottle contains 500 mL and 200 mL is poured out, how much is left?",
+    "options": {},
+    "correct_answer": {
+      "value": 300
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 300}",
+    "status": "active",
+    "source_ref": "legacy-report-7290"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A man can walk 20 km in 4 hours. How far does he walk in 1 hour?",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 5}",
+    "status": "active",
+    "source_ref": "legacy-report-7291"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If 2 liters of milk cost $4, what is the cost of 1 liter?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 2
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 2}",
+    "status": "pending",
+    "source_ref": "legacy-report-7292"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "A box contains 24 chocolates equally shared among 6 children. How many does each get?",
+    "options": {},
+    "correct_answer": {
+      "unit": "chocolates",
+      "value": 4
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"chocolates\", \"value\": 4}",
+    "status": "pending",
+    "source_ref": "legacy-report-7293"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If a number increased by 10 is 110. equals, what is the original number?",
+    "options": {},
+    "correct_answer": {
+      "value": 100
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 100}",
+    "status": "pending",
+    "source_ref": "legacy-report-7294"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "A shelf holds 50 books. If 20 are removed, how many remain left?",
+    "options": {},
+    "correct_answer": {
+      "unit": "books",
+      "value": 30
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"books\", \"value\": 30}",
+    "status": "pending",
+    "source_ref": "legacy-report-7295"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If a train travels 150 km in 3 hours. hours, what is its speed?",
+    "options": {},
+    "correct_answer": {
+      "unit": "km/h",
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"km/h\", \"value\": 50}",
+    "status": "pending",
+    "source_ref": "legacy-report-7296"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "If a worker earns $120 in 3 days. days, how much does he earn in 1 day?",
+    "options": {},
+    "correct_answer": {
+      "value": 40
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 40}",
+    "status": "active",
+    "source_ref": "legacy-report-7297"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "If 3 notebooks cost $15, what is the cost of 1 notebook?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 5}",
+    "status": "pending",
+    "source_ref": "legacy-report-7298"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "A car travels at a 30 km/h. How far. does it go in 2 hours?",
+    "options": {},
+    "correct_answer": {
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 60}",
+    "status": "active",
+    "source_ref": "legacy-report-7299"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If a number decreased by 15 equals 85, what is the number?",
+    "options": {},
+    "correct_answer": {
+      "unit": "</xaiArtifactEnd>",
+      "value": 100
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"</xaiArtifactEnd>\", \"value\": 100}",
+    "status": "pending",
+    "source_ref": "legacy-report-7300"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A number is increased by 20% and then decreased by 10%. If the final number is 264, find the origina",
+    "options": {},
+    "correct_answer": {
+      "value": 244.44
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 244.44}",
+    "status": "pending",
+    "source_ref": "legacy-report-7301"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If 30% of a number is 45, what is 40% of that number?",
+    "options": {},
+    "correct_answer": {
+      "value": 60
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 60}",
+    "status": "pending",
+    "source_ref": "legacy-report-7302"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A salary of $5000 is increased by 15%. What is the new salary?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 5750
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 5750}",
+    "status": "pending",
+    "source_ref": "legacy-report-7303"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If a price is reduced by 25% and the new price is $150, what was the original price?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 200
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 200}",
+    "status": "pending",
+    "source_ref": "legacy-report-7304"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A number is decreased by 10% and then increased by 20%. If the final result is 264, find the origina",
+    "options": {},
+    "correct_answer": {
+      "value": 244.44
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 244.44}",
+    "status": "pending",
+    "source_ref": "legacy-report-7305"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If 40% of a number exceeds 25% of it by 30, find the number.",
+    "options": {},
+    "correct_answer": {
+      "value": 200
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 200}",
+    "status": "pending",
+    "source_ref": "legacy-report-7306"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A shop offers a 20% discount on an item and still makes a 20% profit. If the cost price is $100, fin",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 150
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 150}",
+    "status": "pending",
+    "source_ref": "legacy-report-7307"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If a population increases by 10% annually, what is the population after 2 years if it is 1000 now?",
+    "options": {},
+    "correct_answer": {
+      "value": 1210
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 1210}",
+    "status": "pending",
+    "source_ref": "legacy-report-7308"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A number is increased by 25% and then decreased by 20%. If the result is 300, find the original numb",
+    "options": {},
+    "correct_answer": {
+      "value": 300
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 300}",
+    "status": "pending",
+    "source_ref": "legacy-report-7309"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If 15% of a number is 60, what is 75% of that number?",
+    "options": {},
+    "correct_answer": {
+      "value": 300
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 300}",
+    "status": "pending",
+    "source_ref": "legacy-report-7310"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A shopkeeper sells an item at a 10% profit. If the cost price is $200, what is the selling price?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 220
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 220}",
+    "status": "pending",
+    "source_ref": "legacy-report-7311"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "An article is sold at a 15% loss. If the selling price is $170, find the cost price.",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 200
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 200}",
+    "status": "pending",
+    "source_ref": "legacy-report-7312"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A man buys an item for $150 and sells it for $180. Find the profit percentage.",
+    "options": {},
+    "correct_answer": {
+      "unit": "%",
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"%\", \"value\": 20}",
+    "status": "pending",
+    "source_ref": "legacy-report-7313"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If a book is sold for $120 at a 20% loss, what is the cost price?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 150
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 150}",
+    "status": "pending",
+    "source_ref": "legacy-report-7314"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A trader marks an item 25% above cost price and gives a 10% discount. If the cost price is $200, fin",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 225
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 225}",
+    "status": "pending",
+    "source_ref": "legacy-report-7315"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "An item is sold at a 5% profit. If the cost price is $400, what is the selling price?",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 420
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 420}",
+    "status": "pending",
+    "source_ref": "legacy-report-7316"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A shopkeeper sells a product at a 12% loss. If the cost price is $250, find the selling price.",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 220
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 220}",
+    "status": "pending",
+    "source_ref": "legacy-report-7317"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If an article is bought for $300 and sold for $360, what is the profit percentage?",
+    "options": {},
+    "correct_answer": {
+      "unit": "%",
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"%\", \"value\": 20}",
+    "status": "pending",
+    "source_ref": "legacy-report-7318"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A vendor marks up an item by 40% and offers a 15% discount. If the cost price is $500, find the sell",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 595
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 595}",
+    "status": "pending",
+    "source_ref": "legacy-report-7319"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If the selling price of an item is $180 and the loss is 10%, find the cost price.",
+    "options": {},
+    "correct_answer": {
+      "unit": "$",
+      "value": 200
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"$\", \"value\": 200}",
+    "status": "pending",
+    "source_ref": "legacy-report-7320"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A can do a work in 12 days, and B can do it in 18 days. How long will they take together?",
+    "options": {},
+    "correct_answer": {
+      "unit": "days",
+      "value": 7.2
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"days\", \"value\": 7.2}",
+    "status": "pending",
+    "source_ref": "legacy-report-7321"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If 6 workers complete a job in 8 days, how long will 4 workers take?",
+    "options": {},
+    "correct_answer": {
+      "unit": "days",
+      "value": 12
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"days\", \"value\": 12}",
+    "status": "pending",
+    "source_ref": "legacy-report-7322"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A can do a work in 15 days, and B in 20 days. If they work together for 5 days, what fraction of the",
+    "options": {},
+    "correct_answer": {
+      "numerator": 5,
+      "denominator": 12
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"numerator\": 5, \"denominator\": 12}",
+    "status": "pending",
+    "source_ref": "legacy-report-7323"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "If 3 men can complete a task in 10 days, how many men are needed to complete it in 6 days?",
+    "options": {},
+    "correct_answer": {
+      "unit": "men",
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"men\", \"value\": 5}",
+    "status": "pending",
+    "source_ref": "legacy-report-7324"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A can do a job in 10 days. After working for 4 days, B joins and they finish in 3 more days. How lon",
+    "options": {},
+    "correct_answer": {
+      "unit": "days",
+      "value": 10
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"days\", \"value\": 10}",
+    "status": "pending",
+    "source_ref": "legacy-report-7325"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "If 8 machines produce 160 units in 5 hours, how many units will 6 machines produce in 4 hours?",
+    "options": {},
+    "correct_answer": {
+      "value": 96
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 96}",
+    "status": "active",
+    "source_ref": "legacy-report-7326"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "A and B together can do a work in 6 days. If A alone takes 10 days, how long does B take?",
+    "options": {},
+    "correct_answer": {
+      "unit": "days",
+      "value": 15
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"unit\": \"days\", \"value\": 15}",
+    "status": "pending",
+    "source_ref": "legacy-report-7327"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Original question bank",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "If 5 workers build a wall in 12 days, how long will 3 workers take?",
+    "options": {},
+    "correct_answer": {
+      "value": 20
+    },
+    "grading_config": {},
+    "solution": "Imported from the original repository report. Accepted answer: {\"value\": 20}",
+    "status": "active",
+    "source_ref": "legacy-report-7328"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 5% of 100.",
+    "options": {},
+    "correct_answer": {
+      "value": 5.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 100 × 5 / 100 = 5.",
+    "status": "active",
+    "source_ref": "demo-curated-101"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹1200 is invested at 6% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 148.32
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹148.32.",
+    "status": "active",
+    "source_ref": "demo-curated-102"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 3, 6, 9, 12, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 15
+    },
+    "grading_config": {},
+    "solution": "The common difference is 3. Add it to 12.",
+    "status": "active",
+    "source_ref": "demo-curated-103"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 2, 5, 10, 17, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 26
+    },
+    "grading_config": {},
+    "solution": "Terms are 1 + n², for n = 1, 2, 3, 4, 5. The next term is 1 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-104"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 10011 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 19
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 10011₂ = 19₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-105"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 5 and b = 8, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 13
+    },
+    "grading_config": {},
+    "solution": "101 XOR 1000 = 1101 in binary, which is 13.",
+    "status": "active",
+    "source_ref": "demo-curated-106"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 10% of 120.",
+    "options": {},
+    "correct_answer": {
+      "value": 12.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 120 × 10 / 100 = 12.",
+    "status": "active",
+    "source_ref": "demo-curated-107"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹1400 is invested at 7% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 202.86
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹202.86.",
+    "status": "active",
+    "source_ref": "demo-curated-108"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 6, 10, 14, 18, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 22
+    },
+    "grading_config": {},
+    "solution": "The common difference is 4. Add it to 18.",
+    "status": "active",
+    "source_ref": "demo-curated-109"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 3, 6, 11, 18, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 27
+    },
+    "grading_config": {},
+    "solution": "Terms are 2 + n², for n = 1, 2, 3, 4, 5. The next term is 2 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-110"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 10110 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 22
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 10110₂ = 22₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-111"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 6 and b = 9, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 15
+    },
+    "grading_config": {},
+    "solution": "110 XOR 1001 = 1111 in binary, which is 15.",
+    "status": "active",
+    "source_ref": "demo-curated-112"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 15% of 140.",
+    "options": {},
+    "correct_answer": {
+      "value": 21.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 140 × 15 / 100 = 21.",
+    "status": "active",
+    "source_ref": "demo-curated-113"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹1600 is invested at 8% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 266.24
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹266.24.",
+    "status": "active",
+    "source_ref": "demo-curated-114"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 9, 14, 19, 24, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 29
+    },
+    "grading_config": {},
+    "solution": "The common difference is 5. Add it to 24.",
+    "status": "active",
+    "source_ref": "demo-curated-115"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 4, 7, 12, 19, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 28
+    },
+    "grading_config": {},
+    "solution": "Terms are 3 + n², for n = 1, 2, 3, 4, 5. The next term is 3 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-116"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 11001 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 25
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 11001₂ = 25₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-117"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 7 and b = 10, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 13
+    },
+    "grading_config": {},
+    "solution": "111 XOR 1010 = 1101 in binary, which is 13.",
+    "status": "active",
+    "source_ref": "demo-curated-118"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 20% of 160.",
+    "options": {},
+    "correct_answer": {
+      "value": 32.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 160 × 20 / 100 = 32.",
+    "status": "active",
+    "source_ref": "demo-curated-119"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹1800 is invested at 9% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 338.58
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹338.58.",
+    "status": "active",
+    "source_ref": "demo-curated-120"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 12, 18, 24, 30, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 36
+    },
+    "grading_config": {},
+    "solution": "The common difference is 6. Add it to 30.",
+    "status": "active",
+    "source_ref": "demo-curated-121"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 5, 8, 13, 20, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 29
+    },
+    "grading_config": {},
+    "solution": "Terms are 4 + n², for n = 1, 2, 3, 4, 5. The next term is 4 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-122"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 11100 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 28
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 11100₂ = 28₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-123"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 8 and b = 11, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "1000 XOR 1011 = 11 in binary, which is 3.",
+    "status": "active",
+    "source_ref": "demo-curated-124"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 25% of 180.",
+    "options": {},
+    "correct_answer": {
+      "value": 45.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 180 × 25 / 100 = 45.",
+    "status": "active",
+    "source_ref": "demo-curated-125"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹2000 is invested at 10% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 420.0
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹420.00.",
+    "status": "active",
+    "source_ref": "demo-curated-126"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 15, 22, 29, 36, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 43
+    },
+    "grading_config": {},
+    "solution": "The common difference is 7. Add it to 36.",
+    "status": "active",
+    "source_ref": "demo-curated-127"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 6, 9, 14, 21, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 30
+    },
+    "grading_config": {},
+    "solution": "Terms are 5 + n², for n = 1, 2, 3, 4, 5. The next term is 5 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-128"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 11111 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 31
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 11111₂ = 31₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-129"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 9 and b = 12, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "1001 XOR 1100 = 101 in binary, which is 5.",
+    "status": "active",
+    "source_ref": "demo-curated-130"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 30% of 200.",
+    "options": {},
+    "correct_answer": {
+      "value": 60.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 200 × 30 / 100 = 60.",
+    "status": "active",
+    "source_ref": "demo-curated-131"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹2200 is invested at 11% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 510.62
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹510.62.",
+    "status": "active",
+    "source_ref": "demo-curated-132"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 18, 26, 34, 42, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 50
+    },
+    "grading_config": {},
+    "solution": "The common difference is 8. Add it to 42.",
+    "status": "active",
+    "source_ref": "demo-curated-133"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 7, 10, 15, 22, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 31
+    },
+    "grading_config": {},
+    "solution": "Terms are 6 + n², for n = 1, 2, 3, 4, 5. The next term is 6 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-134"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 100010 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 34
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 100010₂ = 34₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-135"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 10 and b = 13, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 7
+    },
+    "grading_config": {},
+    "solution": "1010 XOR 1101 = 111 in binary, which is 7.",
+    "status": "active",
+    "source_ref": "demo-curated-136"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 35% of 220.",
+    "options": {},
+    "correct_answer": {
+      "value": 77.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 220 × 35 / 100 = 77.",
+    "status": "active",
+    "source_ref": "demo-curated-137"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹2400 is invested at 12% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 610.56
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹610.56.",
+    "status": "active",
+    "source_ref": "demo-curated-138"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 21, 30, 39, 48, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 57
+    },
+    "grading_config": {},
+    "solution": "The common difference is 9. Add it to 48.",
+    "status": "active",
+    "source_ref": "demo-curated-139"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 8, 11, 16, 23, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 32
+    },
+    "grading_config": {},
+    "solution": "Terms are 7 + n², for n = 1, 2, 3, 4, 5. The next term is 7 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-140"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 100101 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 37
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 100101₂ = 37₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-141"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 11 and b = 14, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "1011 XOR 1110 = 101 in binary, which is 5.",
+    "status": "active",
+    "source_ref": "demo-curated-142"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 40% of 240.",
+    "options": {},
+    "correct_answer": {
+      "value": 96.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 240 × 40 / 100 = 96.",
+    "status": "active",
+    "source_ref": "demo-curated-143"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹2600 is invested at 13% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 719.94
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹719.94.",
+    "status": "active",
+    "source_ref": "demo-curated-144"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 24, 34, 44, 54, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 64
+    },
+    "grading_config": {},
+    "solution": "The common difference is 10. Add it to 54.",
+    "status": "active",
+    "source_ref": "demo-curated-145"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 9, 12, 17, 24, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 33
+    },
+    "grading_config": {},
+    "solution": "Terms are 8 + n², for n = 1, 2, 3, 4, 5. The next term is 8 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-146"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 101000 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 40
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 101000₂ = 40₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-147"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 12 and b = 15, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "1100 XOR 1111 = 11 in binary, which is 3.",
+    "status": "active",
+    "source_ref": "demo-curated-148"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 45% of 260.",
+    "options": {},
+    "correct_answer": {
+      "value": 117.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 260 × 45 / 100 = 117.",
+    "status": "active",
+    "source_ref": "demo-curated-149"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹2800 is invested at 14% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 838.88
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹838.88.",
+    "status": "active",
+    "source_ref": "demo-curated-150"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 27, 38, 49, 60, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 71
+    },
+    "grading_config": {},
+    "solution": "The common difference is 11. Add it to 60.",
+    "status": "active",
+    "source_ref": "demo-curated-151"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 10, 13, 18, 25, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 34
+    },
+    "grading_config": {},
+    "solution": "Terms are 9 + n², for n = 1, 2, 3, 4, 5. The next term is 9 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-152"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 101011 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 43
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 101011₂ = 43₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-153"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 13 and b = 16, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 29
+    },
+    "grading_config": {},
+    "solution": "1101 XOR 10000 = 11101 in binary, which is 29.",
+    "status": "active",
+    "source_ref": "demo-curated-154"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 50% of 280.",
+    "options": {},
+    "correct_answer": {
+      "value": 140.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 280 × 50 / 100 = 140.",
+    "status": "active",
+    "source_ref": "demo-curated-155"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹3000 is invested at 15% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 967.5
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹967.50.",
+    "status": "active",
+    "source_ref": "demo-curated-156"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 30, 42, 54, 66, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 78
+    },
+    "grading_config": {},
+    "solution": "The common difference is 12. Add it to 66.",
+    "status": "active",
+    "source_ref": "demo-curated-157"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 11, 14, 19, 26, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 35
+    },
+    "grading_config": {},
+    "solution": "Terms are 10 + n², for n = 1, 2, 3, 4, 5. The next term is 10 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-158"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 101110 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 46
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 101110₂ = 46₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-159"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 14 and b = 17, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 31
+    },
+    "grading_config": {},
+    "solution": "1110 XOR 10001 = 11111 in binary, which is 31.",
+    "status": "active",
+    "source_ref": "demo-curated-160"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 55% of 300.",
+    "options": {},
+    "correct_answer": {
+      "value": 165.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 300 × 55 / 100 = 165.",
+    "status": "active",
+    "source_ref": "demo-curated-161"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹3200 is invested at 16% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 1105.92
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹1105.92.",
+    "status": "active",
+    "source_ref": "demo-curated-162"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 33, 46, 59, 72, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 85
+    },
+    "grading_config": {},
+    "solution": "The common difference is 13. Add it to 72.",
+    "status": "active",
+    "source_ref": "demo-curated-163"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 12, 15, 20, 27, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 36
+    },
+    "grading_config": {},
+    "solution": "Terms are 11 + n², for n = 1, 2, 3, 4, 5. The next term is 11 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-164"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 110001 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 49
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 110001₂ = 49₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-165"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 15 and b = 18, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 29
+    },
+    "grading_config": {},
+    "solution": "1111 XOR 10010 = 11101 in binary, which is 29.",
+    "status": "active",
+    "source_ref": "demo-curated-166"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 60% of 320.",
+    "options": {},
+    "correct_answer": {
+      "value": 192.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 320 × 60 / 100 = 192.",
+    "status": "active",
+    "source_ref": "demo-curated-167"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹3400 is invested at 17% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 1254.26
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹1254.26.",
+    "status": "active",
+    "source_ref": "demo-curated-168"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 36, 50, 64, 78, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 92
+    },
+    "grading_config": {},
+    "solution": "The common difference is 14. Add it to 78.",
+    "status": "active",
+    "source_ref": "demo-curated-169"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 13, 16, 21, 28, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 37
+    },
+    "grading_config": {},
+    "solution": "Terms are 12 + n², for n = 1, 2, 3, 4, 5. The next term is 12 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-170"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 110100 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 52
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 110100₂ = 52₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-171"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 16 and b = 19, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 3
+    },
+    "grading_config": {},
+    "solution": "10000 XOR 10011 = 11 in binary, which is 3.",
+    "status": "active",
+    "source_ref": "demo-curated-172"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 65% of 340.",
+    "options": {},
+    "correct_answer": {
+      "value": 221.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 340 × 65 / 100 = 221.",
+    "status": "active",
+    "source_ref": "demo-curated-173"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹3600 is invested at 18% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 1412.64
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹1412.64.",
+    "status": "active",
+    "source_ref": "demo-curated-174"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 39, 54, 69, 84, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 99
+    },
+    "grading_config": {},
+    "solution": "The common difference is 15. Add it to 84.",
+    "status": "active",
+    "source_ref": "demo-curated-175"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 14, 17, 22, 29, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 38
+    },
+    "grading_config": {},
+    "solution": "Terms are 13 + n², for n = 1, 2, 3, 4, 5. The next term is 13 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-176"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 110111 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 55
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 110111₂ = 55₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-177"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 17 and b = 20, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "10001 XOR 10100 = 101 in binary, which is 5.",
+    "status": "active",
+    "source_ref": "demo-curated-178"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 70% of 360.",
+    "options": {},
+    "correct_answer": {
+      "value": 252.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 360 × 70 / 100 = 252.",
+    "status": "active",
+    "source_ref": "demo-curated-179"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹3800 is invested at 19% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 1581.18
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹1581.18.",
+    "status": "active",
+    "source_ref": "demo-curated-180"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 42, 58, 74, 90, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 106
+    },
+    "grading_config": {},
+    "solution": "The common difference is 16. Add it to 90.",
+    "status": "active",
+    "source_ref": "demo-curated-181"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 15, 18, 23, 30, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 39
+    },
+    "grading_config": {},
+    "solution": "Terms are 14 + n², for n = 1, 2, 3, 4, 5. The next term is 14 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-182"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 111010 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 58
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 111010₂ = 58₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-183"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 18 and b = 21, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 7
+    },
+    "grading_config": {},
+    "solution": "10010 XOR 10101 = 111 in binary, which is 7.",
+    "status": "active",
+    "source_ref": "demo-curated-184"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find 75% of 380.",
+    "options": {},
+    "correct_answer": {
+      "value": 285.0
+    },
+    "grading_config": {},
+    "solution": "Percentage = 380 × 75 / 100 = 285.",
+    "status": "active",
+    "source_ref": "demo-curated-185"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Compound interest",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "₹4000 is invested at 20% compound interest annually for 2 years. Find the interest earned.",
+    "options": {},
+    "correct_answer": {
+      "value": 1760.0
+    },
+    "grading_config": {
+      "tolerance": 0.01
+    },
+    "solution": "Interest = P[(1 + r/100)^2 − 1] = ₹1760.00.",
+    "status": "active",
+    "source_ref": "demo-curated-186"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "basic",
+    "question_type": "numeric",
+    "question_text": "Find the next number: 45, 62, 79, 96, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 113
+    },
+    "grading_config": {},
+    "solution": "The common difference is 17. Add it to 96.",
+    "status": "active",
+    "source_ref": "demo-curated-187"
+  },
+  {
+    "category": "Logical Reasoning",
+    "subcategory": "Number series",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "Find the next term: 16, 19, 24, 31, __.",
+    "options": {},
+    "correct_answer": {
+      "value": 40
+    },
+    "grading_config": {},
+    "solution": "Terms are 15 + n², for n = 1, 2, 3, 4, 5. The next term is 15 + 25.",
+    "status": "active",
+    "source_ref": "demo-curated-188"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert the binary number 111101 to decimal.",
+    "options": {},
+    "correct_answer": {
+      "value": 61
+    },
+    "grading_config": {},
+    "solution": "Sum each binary digit multiplied by its corresponding power of 2: 111101₂ = 61₁₀.",
+    "status": "active",
+    "source_ref": "demo-curated-189"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Bitwise operations",
+    "difficulty": "advanced",
+    "question_type": "numeric",
+    "question_text": "For integers a = 19 and b = 22, find a XOR b (bitwise exclusive OR).",
+    "options": {},
+    "correct_answer": {
+      "value": 5
+    },
+    "grading_config": {},
+    "solution": "10011 XOR 10110 = 101 in binary, which is 5.",
+    "status": "active",
+    "source_ref": "demo-curated-190"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Data structures",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which data structure uses FIFO order?",
+    "options": {
+      "A": "Stack",
+      "B": "Queue",
+      "C": "Tree",
+      "D": "Graph"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "A queue removes items in the order in which they were inserted.",
+    "status": "active",
+    "source_ref": "demo-curated-191"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Data structures",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which data structure uses LIFO order?",
+    "options": {
+      "A": "Queue",
+      "B": "Stack",
+      "C": "Heap",
+      "D": "Linked list only"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "A stack removes the most recently inserted item first.",
+    "status": "active",
+    "source_ref": "demo-curated-192"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Algorithms",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "What is the worst-case time complexity of binary search on a sorted array?",
+    "options": {
+      "A": "O(1)",
+      "B": "O(log n)",
+      "C": "O(n)",
+      "D": "O(n²)"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "Each comparison halves the search interval.",
+    "status": "active",
+    "source_ref": "demo-curated-193"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Databases",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which SQL command retrieves rows from a table?",
+    "options": {
+      "A": "UPDATE",
+      "B": "DELETE",
+      "C": "SELECT",
+      "D": "DROP"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "SELECT retrieves data without changing it.",
+    "status": "active",
+    "source_ref": "demo-curated-194"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Databases",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which constraint uniquely identifies each row in a relational table?",
+    "options": {
+      "A": "DEFAULT",
+      "B": "PRIMARY KEY",
+      "C": "CHECK",
+      "D": "ORDER BY"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "A primary key must be unique and non-null.",
+    "status": "active",
+    "source_ref": "demo-curated-195"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Networking",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which HTTP method is defined as safe and is normally used to retrieve a resource?",
+    "options": {
+      "A": "POST",
+      "B": "PATCH",
+      "C": "GET",
+      "D": "DELETE"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "GET is defined as safe and idempotent.",
+    "status": "active",
+    "source_ref": "demo-curated-196"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Java",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which Java keyword prevents a class from being extended?",
+    "options": {
+      "A": "static",
+      "B": "final",
+      "C": "abstract",
+      "D": "volatile"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "A final class cannot be subclassed.",
+    "status": "active",
+    "source_ref": "demo-curated-197"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Operating systems",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "Which OS mechanism gives each process its own logical address space?",
+    "options": {
+      "A": "Virtual memory",
+      "B": "Spooling",
+      "C": "Polling",
+      "D": "Defragmentation"
+    },
+    "correct_answer": {
+      "value": "A"
+    },
+    "grading_config": {},
+    "solution": "Virtual memory maps per-process virtual addresses to physical memory.",
+    "status": "active",
+    "source_ref": "demo-curated-198"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Algorithms",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "Which sorting algorithm guarantees O(n log n) time in the worst case?",
+    "options": {
+      "A": "Bubble sort",
+      "B": "Insertion sort",
+      "C": "Merge sort",
+      "D": "Selection sort"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "Merge sort divides and merges in O(n log n) worst-case time.",
+    "status": "active",
+    "source_ref": "demo-curated-199"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Databases",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "Which normal form removes partial dependencies on a composite candidate key?",
+    "options": {
+      "A": "1NF",
+      "B": "2NF",
+      "C": "Only 4NF",
+      "D": "No normal form"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "Second normal form requires 1NF and no partial dependency of a non-prime attribute on a candidate key.",
+    "status": "active",
+    "source_ref": "demo-curated-200"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Networking",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which protocol provides reliable, ordered byte-stream transport?",
+    "options": {
+      "A": "UDP",
+      "B": "IP",
+      "C": "TCP",
+      "D": "ARP"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "TCP provides reliable, ordered delivery using sequence numbers and acknowledgements.",
+    "status": "active",
+    "source_ref": "demo-curated-201"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Java",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What does JVM stand for?",
+    "options": {
+      "A": "Java Variable Method",
+      "B": "Java Virtual Machine",
+      "C": "Joint Virtual Memory",
+      "D": "Java Visual Model"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "The JVM executes Java bytecode.",
+    "status": "active",
+    "source_ref": "demo-curated-202"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Data structures",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "Which traversal of a binary search tree visits keys in ascending order?",
+    "options": {
+      "A": "Preorder",
+      "B": "Postorder",
+      "C": "Inorder",
+      "D": "Level order"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "Inorder visits the left subtree, root, and then right subtree.",
+    "status": "active",
+    "source_ref": "demo-curated-203"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Algorithms",
+    "difficulty": "advanced",
+    "question_type": "mcq_single",
+    "question_text": "Which algorithm finds shortest paths from one source when every edge weight is non-negative?",
+    "options": {
+      "A": "Dijkstra’s algorithm",
+      "B": "Binary search",
+      "C": "Kruskal’s algorithm only",
+      "D": "Heap sort"
+    },
+    "correct_answer": {
+      "value": "A"
+    },
+    "grading_config": {},
+    "solution": "Dijkstra’s greedy choice is valid for non-negative weights.",
+    "status": "active",
+    "source_ref": "demo-curated-204"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Discrete mathematics",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "What is the maximum number of edges in a simple undirected graph with n vertices?",
+    "options": {
+      "A": "n",
+      "B": "n−1",
+      "C": "n(n−1)/2",
+      "D": "n²+n"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "Each unordered pair of distinct vertices contributes at most one edge.",
+    "status": "active",
+    "source_ref": "demo-curated-205"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Databases",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "Which property of a database transaction means that either all its changes happen or none do?",
+    "options": {
+      "A": "Isolation",
+      "B": "Durability",
+      "C": "Atomicity",
+      "D": "Indexing"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "Atomicity makes a transaction an indivisible unit of work.",
+    "status": "active",
+    "source_ref": "demo-curated-206"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Java",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which Java collection does not allow duplicate elements?",
+    "options": {
+      "A": "List",
+      "B": "Set",
+      "C": "ArrayList",
+      "D": "Vector"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "Set models a collection of distinct elements.",
+    "status": "active",
+    "source_ref": "demo-curated-207"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Operating systems",
+    "difficulty": "advanced",
+    "question_type": "mcq_single",
+    "question_text": "Which scheduling algorithm can cause starvation if short jobs keep arriving?",
+    "options": {
+      "A": "First come first served",
+      "B": "Shortest job first",
+      "C": "Round robin with a fixed quantum",
+      "D": "FIFO without priorities"
+    },
+    "correct_answer": {
+      "value": "B"
+    },
+    "grading_config": {},
+    "solution": "Long jobs may wait indefinitely in shortest-job-first scheduling.",
+    "status": "active",
+    "source_ref": "demo-curated-208"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Data structures",
+    "difficulty": "intermediate",
+    "question_type": "mcq_single",
+    "question_text": "What is the worst-case lookup time in an unbalanced binary search tree with n nodes?",
+    "options": {
+      "A": "O(1)",
+      "B": "O(log n)",
+      "C": "O(n)",
+      "D": "O(n log n)"
+    },
+    "correct_answer": {
+      "value": "C"
+    },
+    "grading_config": {},
+    "solution": "An unbalanced tree can degenerate into a chain of n nodes.",
+    "status": "active",
+    "source_ref": "demo-curated-209"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Databases",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "Which SQL join returns only rows with matching keys in both inputs?",
+    "options": {
+      "A": "INNER JOIN",
+      "B": "LEFT JOIN",
+      "C": "FULL OUTER JOIN",
+      "D": "CROSS JOIN"
+    },
+    "correct_answer": {
+      "value": "A"
+    },
+    "grading_config": {},
+    "solution": "INNER JOIN includes only matching combinations.",
+    "status": "active",
+    "source_ref": "demo-curated-210"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 6/12. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 6: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-211"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 4:6. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 2 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-212"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 9/18. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 9: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-213"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 6:9. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 3 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-214"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 12/24. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 12: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-215"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 8:12. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 4 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-216"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 15/30. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 15: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-217"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 10:15. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 5 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-218"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 18/36. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 18: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-219"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 12:18. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 6 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-220"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 21/42. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 21: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-221"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 14:21. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 7 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-222"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 24/48. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 24: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-223"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 16:24. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 8 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-224"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Fractions",
+    "difficulty": "basic",
+    "question_type": "fraction",
+    "question_text": "Simplify 27/54. Give a fraction in lowest terms.",
+    "options": {},
+    "correct_answer": {
+      "numerator": 1,
+      "denominator": 2
+    },
+    "grading_config": {
+      "allow_decimal_equivalent": true
+    },
+    "solution": "Divide numerator and denominator by 27: 1/2.",
+    "status": "active",
+    "source_ref": "demo-curated-225"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Ratios",
+    "difficulty": "intermediate",
+    "question_type": "ratio",
+    "question_text": "The ratio of two quantities is 18:27. Express it in simplest form.",
+    "options": {},
+    "correct_answer": {
+      "values": [
+        2,
+        3
+      ]
+    },
+    "grading_config": {
+      "allow_scaled_equivalent": true
+    },
+    "solution": "Divide both terms by 9 to obtain 2:3.",
+    "status": "active",
+    "source_ref": "demo-curated-226"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Concept checks",
+    "difficulty": "basic",
+    "question_type": "boolean",
+    "question_text": "All squares are rectangles. True or false?",
+    "options": {},
+    "correct_answer": {
+      "value": true
+    },
+    "grading_config": {},
+    "solution": "A square has four right angles and is therefore a rectangle.",
+    "status": "active",
+    "source_ref": "demo-curated-227"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Concept checks",
+    "difficulty": "basic",
+    "question_type": "boolean",
+    "question_text": "Every prime number is odd. True or false?",
+    "options": {},
+    "correct_answer": {
+      "value": false
+    },
+    "grading_config": {},
+    "solution": "2 is prime and even.",
+    "status": "active",
+    "source_ref": "demo-curated-228"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Concept checks",
+    "difficulty": "basic",
+    "question_type": "boolean",
+    "question_text": "In Java, a class can directly extend more than one class. True or false?",
+    "options": {},
+    "correct_answer": {
+      "value": false
+    },
+    "grading_config": {},
+    "solution": "Java classes support single class inheritance; they may implement multiple interfaces.",
+    "status": "active",
+    "source_ref": "demo-curated-229"
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Concept checks",
+    "difficulty": "basic",
+    "question_type": "boolean",
+    "question_text": "An SQL primary key may contain NULL values. True or false?",
+    "options": {},
+    "correct_answer": {
+      "value": false
+    },
+    "grading_config": {},
+    "solution": "Primary-key columns must be non-null.",
+    "status": "active",
+    "source_ref": "demo-curated-230"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Concept checks",
+    "difficulty": "intermediate",
+    "question_type": "mcq_multiple",
+    "question_text": "Which Java keywords are used for exception handling? Select all that apply.",
+    "options": {
+      "A": "try",
+      "B": "extends",
+      "C": "catch",
+      "D": "package"
+    },
+    "correct_answer": {
+      "values": [
+        "A",
+        "C"
+      ]
+    },
+    "grading_config": {},
+    "solution": "try introduces the protected block; catch handles a matching exception.",
+    "status": "active",
+    "source_ref": "demo-curated-231"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Concept checks",
+    "difficulty": "intermediate",
+    "question_type": "mcq_multiple",
+    "question_text": "Which are linear data structures? Select all that apply.",
+    "options": {
+      "A": "Stack",
+      "B": "Queue",
+      "C": "Tree",
+      "D": "Graph"
+    },
+    "correct_answer": {
+      "values": [
+        "A",
+        "B"
+      ]
+    },
+    "grading_config": {},
+    "solution": "Stacks and queues are linear; trees and general graphs are non-linear.",
+    "status": "active",
+    "source_ref": "demo-curated-232"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Terminology",
+    "difficulty": "basic",
+    "question_type": "fill_in_blank",
+    "question_text": "Fill in the blank: The Java keyword used to create an object is ____.",
+    "options": {},
+    "correct_answer": {
+      "answers": [
+        "new"
+      ]
+    },
+    "grading_config": {},
+    "solution": "The new expression allocates and initializes an object.",
+    "status": "active",
+    "source_ref": "demo-curated-233"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Terminology",
+    "difficulty": "basic",
+    "question_type": "short_text",
+    "question_text": "Name the algorithmic technique that solves overlapping subproblems and reuses stored results.",
+    "options": {},
+    "correct_answer": {
+      "answers": [
+        "dynamic programming"
+      ]
+    },
+    "grading_config": {},
+    "solution": "Dynamic programming uses memoization or tabulation.",
+    "status": "active",
+    "source_ref": "demo-curated-234"
+  },
+  {
+    "category": "Programming Concepts",
+    "subcategory": "Terminology",
+    "difficulty": "basic",
+    "question_type": "fill_in_blank",
+    "question_text": "Fill in the blank: SQL stands for ____ Query Language.",
+    "options": {},
+    "correct_answer": {
+      "answers": [
+        "structured"
+      ]
+    },
+    "grading_config": {},
+    "solution": "SQL means Structured Query Language.",
+    "status": "active",
+    "source_ref": "demo-curated-235"
+  },
+  {
+    "category": "Verbal Ability",
+    "subcategory": "Terminology",
+    "difficulty": "basic",
+    "question_type": "short_text",
+    "question_text": "Which English word is the opposite of \"scarce\"? Answer \"abundant\" or \"plentiful\".",
+    "options": {},
+    "correct_answer": {
+      "answers": [
+        "abundant",
+        "plentiful"
+      ]
+    },
+    "grading_config": {},
+    "solution": "Scarce means in short supply; abundant means plentiful.",
+    "status": "active",
+    "source_ref": "demo-curated-236"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Arithmetic",
+    "difficulty": "basic",
+    "question_type": "numeric_with_unit",
+    "question_text": "A vehicle covers 150 km in 3 hours. Give its speed with the unit km/h.",
+    "options": {},
+    "correct_answer": {
+      "value": 50,
+      "unit": "km/h"
+    },
+    "grading_config": {
+      "unit_required": true,
+      "tolerance": 0.01
+    },
+    "solution": "Speed = distance / time = 150/3 = 50 km/h.",
+    "status": "active",
+    "source_ref": "demo-curated-237"
+  },
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Data interpretation",
+    "difficulty": "basic",
+    "question_type": "data_interpretation",
+    "question_text": "A shop sold 20, 30, and 40 items on Monday, Tuesday, and Wednesday. Find average daily sales.",
+    "options": {},
+    "correct_answer": {
+      "value": 30
+    },
+    "grading_config": {},
+    "solution": "Average = (20+30+40)/3 = 30.",
+    "status": "active",
+    "source_ref": "demo-curated-238"
+  }
+]
