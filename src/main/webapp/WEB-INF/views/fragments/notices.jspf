@@ -1,0 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
+<c:if test="${not empty success}"><div class="notice success" role="status"><span>✓</span><div><c:out value="${success}"/></div></div></c:if>
+<c:if test="${not empty error}"><div class="notice danger" role="alert"><span>!</span><div><c:out value="${error}"/></div></div></c:if>
+<c:if test="${not empty errors}"><div class="notice danger" role="alert"><span>!</span><div><c:out value="${errors}"/></div></div></c:if>

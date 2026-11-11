@@ -1,0 +1,24 @@
+[
+  {
+    "category": "Quantitative Aptitude",
+    "subcategory": "Percentages",
+    "difficulty": "basic",
+    "question_type": "mcq_single",
+    "question_text": "What is 20% of 150?",
+    "options": {"A": "20", "B": "25", "C": "30", "D": "35"},
+    "correct_answer": {"value": "C"},
+    "grading_config": {},
+    "solution": "20/100 × 150 = 30."
+  },
+  {
+    "category": "CSE Fundamentals",
+    "subcategory": "Number systems",
+    "difficulty": "intermediate",
+    "question_type": "numeric",
+    "question_text": "Convert binary 1011 to decimal.",
+    "options": {},
+    "correct_answer": {"value": 11},
+    "grading_config": {"tolerance": 0},
+    "solution": "1×8 + 0×4 + 1×2 + 1×1 = 11."
+  }
+]

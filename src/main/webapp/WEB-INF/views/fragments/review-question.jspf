@@ -1,0 +1,6 @@
+<%@ page pageEncoding="UTF-8" %>
+<article class="review-item"><div class="review-top"><span>QUESTION ${item.position} · <c:out value="${item.category}"/> · ${item.timeTakenSeconds}s</span><span class="pill ${not item.answered ? 'pill-muted' : item.correct ? '' : 'pill-red'}">${not item.answered ? 'Skipped' : item.correct ? 'Correct' : 'Incorrect'}</span></div>
+<c:if test="${not empty item.passage}"><div class="quiz-passage"><c:out value="${item.passage}"/></div></c:if><c:if test="${not empty item.dataBlock}"><div class="quiz-data"><c:out value="${item.dataBlock}"/></div></c:if>
+<p class="review-question"><c:out value="${item.questionText}"/></p>
+<c:if test="${not empty item.optionMap}"><div class="review-options"><c:forEach items="${item.optionMap}" var="option"><span><strong><c:out value="${option.key}"/>.</strong><c:out value="${option.value}"/></span></c:forEach></div></c:if>
+<div class="review-answers"><div><small>YOUR ANSWER</small><p><c:out value="${item.answered ? item.userAnswer : 'Not answered'}"/></p></div><div><small>CORRECT ANSWER</small><p><c:out value="${item.correctDisplay}"/></p></div></div><c:if test="${not empty item.solution}"><div class="solution"><strong>Explanation</strong><c:out value="${item.solution}"/></div></c:if></article>
