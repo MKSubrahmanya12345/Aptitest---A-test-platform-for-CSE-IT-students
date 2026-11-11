@@ -1,0 +1,233 @@
+{
+  "source_repository": "https://github.com/MKSubrahmanya12345/Aptitest-JSF",
+  "source_revision": "d23b6e798b4c82222642ab03a7ba9f8f1b72163c",
+  "audit_kind": "static inspection / independent seed recount / exact screenshot and crop comparisons",
+  "application_suites_rerun": false,
+  "stack": {
+    "java_target": "17",
+    "spring_boot_parent": "3.5.16",
+    "packaging": "war"
+  },
+  "question_counts": {
+    "total": 238,
+    "status": {
+      "active": 187,
+      "pending": 51
+    },
+    "answer_type_all_rows": {
+      "fraction": 9,
+      "numeric": 134,
+      "mcq_single": 71,
+      "ratio": 11,
+      "boolean": 5,
+      "mcq_multiple": 2,
+      "fill_in_blank": 2,
+      "short_text": 2,
+      "numeric_with_unit": 1,
+      "data_interpretation": 1
+    },
+    "active_difficulty": {
+      "basic": 105,
+      "intermediate": 50,
+      "advanced": 32
+    },
+    "active_category": {
+      "Quantitative Aptitude": 97,
+      "Logical Reasoning": 30,
+      "CSE Fundamentals": 39,
+      "Programming Concepts": 20,
+      "Verbal Ability": 1
+    }
+  },
+  "seed_templates": [
+    {
+      "name": "Quick Warm-up",
+      "difficulty": "mixed",
+      "questions": 10,
+      "minutes": 10,
+      "paid": false
+    },
+    {
+      "name": "Easy Practice - 30 Qs",
+      "difficulty": "easy",
+      "questions": 30,
+      "minutes": 30,
+      "paid": false
+    },
+    {
+      "name": "Easy Practice - 60 Qs",
+      "difficulty": "easy",
+      "questions": 60,
+      "minutes": 60,
+      "paid": false
+    },
+    {
+      "name": "Hard Practice - 30 Qs",
+      "difficulty": "hard",
+      "questions": 30,
+      "minutes": 30,
+      "paid": false
+    },
+    {
+      "name": "Hard Practice - 60 Qs",
+      "difficulty": "hard",
+      "questions": 60,
+      "minutes": 60,
+      "paid": true
+    }
+  ],
+  "entities": [
+    {
+      "entity": "AppUser",
+      "table": "at_users",
+      "foreign_key_names": []
+    },
+    {
+      "entity": "AttemptQuestion",
+      "table": "at_attempt_questions",
+      "foreign_key_names": [
+        "fk_at_attemptquestion_attempt",
+        "fk_at_attemptquestion_question"
+      ]
+    },
+    {
+      "entity": "PaymentRecord",
+      "table": "at_payments",
+      "foreign_key_names": [
+        "fk_at_paymentrecord_user",
+        "fk_at_paymentrecord_template"
+      ]
+    },
+    {
+      "entity": "Question",
+      "table": "at_questions",
+      "foreign_key_names": []
+    },
+    {
+      "entity": "TestAttempt",
+      "table": "at_attempts",
+      "foreign_key_names": [
+        "fk_at_testattempt_user",
+        "fk_at_testattempt_template",
+        "fk_at_testattempt_originalattempt"
+      ]
+    },
+    {
+      "entity": "TestTemplate",
+      "table": "at_templates",
+      "foreign_key_names": []
+    }
+  ],
+  "test_source_inventory": {
+    "grading_parameter_inputs": 31,
+    "grading_signature_ordinary_tests": 3,
+    "integration_test_methods": 27,
+    "execution_for_this_report": false
+  },
+  "documented_execution_only": {
+    "java_cases_passed": 61,
+    "packaged_http_checks_passed": 47,
+    "source": "docs/TEST_REPORT.md",
+    "not_rerun_here": true
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/01-login.png",
+      "sha256": "4571ae653c3b9f79c50178f3d216722052995546799e45b0f0fccc905b0720ce",
+      "pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/screenshots/02-student-dashboard.png",
+      "sha256": "50975a5dc9e5d2fe6c9c9f9e0e5986bbe2d7e43338b2606ec5034de83aaae457",
+      "pixels": [
+        1440,
+        1967
+      ]
+    },
+    {
+      "path": "docs/screenshots/03-practice-test.png",
+      "sha256": "217de7c3b9ebffb167be518442587a6c73304591d914a6ce18c16d327088a582",
+      "pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/screenshots/04-result.png",
+      "sha256": "fee30e264d94686d8f148b8db75d8c94e91b404348c22111abb4f97ec06ddab5",
+      "pixels": [
+        1440,
+        3585
+      ]
+    },
+    {
+      "path": "docs/screenshots/05-admin-dashboard.png",
+      "sha256": "aa235e91b3e3bfaf922869643733dcbf5180dc3ad6baa38daf37402d261a3676",
+      "pixels": [
+        1440,
+        1082
+      ]
+    },
+    {
+      "path": "docs/screenshots/06-mobile-dashboard.png",
+      "sha256": "4bf23a88740a3aff4cdd524971503a91974618080a51d30b112e4d6d71ec5ada",
+      "pixels": [
+        390,
+        3411
+      ]
+    }
+  ],
+  "source_file_sha256": {
+    "pom.xml": "d578099f71a9fe60952f3c0a43a868682fea8c712696536fe47e41484a2ecaaf",
+    "src/main/resources/application.properties": "c5eb6b5bdb24c54c906f1a9d304932de53ca94b1ea68e0aab2dd3656ab4a0fb4",
+    "src/main/resources/application-mysql.properties": "7290cff0b8acbb69ce1b1f821591b5a28e577d8df31564ed5dbb294f81745593",
+    "src/main/resources/seed/questions.json": "0382ef99e74d2e3b76509b8125a91b67f4c6cb15091638805feb25ce5a426329",
+    "docs/TEST_REPORT.md": "adcd7ce005b1adb8d45e59d96d2d624cf6cb0bb988a569cce03ec9b93f2a0a6d",
+    "docs/SECURITY.md": "378506d80b21f18d81386c749c49622bfd9e3ec73a7f8ff2f4c495c3a3f50dd6",
+    "docs/DEPLOYMENT.md": "ddbbfc956bfd53554d034894b7cc0c43da612f5a93fb7a72a9ee1354e8fd0923",
+    "src/main/java/com/aptitest/AptiTestApplication.java": "8182b4887a50c62c5fd762df961c6a36d5b1562b31831799f3276903249408de",
+    "src/main/java/com/aptitest/config/AccountStateFilter.java": "c9597fd2250962ca209cf5d3f69ebd8d93aa421c42bac9fdcb0a1c0fc5e4b6a9",
+    "src/main/java/com/aptitest/config/AppPrincipal.java": "82cb8197e8f54b4b52c1cc943690060c3b35ad25f6fd45e7d68e82c0245aea23",
+    "src/main/java/com/aptitest/config/SecurityConfig.java": "d7628c13e9e3eb9dab20003328da4a0f122df9cb3104c3fe9aebf99ca57ba8b2",
+    "src/main/java/com/aptitest/config/SeedDataLoader.java": "e09b281924fc5390a5e5fc9d38d6d83444b7a2099dcd11d4957bc28ae93f2127",
+    "src/main/java/com/aptitest/domain/AppUser.java": "b8931862617d4acef1407410ea19ebaa58260e6c174f51656d44589d4b89fe77",
+    "src/main/java/com/aptitest/domain/AttemptQuestion.java": "8035160534b1cad5f5e1dea243313bee9766b07234c2d45e72db9169d092f88c",
+    "src/main/java/com/aptitest/domain/PaymentRecord.java": "c5ba5e5f3b06f6038abe3a7144aee304ac84309f087166a5821edef72ec3fd97",
+    "src/main/java/com/aptitest/domain/Question.java": "7e11f892eded36c4179f1ca1284f2793e53bd8f8f67ed455c2283630a396bffa",
+    "src/main/java/com/aptitest/domain/Role.java": "2218917a69dbe6070a81611a19b0b8eadef89d6920cb7c79f9c205d0e70f20e1",
+    "src/main/java/com/aptitest/domain/TestAttempt.java": "79119ce33c7d2c0bc236841e68509d87d7c4105568e941b2525e4fc1ca757870",
+    "src/main/java/com/aptitest/domain/TestTemplate.java": "7fee972bac650b381f39898b63b83e9e3e9d1c2a3b42338dd0081082fd0c60c6",
+    "src/main/java/com/aptitest/repository/AttemptQuestionRepository.java": "8f4b10b634abb0b5c302955a82d988498a04d3d62fe071cd81f8fc80e3195e1e",
+    "src/main/java/com/aptitest/repository/AttemptRepository.java": "445bb64995fd15062f2151150a6f8999ba285ae220b7c35357d27941870f68f3",
+    "src/main/java/com/aptitest/repository/PaymentRepository.java": "6c7b1b4909318766db34f1c218b0a94682178556bceb690163f062d1846520ca",
+    "src/main/java/com/aptitest/repository/QuestionRepository.java": "af1cc5963de25d38da6c1e9fdb0aa978be230fd921a46ec09527e2291e5fd340",
+    "src/main/java/com/aptitest/repository/TemplateRepository.java": "b5a1dadf3cf7a9d823fafaf2dbfd5c9add66b23c4fff392482ce4e2f1f3745fc",
+    "src/main/java/com/aptitest/repository/UserRepository.java": "a7435251297c4ebd14bee38a16737b07b9bee23744f3d3225bacc3ce9d3259c1",
+    "src/main/java/com/aptitest/service/AccountService.java": "bb196bead2fd6f101697603e6bb45281868c9fd9c5e9f882c229440c957cfece",
+    "src/main/java/com/aptitest/service/AnalyticsService.java": "f95246541d153c758d4772d479664b3e49354693e4851009593badfc39952f9d",
+    "src/main/java/com/aptitest/service/AttemptService.java": "362465b9d3f84d98f391b19377c5f249eda9b063f8fa5b9417042aa5480389fa",
+    "src/main/java/com/aptitest/service/BusinessException.java": "97729d1fdec56781bb8a2f4168b3082fda2909555c509c54b59338128e1b6c28",
+    "src/main/java/com/aptitest/service/ExpiredAttemptJob.java": "cfef6bc189f1bdbe87bcaf560e6b78250d80012b0e342e82b043ee0c4c8a11b9",
+    "src/main/java/com/aptitest/service/GradingService.java": "438d3b6ad1b5195b78c5186dfa3c909dba009f539c7b4d16566242a5f1f2f379",
+    "src/main/java/com/aptitest/service/JsonSupport.java": "2dd0382e9d0ac1912912c5bf2ed69512917d67f10a16903662fd2e693dbe4d43",
+    "src/main/java/com/aptitest/service/MailService.java": "549a4d4a9579ea21e0ed8989cdefa006c7bcceaaad59bb07cdb3975da3a75e19",
+    "src/main/java/com/aptitest/service/PaymentService.java": "389204c5c6a1aba2f63b47a58f8a12884e5ae0d50d253dfd59c7e7808a43b122",
+    "src/main/java/com/aptitest/service/QuestionService.java": "ac1180e3895598ba068c2bd3b76c4aa732a7e99876cb904d1deb6e55193160d9",
+    "src/main/java/com/aptitest/service/TemplateService.java": "daa3145fe14f580fa4fbfaeae6c9500ea01b9348eaaefb75964c4a6cdf4b4de0",
+    "src/main/java/com/aptitest/web/AdminController.java": "2ee1eebadd8c1d3c4dc55530962024c135282816f005d5575c30f0584e91ffbd",
+    "src/main/java/com/aptitest/web/AuthController.java": "81833d76ed9cf2c9accd6a9e366cde7065adaa5b9fee84e6e74abc85a42fa2d1",
+    "src/main/java/com/aptitest/web/GlobalExceptionHandler.java": "356822e23c7a4269622cd14ad476a20250b81f53a7dee5c6d695e57ae932365e",
+    "src/main/java/com/aptitest/web/GlobalModel.java": "55a1e1077f33ac35c3c0878ef12d052322730215e6b855f0cf7ba3ed16aaf8ac",
+    "src/main/java/com/aptitest/web/PaymentController.java": "d8b613c31ee3251795c288fa500af26a2a5de7d098dec04a8e719ed0eb9c7c67",
+    "src/main/java/com/aptitest/web/ProfileController.java": "d53d6d9b9cc7dd7e2353aedd707eb7f24cdba075f2e03e28e7da0fbd1d6925d6",
+    "src/main/java/com/aptitest/web/SiteController.java": "54acb4190c7d1ff1a5b9c1359246d20c59ce830dc845f4e3b0e83454aeff633a",
+    "src/main/java/com/aptitest/web/StudentController.java": "580719ac2638554c8ba9d65ea5fd64a0639ef493b87e1fceadb2598cfcf0b4da",
+    "src/main/java/com/aptitest/web/TestController.java": "ac35b6c393df6aaaa5832891ab1451a3940437065948104f5c34348ef617f843",
+    "src/main/java/com/aptitest/web/form/QuestionForm.java": "fd2344dc17d4b571ccd9c3e34653234fb9ca336d24c1f23661e7ba9635c537b6",
+    "src/main/java/com/aptitest/web/form/SignupForm.java": "c9ded82267f2ad2a2a51980d224972b032ce5cf7abe620638512ba3a4ce12106",
+    "src/main/java/com/aptitest/web/form/TemplateForm.java": "6ce60f628eaad4cfaa892f39c3815493c31e5c2f310250a3855af12075ad7e38"
+  }
+}
