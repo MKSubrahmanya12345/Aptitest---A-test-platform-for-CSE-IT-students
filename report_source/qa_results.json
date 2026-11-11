@@ -1,0 +1,412 @@
+{
+  "status": "PASS",
+  "visible_pages": 38,
+  "front_matter_pages": 5,
+  "main_pages": 33,
+  "checks": 2707,
+  "failures": [],
+  "independent_reconversion_pixel_identical_pages": 38,
+  "automatic_toc_entries": 50,
+  "live_figure_cross_references": 3,
+  "report_tables": 19,
+  "technical_diagrams": 3,
+  "genuine_application_figures": 6,
+  "font_families_used_in_pdf": [
+    "Algerian",
+    "Arial-BoldItalicMT",
+    "Arial-BoldMT",
+    "Arial-ItalicMT",
+    "ArialMT",
+    "DejaVuSans",
+    "TimesNewRomanPS-BoldMT",
+    "TimesNewRomanPSMT"
+  ],
+  "files": {
+    "AptiTest_Mini_Project_Report.docx": {
+      "bytes": 2341895,
+      "sha256": "5ce0859192093bfd28f5b99cb95eba72c283925b742a1828b9859a4f49d61d75"
+    },
+    "AptiTest_Mini_Project_Report.pdf": {
+      "bytes": 1714991,
+      "sha256": "6a25573ab956e1fda3da73f35fcd9101c53a00967e2abf099a2309a308529791"
+    }
+  },
+  "application_test_scope": "Source/test inspection and static seed recount only. Repository-documented 61 Java cases and 47 HTTP checks were NOT rerun for this report.",
+  "template_limit": "Original attached template was a PDF, not DOCX; editable layout recreated for A4.",
+  "screenshot_provenance": "Six original captures from MKSubrahmanya12345/Aptitest-JSF revision d23b6e798b4c82222642ab03a7ba9f8f1b72163c. Three explicitly captioned crops; no fabricated screens.",
+  "images": [
+    {
+      "pdf_page": 1,
+      "bbox": [
+        65.6,
+        54.95,
+        555.2,
+        165.0
+      ],
+      "pixel_size": [
+        1241,
+        279
+      ]
+    },
+    {
+      "pdf_page": 2,
+      "bbox": [
+        41.9,
+        54.95,
+        527.9,
+        125.05
+      ],
+      "pixel_size": [
+        1234,
+        178
+      ]
+    },
+    {
+      "pdf_page": 12,
+      "bbox": [
+        78.2,
+        220.6,
+        542.6,
+        628.25
+      ],
+      "pixel_size": [
+        1800,
+        1580
+      ]
+    },
+    {
+      "pdf_page": 14,
+      "bbox": [
+        67.4,
+        184.65,
+        553.4,
+        684.15
+      ],
+      "pixel_size": [
+        1800,
+        1850
+      ]
+    },
+    {
+      "pdf_page": 19,
+      "bbox": [
+        54.5,
+        95.85,
+        515.3,
+        620.65
+      ],
+      "pixel_size": [
+        1800,
+        2050
+      ]
+    },
+    {
+      "pdf_page": 28,
+      "bbox": [
+        67.4,
+        95.85,
+        553.4,
+        433.35
+      ],
+      "pixel_size": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "pdf_page": 29,
+      "bbox": [
+        56.3,
+        95.85,
+        513.5,
+        551.45
+      ],
+      "pixel_size": [
+        1440,
+        1435
+      ]
+    },
+    {
+      "pdf_page": 30,
+      "bbox": [
+        67.4,
+        95.85,
+        553.4,
+        433.35
+      ],
+      "pixel_size": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "pdf_page": 31,
+      "bbox": [
+        52.7,
+        95.85,
+        517.1,
+        466.75
+      ],
+      "pixel_size": [
+        1440,
+        1150
+      ]
+    },
+    {
+      "pdf_page": 32,
+      "bbox": [
+        67.4,
+        95.85,
+        553.4,
+        461.05
+      ],
+      "pixel_size": [
+        1440,
+        1082
+      ]
+    },
+    {
+      "pdf_page": 33,
+      "bbox": [
+        200.3,
+        95.85,
+        369.5,
+        462.05
+      ],
+      "pixel_size": [
+        390,
+        844
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "pdf_page": 1,
+      "main_page": null,
+      "text_characters": 658,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 2,
+      "main_page": null,
+      "text_characters": 680,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 3,
+      "main_page": null,
+      "text_characters": 2319,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 4,
+      "main_page": null,
+      "text_characters": 3443,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 5,
+      "main_page": null,
+      "text_characters": 2744,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 6,
+      "main_page": 1,
+      "text_characters": 2171,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 7,
+      "main_page": 2,
+      "text_characters": 2099,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 8,
+      "main_page": 3,
+      "text_characters": 2095,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 9,
+      "main_page": 4,
+      "text_characters": 1799,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 10,
+      "main_page": 5,
+      "text_characters": 1944,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 11,
+      "main_page": 6,
+      "text_characters": 2180,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 12,
+      "main_page": 7,
+      "text_characters": 689,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 13,
+      "main_page": 8,
+      "text_characters": 2093,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 14,
+      "main_page": 9,
+      "text_characters": 667,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 15,
+      "main_page": 10,
+      "text_characters": 2288,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 16,
+      "main_page": 11,
+      "text_characters": 2223,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 17,
+      "main_page": 12,
+      "text_characters": 2108,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 18,
+      "main_page": 13,
+      "text_characters": 2089,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 19,
+      "main_page": 14,
+      "text_characters": 562,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 20,
+      "main_page": 15,
+      "text_characters": 2228,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 21,
+      "main_page": 16,
+      "text_characters": 2160,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 22,
+      "main_page": 17,
+      "text_characters": 2035,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 23,
+      "main_page": 18,
+      "text_characters": 2378,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 24,
+      "main_page": 19,
+      "text_characters": 2331,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 25,
+      "main_page": 20,
+      "text_characters": 2272,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 26,
+      "main_page": 21,
+      "text_characters": 2404,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 27,
+      "main_page": 22,
+      "text_characters": 2091,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 28,
+      "main_page": 23,
+      "text_characters": 1095,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 29,
+      "main_page": 24,
+      "text_characters": 731,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 30,
+      "main_page": 25,
+      "text_characters": 1057,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 31,
+      "main_page": 26,
+      "text_characters": 1036,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 32,
+      "main_page": 27,
+      "text_characters": 1099,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 33,
+      "main_page": 28,
+      "text_characters": 1173,
+      "image_count": 1
+    },
+    {
+      "pdf_page": 34,
+      "main_page": 29,
+      "text_characters": 2220,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 35,
+      "main_page": 30,
+      "text_characters": 2272,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 36,
+      "main_page": 31,
+      "text_characters": 1861,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 37,
+      "main_page": 32,
+      "text_characters": 1641,
+      "image_count": 0
+    },
+    {
+      "pdf_page": 38,
+      "main_page": 33,
+      "text_characters": 1740,
+      "image_count": 0
+    }
+  ]
+}
