@@ -6,7 +6,6 @@ import com.aptitest.service.*;
 import com.aptitest.web.form.*;
 import jakarta.validation.Valid;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +27,6 @@ public class AdminController {
     private final AttemptService tests;
     private final AnalyticsService analytics;
     private final MailService mail;
-    @Value("${app.demo-enabled}") private boolean demoEnabled;
     public AdminController(QuestionService questions, QuestionRepository questionRepository, TemplateService templates,
             TemplateRepository templateRepository, AccountService accounts, UserRepository users, AttemptRepository attempts,
             AttemptService tests, AnalyticsService analytics, MailService mail) {
@@ -115,7 +113,7 @@ public class AdminController {
         model.addAttribute("attempt", a); model.addAttribute("items", tests.questions(id)); model.addAttribute("backUrl", "/admin/view-students/" + a.getUserId()); return "result";
     }
     @GetMapping("/mail") public String outbox(Model model) {
-        if (!demoEnabled) throw new BusinessException("The demo email outbox is disabled.");
+        if (!"outbox".equals(mail.getMode())) throw new BusinessException("Email is delivered through the configured provider.");
         model.addAttribute("messages", mail.getOutbox()); return "admin-mail";
     }
 }

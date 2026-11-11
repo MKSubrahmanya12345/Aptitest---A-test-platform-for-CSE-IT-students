@@ -21,19 +21,18 @@ public class PaymentService {
     private final PaymentRepository payments;
     private final TemplateService templates;
     private final String mode, keyId, keySecret;
-    private final boolean demoEnabled;
     private final RestClient gateway;
 
     public PaymentService(PaymentRepository payments, TemplateService templates,
-            @Value("${app.payment-mode}") String mode, @Value("${app.demo-enabled}") boolean demoEnabled,
+            @Value("${app.payment-mode}") String mode,
             @Value("${app.razorpay-key-id}") String keyId, @Value("${app.razorpay-key-secret}") String keySecret) {
-        this.payments = payments; this.templates = templates; this.mode = mode; this.demoEnabled = demoEnabled; this.keyId = keyId; this.keySecret = keySecret;
+        this.payments = payments; this.templates = templates; this.mode = mode; this.keyId = keyId; this.keySecret = keySecret;
         var factory = new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build());
         factory.setReadTimeout(Duration.ofSeconds(15));
         gateway = RestClient.builder().baseUrl("https://api.razorpay.com/v1").requestFactory(factory)
                 .defaultHeaders(h -> h.setBasicAuth(keyId, keySecret)).build();
     }
-    public String getMode() { return mode; }
+    public boolean isConfigured() { return "razorpay".equals(mode) && !keyId.isBlank() && !keySecret.isBlank(); }
     public String getKeyId() { return keyId; }
     public boolean hasAccess(Long userId, TestTemplate t) { return !t.isPaid() || payments.existsByUserIdAndTemplateIdAndStatus(userId, t.getId(), "succeeded"); }
     public Set<Long> accessIds(Long userId) {
@@ -48,14 +47,12 @@ public class PaymentService {
         TestTemplate t = templates.get(templateId);
         if (!t.isActive() || !t.isPaid()) throw new BusinessException("This template is not available for purchase.");
         if (hasAccess(userId, t)) throw new BusinessException("You already have access to this template.");
-        if (!("demo".equals(mode) && demoEnabled) && !"razorpay".equals(mode)) throw new BusinessException("Paid checkout is disabled. Please choose a free test.");
-        if ("razorpay".equals(mode) && (keyId.isBlank() || keySecret.isBlank())) throw new BusinessException("Razorpay has not been configured. Please contact the administrator.");
+        if (!isConfigured()) throw new BusinessException("Online payments are not configured. Please choose a free test or contact the administrator.");
         var existing = payments.findFirstByUserIdAndTemplateIdAndStatusAndGatewayOrderByCreatedAtDesc(userId, templateId, "pending", mode);
         if (existing.isPresent() && existing.get().getAmountPaise() == t.getPricePaise()) return existing.get();
         PaymentRecord p = new PaymentRecord();
         p.setUserId(userId); p.setTemplateId(templateId); p.setAmountPaise(t.getPricePaise()); p.setGateway(mode);
-        if ("demo".equals(mode)) p.setOrderId("demo_" + UUID.randomUUID());
-        else {
+        {
             try {
                 JsonNode result = gateway.post().uri("/orders").body(Map.of("amount", t.getPricePaise(), "currency", "INR", "receipt", "at_" + UUID.randomUUID().toString().substring(0, 30))).retrieve().body(JsonNode.class);
                 if (result == null || result.path("id").asText().isBlank()) throw new IllegalStateException();
@@ -63,13 +60,6 @@ public class PaymentService {
             } catch (Exception e) { throw new BusinessException("The payment gateway is unavailable. No local access was granted. Try again later."); }
         }
         return payments.save(p);
-    }
-    @Transactional
-    public void completeDemo(Long userId, Long templateId, String orderId) {
-        if (!demoEnabled || !"demo".equals(mode)) throw new BusinessException("Demo checkout is disabled.");
-        PaymentRecord p = ownedOrder(userId, templateId, orderId);
-        if (!"demo".equals(p.getGateway())) throw new BusinessException("Invalid demo order.");
-        p.setStatus("succeeded"); p.setGatewayPaymentId("demo_payment_" + p.getOrderId());
     }
     @Transactional
     public void verifyRazorpay(Long userId, Long templateId, String orderId, String paymentId, String signature) {

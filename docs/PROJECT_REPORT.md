@@ -5,7 +5,7 @@
 
 AptiTest supports structured aptitude and technical practice with immediate post-test feedback. Students take timed tests, resume saved work, review explanations, track topic performance, and compare progress. Administrators curate questions, publish configurable templates, inspect results, and manage student access. This version migrates the original JavaScript application to a layered Java MVC application packaged as an executable WAR.
 
-The default deployment is self-contained: embedded Tomcat/Jasper serves JSP pages, H2 stores data on disk, and deterministic seed data makes the platform immediately demonstrable. Optional MySQL, SendGrid, and Razorpay settings allow further deployment work without making external accounts a prerequisite for evaluation.
+The default deployment is self-contained: embedded Tomcat/Jasper serves JSP pages and MySQL stores the application data. An initial question bank makes the platform ready for practice after database setup. SendGrid and Razorpay can be configured for external email and payment processing.
 
 ## 1. Problem statement and objectives
 
@@ -29,9 +29,9 @@ Objectives:
 | Presentation | JSP, Jakarta JSTL, reusable JSP tag files |
 | Browser enhancements | Local CSS and vanilla JavaScript; no frontend build |
 | Security | Spring Security, BCrypt, CSRF, server-side sessions |
-| Persistence | Spring Data JPA / Hibernate; H2 default, MySQL optional |
+| Persistence | Spring Data JPA / Hibernate; MySQL 8+; H2 for automated tests only |
 | Container | Embedded Tomcat 10.1 + Jasper; executable WAR |
-| Email/payment | Demo adapters; optional SendGrid REST and Razorpay |
+| Email/payment | Administrator email outbox / SendGrid REST; optional Razorpay |
 | Build/test | Maven Wrapper, JUnit 5, Spring Boot Test, MockMvc, black-box HTTP smoke suite |
 
 ## 3. Architecture
@@ -42,7 +42,7 @@ flowchart LR
     Security --> MVC[Spring MVC controllers and validated forms]
     MVC --> Services[Account / Question / Template / Attempt / Analytics / Payment services]
     Services --> Repositories[Spring Data repositories]
-    Repositories --> Database[(H2 file or MySQL)]
+    Repositories --> Database[(MySQL)]
     MVC --> Views[JSP views + layout / CSRF / icon tags]
     Views --> Browser
     Job[Scheduled expired-attempt safety net] --> Services
@@ -68,7 +68,7 @@ Controllers handle request binding, authorization context, redirects, and presen
 - Question search/filter, create/edit, review approval/rejection, deactivate, and atomic JSON import.
 - Template question-count/time/difficulty/category/type/subcategory settings; free/paid configuration; archive.
 - Student search, detailed performance/history/results, and enable/disable with session revocation.
-- Private in-memory email outbox during a demonstration.
+- Administrator-only email outbox for account verification and recovery.
 
 ## 5. Data model
 
@@ -188,7 +188,7 @@ Each correct answer awards one mark. There is no negative marking. All skipped q
 
 ## 8. Question data and migration
 
-The seed bank contains 238 questions: 49 approved original report items, 51 flagged items kept pending, and 138 supplemental demo items. Provenance is retained. Five templates include the original 30/60-question easy/hard configurations and a quick warm-up. Both 60-question pools have enough active questions.
+The seed bank contains 238 questions: 49 approved original report items, 51 flagged items kept pending, and 138 additional curriculum items. Provenance is retained. Five templates include the original 30/60-question easy/hard configurations and a quick warm-up. Both 60-question pools have enough active questions.
 
 The old hosted database was not available as an export in the repository, so no real users, payments, or history migration is claimed. [MIGRATION.md](MIGRATION.md) describes safe import and remaining work.
 
@@ -202,23 +202,17 @@ The old hosted database was not available as an export in the repository, so no 
 - Atomic imports roll back on any invalid row.
 - Source references make seed initialization repeatable without overwriting edits.
 - Template archiving and immutable question snapshots preserve history.
-- Default demo email/checkout remove external account prerequisites without pretending to deliver/charge.
+- Account links are administrator-only when outbox delivery is configured; online payments require a configured and verified gateway.
 - WAR packaging deliberately accommodates JSP, with both executable and servlet-initializer entry points.
 
 ## 10. Verification and screenshots
 
 See [TEST_REPORT.md](TEST_REPORT.md) for executed tests, environment details, and explicitly untested integrations.
 
-![Student dashboard](screenshots/02-student-dashboard.png)
-
-![Administrator overview](screenshots/05-admin-dashboard.png)
-
-Additional screenshots: [sign in](screenshots/01-login.png), [test](screenshots/03-practice-test.png), [result](screenshots/04-result.png), [mobile dashboard](screenshots/06-mobile-dashboard.png). These show the actual application, not design mockups. The displayed demo result comes from an exercised ten-question browser flow.
-
 ## 11. Limitations and future work
 
-The application is an educational practice platform, not a proctored exam system. Production work includes controlled schema/data migrations, rate limiting, audit logging, observability, shared session storage if scaled, large-dataset analytics optimization, and provider webhooks/refunds/reconciliation. Real MySQL and provider connections must be tested with private deployment credentials. The full scope and security boundaries are documented in [SECURITY.md](SECURITY.md).
+The application is an educational practice platform, not a proctored exam system. Production work includes controlled schema/data migrations, rate limiting, audit logging, observability, shared session storage if scaled, large-dataset analytics optimization, and provider webhooks/refunds/reconciliation. Use the MySQL setup script and private database credentials; external provider connections require their own configured credentials. The full scope and security boundaries are documented in [SECURITY.md](SECURITY.md).
 
 ## 12. Conclusion
 
-The migration provides a working Java/Spring/JSP application with a reproducible build, persistent local data, complete core user flows, deterministic grading, server-side controls, automated verification, and clean submission artifacts. It preserves the original source for reference while making the runnable hand-in independent of the old JavaScript runtime.
+The migration provides a working Java/Spring/JSP application with a reproducible build, persistent MySQL data, complete core user flows, deterministic grading, server-side controls, automated verification, and clean submission artifacts. It preserves the original source for reference while making the runnable hand-in independent of the old JavaScript runtime.

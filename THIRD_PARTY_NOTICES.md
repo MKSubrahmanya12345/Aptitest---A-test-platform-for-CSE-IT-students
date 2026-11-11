@@ -11,6 +11,6 @@ The Java application uses open-source dependencies resolved by Maven. Their own 
 
 `mvnw` and `mvnw.cmd` are the Apache Maven Wrapper **3.3.4 only-script** launchers from the Apache Maven Wrapper project. Their original Apache license headers are retained. They download Maven 3.9.11 when needed.
 
-The question-processing report retained under `server/bedrock-report-1785356134001.json` comes from the original repository. Questions reused from it carry a `legacy-report-*` source reference; supplemental questions carry `demo-curated-*` references. No external question collection or personal database export has been added.
+The question source records retained under `database/questions-source.json` come from the original repository. Imported records carry `legacy-report-*` references and additional curriculum exercises carry `curated-*` references.
 
 No new project-wide license is asserted for the original repository by this migration. The repository owner should choose a project license before redistributing the complete codebase. This file is a notice, not legal advice.

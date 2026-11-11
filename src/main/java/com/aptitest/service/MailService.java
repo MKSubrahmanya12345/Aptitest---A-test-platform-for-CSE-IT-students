@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 
 @Service
 public class MailService {
-    public record DemoMail(String recipient, String subject, String path, Instant createdAt) {
+    public record MailMessage(String recipient, String subject, String path, Instant createdAt) {
         public String getRecipient() { return recipient; }
         public String getSubject() { return subject; }
         public String getPath() { return path; }
@@ -19,7 +19,7 @@ public class MailService {
     }
     private final String mode, baseUrl, from, apiKey;
     private final RestClient sender;
-    private final Deque<DemoMail> outbox = new ConcurrentLinkedDeque<>();
+    private final Deque<MailMessage> outbox = new ConcurrentLinkedDeque<>();
 
     public MailService(@Value("${app.mail-mode}") String mode, @Value("${app.base-url}") String baseUrl,
                        @Value("${app.mail-from}") String from, @Value("${app.mail-api-key:}") String apiKey) {
@@ -30,8 +30,8 @@ public class MailService {
                 .defaultHeaders(h -> h.setBearerAuth(apiKey)).build();
     }
     public void sendLink(String email, String subject, String path) {
-        if ("demo".equals(mode)) {
-            outbox.addFirst(new DemoMail(email, subject, path, Instant.now()));
+        if ("outbox".equals(mode)) {
+            outbox.addFirst(new MailMessage(email, subject, path, Instant.now()));
             while (outbox.size() > 50) outbox.pollLast();
             return;
         }
@@ -45,5 +45,6 @@ public class MailService {
                 .retrieve().toBodilessEntity();
         } catch (Exception e) { throw new BusinessException("Email could not be sent. Please try again later or contact the administrator."); }
     }
-    public List<DemoMail> getOutbox() { return List.copyOf(outbox); }
+    public String getMode() { return mode; }
+    public List<MailMessage> getOutbox() { return List.copyOf(outbox); }
 }

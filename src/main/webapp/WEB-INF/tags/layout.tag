@@ -53,7 +53,7 @@
         <a class="nav-link ${fn:contains(requestPath,'test-templates') ? 'active' : ''}" href="${contextPath}/admin/test-templates"><t:icon name="check"/>Test templates</a>
         <a class="nav-link ${fn:contains(requestPath,'view-students') ? 'active' : ''}" href="${contextPath}/admin/view-students"><t:icon name="users"/>Students</a>
         <a class="nav-link ${fn:contains(requestPath,'rankings') ? 'active' : ''}" href="${contextPath}/admin/rankings"><t:icon name="trophy"/>Rankings</a>
-        <c:if test="${demoEnabled}"><a class="nav-link ${requestPath == '/admin/mail' ? 'active' : ''}" href="${contextPath}/admin/mail"><t:icon name="book"/>Demo email outbox</a></c:if>
+        <c:if test="${outboxEnabled}"><a class="nav-link ${requestPath == '/admin/mail' ? 'active' : ''}" href="${contextPath}/admin/mail"><t:icon name="book"/>Email outbox</a></c:if>
         </c:when><c:otherwise>
         <a class="nav-link ${requestPath == '/dashboard' ? 'active' : ''}" href="${contextPath}/dashboard"><t:icon name="home"/>Overview</a>
         <a class="nav-link ${fn:startsWith(requestPath,'/tests') ? 'active' : ''}" href="${contextPath}/dashboard#practice"><t:icon name="book"/>Practice tests</a>
@@ -68,7 +68,7 @@
     <div class="sidebar-bottom"><span class="avatar">${fn:toUpperCase(fn:substring(currentUser.name,0,1))}</span><div><strong><c:out value="${currentUser.name}"/></strong><span>${currentUser.role == 'ADMIN' ? 'Administrator' : 'Student account'}</span></div><form method="post" action="${contextPath}/logout"><t:csrf/><button type="submit" class="icon-button" aria-label="Sign out"><t:icon name="logout"/></button></form></div>
 </aside>
 <div class="workspace">
-    <header class="topbar"><div class="topbar-left"><button type="button" class="icon-button mobile-menu" data-menu-toggle aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">☰</button><span class="breadcrumb">Workspace <span>/</span> <strong><c:out value="${title}"/></strong></span></div><div class="topbar-right"><c:if test="${demoEnabled}"><span class="demo-badge"><i></i>Demo mode</span></c:if><button class="theme-button" type="button" data-theme-toggle aria-label="Toggle color theme"><t:icon name="sun"/></button><span class="top-avatar">${fn:toUpperCase(fn:substring(currentUser.name,0,1))}</span></div></header>
+    <header class="topbar"><div class="topbar-left"><button type="button" class="icon-button mobile-menu" data-menu-toggle aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">☰</button><span class="breadcrumb">Workspace <span>/</span> <strong><c:out value="${title}"/></strong></span></div><div class="topbar-right"><button class="theme-button" type="button" data-theme-toggle aria-label="Toggle color theme"><t:icon name="sun"/></button><span class="top-avatar">${fn:toUpperCase(fn:substring(currentUser.name,0,1))}</span></div></header>
     <main id="main" class="page-content"><jsp:doBody/></main>
     <footer class="workspace-footer"><span>AptiTest · Built for your next step.</span><span>Spring Boot + Java + JSP</span></footer>
 </div>

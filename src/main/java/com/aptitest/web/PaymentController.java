@@ -17,12 +17,10 @@ public class PaymentController {
     @GetMapping("/{id}") public String checkout(@PathVariable Long id, @AuthenticationPrincipal AppPrincipal p, Model model) {
         var t = templates.get(id);
         if (payments.hasAccess(p.getId(), t)) return "redirect:/dashboard";
-        model.addAttribute("template", t); model.addAttribute("order", payments.createOrder(p.getId(), id));
-        model.addAttribute("paymentMode", payments.getMode()); model.addAttribute("razorpayKeyId", payments.getKeyId());
+        model.addAttribute("template", t); model.addAttribute("paymentConfigured", payments.isConfigured());
+        if (payments.isConfigured()) model.addAttribute("order", payments.createOrder(p.getId(), id));
+        model.addAttribute("razorpayKeyId", payments.getKeyId());
         return "checkout";
-    }
-    @PostMapping("/{id}/demo") public String demo(@PathVariable Long id, @AuthenticationPrincipal AppPrincipal p, @RequestParam String orderId, RedirectAttributes flash) {
-        payments.completeDemo(p.getId(), id, orderId); flash.addFlashAttribute("success", "Demo access granted. No money was charged."); return "redirect:/dashboard";
     }
     @PostMapping("/{id}/verify") public String verify(@PathVariable Long id, @AuthenticationPrincipal AppPrincipal p, @RequestParam String orderId,
             @RequestParam String paymentId, @RequestParam String signature, RedirectAttributes flash) {

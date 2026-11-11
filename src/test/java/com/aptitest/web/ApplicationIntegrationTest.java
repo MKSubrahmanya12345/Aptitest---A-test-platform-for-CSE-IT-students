@@ -138,15 +138,38 @@ class ApplicationIntegrationTest {
         assertThat(templateService.pool(template, List.of())).hasSize(1);
         assertThat(templateService.pool(template, List.of("Other topic"))).isEmpty();
     }
-    @Test void paymentCannotBeBypassedOrCreditedToAnotherUser() {
+    @Test void paymentCannotBeBypassedWhenCheckoutIsNotConfigured() {
         template.setPaid(true); template.setPricePaise(5000); templates.saveAndFlush(template);
         assertThatThrownBy(this::start).isInstanceOf(BusinessException.class).hasMessageContaining("Unlock");
-        var order = payments.createOrder(student.getId(), template.getId());
-        assertThatThrownBy(() -> payments.completeDemo(admin.getId(), template.getId(), order.getOrderId())).isInstanceOf(BusinessException.class);
-        payments.completeDemo(student.getId(), template.getId(), order.getOrderId());
-        payments.completeDemo(student.getId(), template.getId(), order.getOrderId());
-        assertThat(payments.hasAccess(student.getId(), template)).isTrue(); assertThat(receipts.count()).isEqualTo(1);
-        assertThat(start()).isNotNull();
+        assertThatThrownBy(() -> payments.createOrder(student.getId(), template.getId()))
+            .isInstanceOf(BusinessException.class).hasMessageContaining("not configured");
+        assertThat(payments.hasAccess(student.getId(), template)).isFalse();
+        assertThat(receipts.count()).isZero();
+    }
+    @Test void unconfiguredCheckoutRendersWithoutCreatingAnOrder() throws Exception {
+        template.setPaid(true); template.setPricePaise(5000); templates.saveAndFlush(template);
+        mvc.perform(get("/checkout/" + template.getId()).with(user(new AppPrincipal(student))))
+            .andExpect(status().isOk()).andExpect(view().name("checkout"))
+            .andExpect(model().attribute("paymentConfigured", false))
+            .andExpect(model().attributeDoesNotExist("order"));
+        assertThat(receipts.count()).isZero();
+    }
+    @Test void publicRegistrationDoesNotExposeAnAccountToken() throws Exception {
+        SignupForm form = registration();
+        var result = mvc.perform(post("/signup").with(csrf()).param("name", form.getName())
+                .param("email", form.getEmail()).param("password", form.getPassword())
+                .param("confirmPassword", form.getConfirmPassword()).param("role", "ADMIN"))
+            .andExpect(redirectedUrl("/login")).andReturn();
+        assertThat(result.getFlashMap().containsKey("verificationLink")).isFalse();
+        assertThat(users.findByEmailIgnoreCase(form.getEmail()).orElseThrow().getRole()).isEqualTo(Role.STUDENT);
+    }
+    @Test void applicationDefaultsToMysql() throws Exception {
+        var properties = new java.util.Properties();
+        try (var stream = new org.springframework.core.io.ClassPathResource("application.properties").getInputStream()) {
+            properties.load(stream);
+        }
+        assertThat(properties.getProperty("spring.datasource.url")).contains("jdbc:mysql:").doesNotContain("jdbc:h2:");
+        assertThat(properties.getProperty("spring.datasource.driver-class-name")).isEqualTo("com.mysql.cj.jdbc.Driver");
     }
     @Test void flaggedMcqWithoutOptionsCannotBeApproved() {
         var pending = bank.findByStatus("pending").stream().filter(q -> q.getQuestionType().equals("mcq_single")).findFirst().orElseThrow();

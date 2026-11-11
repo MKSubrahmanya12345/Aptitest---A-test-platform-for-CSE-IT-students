@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AuthController {
     private final AccountService accounts;
-    @Value("${app.demo-enabled}") private boolean demo;
+    @Value("${app.mail-mode}") private String mailMode;
     public AuthController(AccountService accounts) { this.accounts = accounts; }
 
     @GetMapping("/") public String home(@AuthenticationPrincipal AppPrincipal p) { return "redirect:" + (p == null ? "/login" : "ADMIN".equals(p.getRole()) ? "/admin" : "/dashboard"); }
@@ -24,9 +24,10 @@ public class AuthController {
     @PostMapping("/signup") public String signup(@Valid @ModelAttribute("form") SignupForm form, BindingResult binding, Model model, RedirectAttributes flash) {
         if (binding.hasErrors()) { model.addAttribute("errors", errors(binding)); return "signup"; }
         try {
-            String path = accounts.signup(form);
-            flash.addFlashAttribute("success", "Account created. Verify your email before signing in.");
-            if (demo) flash.addFlashAttribute("verificationLink", path);
+            accounts.signup(form);
+            flash.addFlashAttribute("success", "outbox".equals(mailMode)
+                ? "Account created. Contact the administrator to activate your account."
+                : "Account created. Check your email to verify your account before signing in.");
             return "redirect:/login";
         } catch (BusinessException e) { model.addAttribute("errors", e.getMessage()); return "signup"; }
     }

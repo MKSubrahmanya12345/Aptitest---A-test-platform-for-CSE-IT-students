@@ -18,8 +18,8 @@ public class SecurityConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid email or password")));
     }
     @Bean SecurityFilterChain securityFilterChain(HttpSecurity http, UserRepository users,
-            @org.springframework.beans.factory.annotation.Value("${app.preview-embedding:false}") boolean previewEmbedding,
-            @org.springframework.beans.factory.annotation.Value("${app.demo-enabled}") boolean demoEnabled) throws Exception {
+            @org.springframework.beans.factory.annotation.Value("${app.allow-embedding:false}") boolean allowEmbedding,
+            @org.springframework.beans.factory.annotation.Value("${app.frame-ancestors:'self'}") String frameAncestors) throws Exception {
         http.authorizeHttpRequests(r -> r
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                 .requestMatchers("/", "/login", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/css/**", "/js/**", "/error", "/api/health").permitAll()
@@ -34,10 +34,10 @@ public class SecurityConfig {
             .logout(l -> l.logoutUrl("/logout").logoutSuccessUrl("/login?logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"))
             .exceptionHandling(e -> e.accessDeniedPage("/forbidden"))
             .addFilterAfter(new AccountStateFilter(users), UsernamePasswordAuthenticationFilter.class);
-        if (previewEmbedding && demoEnabled) {
-            // Preview embedding is opt-in; normal deployments retain Spring Security's DENY header.
+        if (allowEmbedding) {
+            // Embedding is opt-in; standard deployments retain the DENY header.
             http.headers(h -> h.frameOptions(f -> f.disable()).contentSecurityPolicy(c -> c.policyDirectives(
-                "frame-ancestors 'self' https://arena.ai https://*.arena.ai https://lmarena.ai https://*.lmarena.ai https://*.e2b.app")));
+                "frame-ancestors " + frameAncestors)));
         }
         return http.build(); // CSRF and all other secure default headers remain enabled.
     }

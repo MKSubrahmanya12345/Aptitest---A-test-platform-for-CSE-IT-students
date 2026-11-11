@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproducible demo bank; original reports are preserved and provenance is explicit."""
+"""Rebuild the question bank from reviewed source questions and curriculum exercises."""
 import json
 from pathlib import Path
 
@@ -9,9 +9,9 @@ rows = []
 def add(text, answer, solution, category='Quantitative Aptitude', subcategory='Arithmetic', difficulty='basic', kind='numeric', options=None, config=None):
     rows.append(dict(category=category, subcategory=subcategory, difficulty=difficulty,
                      question_type=kind, question_text=text, options=options or {}, correct_answer=answer,
-                     grading_config=config or {}, solution=solution, status='active', source_ref=f'demo-curated-{len(rows)+1:03d}'))
+                     grading_config=config or {}, solution=solution, status='active', source_ref=f'curated-{len(rows)+1:03d}'))
 
-for item in json.loads((ROOT / 'server/bedrock-report-1785356134001.json').read_text()):
+for item in json.loads((ROOT / 'database/questions-source.json').read_text()):
     approved = item['action'] == 'approved'
     rows.append(dict(category='Quantitative Aptitude', subcategory='Original question bank',
                      difficulty='intermediate' if item['id'] >= 7300 else 'basic',

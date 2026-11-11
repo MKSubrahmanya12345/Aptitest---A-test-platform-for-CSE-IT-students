@@ -21,10 +21,8 @@ public class SeedDataLoader implements ApplicationRunner {
     private final QuestionRepository questions;
     private final TemplateRepository templates;
     private final PasswordEncoder encoder;
-    @Value("${app.demo-enabled}") private boolean demoEnabled;
+    @Value("${app.initial-accounts-enabled}") private boolean initialAccountsEnabled;
     @Value("${app.seed-enabled}") private boolean seedEnabled;
-    @Value("${app.mail-mode}") private String mailMode;
-    @Value("${app.payment-mode}") private String paymentMode;
     @Value("${app.bootstrap-admin-email}") private String adminEmail;
     @Value("${app.bootstrap-admin-password}") private String adminPassword;
     public SeedDataLoader(UserRepository users, QuestionRepository questions, TemplateRepository templates, PasswordEncoder encoder) {
@@ -32,17 +30,16 @@ public class SeedDataLoader implements ApplicationRunner {
     }
     @Override @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        if (!demoEnabled && (seedEnabled || "demo".equals(mailMode) || "demo".equals(paymentMode))) {
-            throw new IllegalStateException("Demo seeding, email, and payments must be disabled when APP_DEMO_ENABLED=false. See docs/DEPLOYMENT.md.");
-        }
         if (!adminEmail.isBlank()) {
             if (adminPassword.isBlank()) throw new IllegalStateException("ADMIN_PASSWORD is required with ADMIN_EMAIL.");
             AccountService.validatePassword(adminPassword);
             createUser("Administrator", adminEmail, adminPassword, Role.ADMIN);
         }
-        if (seedEnabled) {
+        if (initialAccountsEnabled) {
             createUser("Administrator", "admin@aptitest.com", "Admin@12345", Role.ADMIN);
-            createUser("Demo Student", "student@aptitest.com", "Student@12345", Role.STUDENT);
+            createUser("Student", "student@aptitest.com", "Student@12345", Role.STUDENT);
+        }
+        if (seedEnabled) {
             try (var stream = new ClassPathResource("seed/questions.json").getInputStream()) {
                 for (JsonNode row : JsonSupport.MAPPER.readTree(stream)) {
                     if (questions.existsBySourceRef(row.path("source_ref").asText())) continue;
@@ -59,10 +56,10 @@ public class SeedDataLoader implements ApplicationRunner {
             template("Easy Practice - 30 Qs", "Build accuracy with a focused foundation practice session.", "easy", 30, 30, false);
             template("Easy Practice - 60 Qs", "A full-length foundation test to improve speed and confidence.", "easy", 60, 60, false);
             template("Hard Practice - 30 Qs", "Intermediate and advanced aptitude and CSE questions.", "hard", 30, 30, false);
-            template("Hard Practice - 60 Qs", "A complete advanced simulation. Demo checkout is available without a real charge.", "hard", 60, 60, true);
-            log.info("Demo data ready: {} active questions, {} pending review. Demo credentials are in README.md.", questions.countByStatus("active"), questions.countByStatus("pending"));
+            template("Hard Practice - 60 Qs", "Sixty intermediate and advanced aptitude and technical questions.", "hard", 60, 60, true);
+            log.info("Question bank ready: {} active questions, {} pending review.", questions.countByStatus("active"), questions.countByStatus("pending"));
         }
-        if (!demoEnabled && users.countByRole(Role.ADMIN) == 0) throw new IllegalStateException("No administrator exists. Set ADMIN_EMAIL and ADMIN_PASSWORD on first start.");
+        if (users.countByRole(Role.ADMIN) == 0) throw new IllegalStateException("No administrator exists. Set ADMIN_EMAIL and ADMIN_PASSWORD on first start.");
     }
     private void createUser(String name, String email, String password, Role role) {
         if (users.existsByEmailIgnoreCase(email)) return;

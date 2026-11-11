@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 public class GlobalModel {
     private final UserRepository users;
     public GlobalModel(UserRepository users) { this.users = users; }
-    @Value("${app.demo-enabled}") private boolean demoEnabled;
-    @ModelAttribute("demoEnabled") public boolean demoEnabled() { return demoEnabled; }
+    @Value("${app.mail-mode}") private String mailMode;
+    @ModelAttribute("outboxEnabled") public boolean outboxEnabled() { return "outbox".equals(mailMode); }
     @ModelAttribute("currentUser") public Object currentUser(Authentication authentication) {
         if (authentication != null && authentication.getPrincipal() instanceof AppPrincipal p) return users.findById(p.getId()).orElse(null);
         return null;

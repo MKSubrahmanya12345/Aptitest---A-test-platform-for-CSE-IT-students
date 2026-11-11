@@ -92,7 +92,7 @@ class Browser:
 def run(base):
     admin = Browser(base)
     text, _, _ = admin.request('/login')
-    expect('Welcome back.' in text and 'Student@12345' in text, 'real login JSP renders and demo credentials are available')
+    expect('Welcome back.' in text and 'Student@12345' not in text, 'login JSP renders without exposing initial passwords')
     expect(admin.csrf is not None, 'login form contains a CSRF token')
     admin.request('/signup', {'name': 'forged'}, csrf=False, expected=403)
     expect(True, 'anonymous POST without CSRF is rejected')
@@ -100,7 +100,7 @@ def run(base):
     for path, marker in [('/admin/manage-questions', 'Your question bank'), ('/admin/questions/new', 'Create a question'),
                          ('/admin/test-templates', 'Build the right kind of test'), ('/admin/test-templates/new', 'Create a test template'),
                          ('/admin/view-students', 'Your student community'), ('/admin/rankings', 'leaderboard'),
-                         ('/admin/mail', 'Demo email outbox'), ('/profile', 'Personal details')]:
+                         ('/admin/mail', 'Email outbox'), ('/profile', 'Personal details')]:
         text, _, _ = admin.request(path)
         expect(marker in text, path + ' compiles and renders')
     question = dict(category='Smoke Check', subcategory='Addition', difficulty='basic', questionType='numeric',
@@ -161,16 +161,15 @@ def run(base):
     expect('Topic performance' in text, 'student statistics and history JSP renders')
     paid = next(link for link in dashboard.links if '/checkout/' in link)
     text, page, _ = student.request(paid)
-    expect('No bank details are requested' in text, 'paid template uses clearly labelled demo checkout')
-    order = page.value('orderId')
-    text, _, _ = student.request(paid + '/demo', {'orderId': order})
-    expect('No money was charged.' in text, 'demo payment grants access without a real charge')
+    expect('Online payments are not configured' in text, 'unconfigured checkout does not offer a payment bypass')
 
     new = Browser(base)
     new.request('/signup')
     email = 'submission-smoke@example.com'
     text, page, _ = new.request('/signup', {'name': 'Smoke Student', 'email': email, 'password': 'Smoke@12345', 'confirmPassword': 'Smoke@12345', 'role': 'ADMIN'})
-    verify = next(link for link in page.links if '/verify-email?token=' in link)
+    expect('/verify-email?token=' not in text, 'registration does not expose a verification token')
+    _, mail_page, _ = admin.request('/admin/mail')
+    verify = next(link for link in mail_page.links if '/verify-email?token=' in link)
     new.request(verify)
     new.login(email, 'Smoke@12345', '/dashboard')
     new.request('/admin', expected=403)
@@ -219,9 +218,9 @@ def main():
             log.parent.mkdir(exist_ok=True)
             stream = log.open('w')
             process = subprocess.Popen(['java', '-jar', str(args.war.resolve()), '--server.port=18080',
-                                        '--spring.datasource.url=jdbc:h2:mem:smoke;DB_CLOSE_DELAY=-1',
-                                        '--spring.jpa.hibernate.ddl-auto=create-drop', '--app.demo-enabled=true', '--app.seed-enabled=true',
-                                        '--app.payment-mode=demo', '--app.mail-mode=demo'], cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
+                                        '--spring.datasource.url=jdbc:mysql://localhost:3306/aptitest_acceptance?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC',
+                                        '--spring.jpa.hibernate.ddl-auto=create-drop', '--app.initial-accounts-enabled=true', '--app.seed-enabled=true',
+                                        '--app.payment-mode=disabled', '--app.mail-mode=outbox'], cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
             base = 'http://127.0.0.1:18080'
             deadline = time.monotonic() + 100
             while True:
