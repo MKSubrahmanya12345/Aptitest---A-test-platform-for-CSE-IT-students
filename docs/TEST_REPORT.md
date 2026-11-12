@@ -1,6 +1,17 @@
 # Verification
 
-## Current revision
+## MySQL question-text correction
+
+`Question.questionText` now explicitly uses `LONGTEXT NOT NULL` rather than a 20,000-character `VARCHAR`. This avoids the MySQL column-size error when the database uses `utf8mb4`, including when the connection and table character sets differ. Its existing string JDBC mapping is retained so case-insensitive question search remains supported.
+
+New regression coverage:
+
+- `MySqlSchemaTest` generates the actual Hibernate MySQL-dialect DDL without connecting to H2 or MySQL. Four cases check that the question column is `LONGTEXT NOT NULL` for connection character widths from one through four bytes, and that the question index and referencing foreign key are generated.
+- `ApplicationIntegrationTest.longUnicodeQuestionTextCanBeReloadedSearchedAndSnapshotted` checks persistence, case-insensitive/literal-wildcard search and attempt snapshots for question text close to the 20,000-character form limit.
+
+These five new cases and the existing suite have not been executed after this correction in the current environment: Maven and a MySQL server are unavailable. Source/packaging checks are not a substitute for a build or a fresh MySQL startup. Run the commands below in the configured local environment.
+
+## Previous verification (before this correction)
 
 - Java 17 compilation: passed for application and test sources.
 - JUnit: **64 tests passed, 0 failed, 0 skipped** (34 grading cases and 30 integration cases).
@@ -10,7 +21,7 @@
 
 The regression tests cover MySQL as the default configuration, unconfigured checkout without creating an order or granting access, and registration without exposing an account token. Other cases cover grading, role separation, ownership, CSRF, expiry, snapshots, imports, search, account recovery, session revocation and database relationships.
 
-Unit/integration tests use an isolated H2 database under the `test` profile. H2 is a test-only dependency; the application uses MySQL. The current revision's MySQL connectivity must be checked with the configured MySQL instance; the database connection and external providers were not exercised in this verification run.
+Unit/integration tests use an isolated H2 database under the `test` profile. H2 is a test-only dependency; the application uses MySQL. A successful H2 run does not validate MySQL schema creation. MySQL connectivity and schema creation must be checked with the configured MySQL instance; that database connection and external providers were not exercised in the previous verification run.
 
 ## Re-run
 

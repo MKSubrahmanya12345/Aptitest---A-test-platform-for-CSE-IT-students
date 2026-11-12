@@ -17,7 +17,7 @@ public class Question {
     @Column(nullable = false, length = 40)
     private String questionType = "mcq_single";
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.LONGVARCHAR)
-    @Column(nullable = false, length = 20000)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String questionText;
     @Lob
     private String passage;
