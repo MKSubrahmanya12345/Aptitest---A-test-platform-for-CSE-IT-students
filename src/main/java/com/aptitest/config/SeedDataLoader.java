@@ -5,6 +5,8 @@ import com.aptitest.repository.*;
 import com.aptitest.service.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Locale;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -21,21 +23,17 @@ public class SeedDataLoader implements ApplicationRunner {
     private final QuestionRepository questions;
     private final TemplateRepository templates;
     private final PasswordEncoder encoder;
-    @Value("${app.initial-accounts-enabled}") private boolean initialAccountsEnabled;
+    private final Environment environment;
+    @Value("${app.initial-accounts-enabled:false}") private boolean initialAccountsEnabled;
     @Value("${app.seed-enabled}") private boolean seedEnabled;
-    @Value("${app.bootstrap-admin-email}") private String adminEmail;
-    @Value("${app.bootstrap-admin-password}") private String adminPassword;
-    public SeedDataLoader(UserRepository users, QuestionRepository questions, TemplateRepository templates, PasswordEncoder encoder) {
-        this.users = users; this.questions = questions; this.templates = templates; this.encoder = encoder;
+    public SeedDataLoader(UserRepository users, QuestionRepository questions, TemplateRepository templates, PasswordEncoder encoder, Environment environment) {
+        this.users = users; this.questions = questions; this.templates = templates; this.encoder = encoder; this.environment = environment;
     }
     @Override @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        if (!adminEmail.isBlank()) {
-            if (adminPassword.isBlank()) throw new IllegalStateException("ADMIN_PASSWORD is required with ADMIN_EMAIL.");
-            AccountService.validatePassword(adminPassword);
-            createUser("Administrator", adminEmail, adminPassword, Role.ADMIN);
-        }
-        if (initialAccountsEnabled) {
+        // Account fixtures are confined to explicitly requested test runs.
+        // Normal startup never creates administrators; promote an account in MySQL.
+        if (initialAccountsEnabled && environment.acceptsProfiles(Profiles.of("test"))) {
             createUser("Administrator", "admin@aptitest.com", "Admin@12345", Role.ADMIN);
             createUser("Student", "student@aptitest.com", "Student@12345", Role.STUDENT);
         }
@@ -59,12 +57,11 @@ public class SeedDataLoader implements ApplicationRunner {
             template("Hard Practice - 60 Qs", "Sixty intermediate and advanced aptitude and technical questions.", "hard", 60, 60, true);
             log.info("Question bank ready: {} active questions, {} pending review.", questions.countByStatus("active"), questions.countByStatus("pending"));
         }
-        if (users.countByRole(Role.ADMIN) == 0) throw new IllegalStateException("No administrator exists. Set ADMIN_EMAIL and ADMIN_PASSWORD on first start.");
     }
     private void createUser(String name, String email, String password, Role role) {
         if (users.existsByEmailIgnoreCase(email)) return;
         AppUser user = new AppUser(); user.setName(name); user.setEmail(email.trim().toLowerCase(Locale.ROOT));
-        user.setPasswordHash(encoder.encode(password)); user.setRole(role); user.setEmailVerified(true); users.save(user);
+        user.setPasswordHash(encoder.encode(password)); user.setRole(role); users.save(user);
     }
     private void template(String name, String description, String difficulty, int count, int minutes, boolean paid) {
         if (templates.existsByName(name)) return;

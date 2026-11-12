@@ -22,7 +22,7 @@ public class SecurityConfig {
             @org.springframework.beans.factory.annotation.Value("${app.frame-ancestors:'self'}") String frameAncestors) throws Exception {
         http.authorizeHttpRequests(r -> r
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                .requestMatchers("/", "/login", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/css/**", "/js/**", "/error", "/api/health").permitAll()
+                .requestMatchers("/", "/login", "/signup", "/css/**", "/js/**", "/error", "/api/health").permitAll()
                 .requestMatchers("/admin/**", "/review").hasRole("ADMIN")
                 .requestMatchers("/dashboard", "/tests/**", "/history", "/solved", "/checkout/**").hasRole("STUDENT")
                 .anyRequest().authenticated())

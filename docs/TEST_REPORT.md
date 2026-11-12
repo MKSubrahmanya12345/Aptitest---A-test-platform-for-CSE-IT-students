@@ -1,5 +1,11 @@
 # Verification
 
+## Simplified accounts
+
+Signup immediately creates an active student account. Password recovery, account-email/token endpoints, email delivery and the administrator outbox have been removed. Old account flags no longer block login or rankings. Tests now cover direct login, legacy-flag compatibility, removed endpoints, role tampering, password-change session revocation and duplicate signup. Normal startup creates no accounts; use the single statement in `database/promote-admin.sql` to assign your own registered account as administrator.
+
+Source syntax, reference and archive checks are distinct from runtime verification. Java compilation, JUnit and a live MySQL login have not been run for this change in this environment. Historical verification below predates the simplification and is not a fresh pass.
+
 ## MySQL question-text correction
 
 `Question.questionText` now explicitly uses `LONGTEXT NOT NULL` rather than a 20,000-character `VARCHAR`. This avoids the MySQL column-size error when the database uses `utf8mb4`, including when the connection and table character sets differ. Its existing string JDBC mapping is retained so case-insensitive question search remains supported.

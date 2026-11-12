@@ -2,7 +2,7 @@
 
 ## Start
 
-Follow the MySQL and Eclipse steps in the root README. Open `http://localhost:8080` after the application has started. Initial administrator and student credentials are listed in the README.
+Follow the MySQL and Eclipse steps in the root README. Open `http://localhost:8080` after the application has started. Register a student account directly; sign in immediately. To make an administrator, promote your own registered account using the MySQL command in the README.
 
 ## Student
 
@@ -21,13 +21,12 @@ Four initial templates are free. A paid template can be unlocked only when onlin
 - **Question bank:** search/filter questions, create/edit content, approve or reject pending rows, and import JSON.
 - **Templates:** configure question counts, categories, difficulty and duration; archive unused templates.
 - **Students:** review results/statistics and enable/disable accounts.
-- **Email outbox:** when outbox delivery is enabled, open account verification and recovery messages. This page is restricted to administrators.
 
 Question imports are atomic: an invalid row rejects the entire upload. Use the example file at `src/main/resources/static/examples/questions.json`. Imported questions remain pending until reviewed.
 
-## Registration and recovery
+## Registration
 
-A registration creates a student account. With external email configured, the user verifies the emailed link. With outbox delivery, the administrator opens the verification link from Email outbox. Password-recovery links expire after 30 minutes and work only once. Password changes and account disabling revoke old sessions.
+Registration immediately activates a student account; no email verification or administrator approval is required. Administrator privileges are assigned only through the manual MySQL promotion command, never by public signup. Password changes and account disabling revoke old sessions. There are no account-email or password-recovery features.
 
 ## Submission
 
