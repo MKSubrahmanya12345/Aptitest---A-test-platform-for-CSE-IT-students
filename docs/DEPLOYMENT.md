@@ -62,5 +62,6 @@ Run the executable WAR on Java 17+ or deploy it to Tomcat 10.1 / Jakarta Servlet
 - **Access denied for user:** correct the username/password in `config/application-local.properties`.
 - **Communications link failure:** start MySQL; check host and port in `DB_URL`.
 - **Unknown database:** execute `database/setup.sql`, or grant permission to create the database.
+- **Column length too big for `question_text`:** update `src/main/java/com/aptitest/domain/Question.java` from the corrected source. Its column annotation must be `@Column(nullable = false, columnDefinition = "LONGTEXT")`, not `length = 20000`. Stop the application, clean the Eclipse project and restart it. Keep your database and local credentials; with `ddl-auto=update`, Hibernate retries creating the missing table and its relationships. Do not drop the database or manually create the missing table to work around the mapping error.
 - **Eclipse dependency errors:** right-click the project → Maven → Update Project; select a full JDK.
 - **Port 8080 occupied:** use `--server.port=9090` in Run Configurations → Program arguments.

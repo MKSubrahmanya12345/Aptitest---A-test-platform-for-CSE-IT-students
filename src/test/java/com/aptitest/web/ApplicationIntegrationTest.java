@@ -42,6 +42,7 @@ class ApplicationIntegrationTest {
     @Autowired AccountService accounts;
     @Autowired MailService mail;
     @Autowired AnalyticsService analytics;
+    @Autowired jakarta.persistence.EntityManager entityManager;
     AppUser student, admin;
     Question question;
     TestTemplate template;
@@ -231,6 +232,23 @@ class ApplicationIntegrationTest {
         assertThat(questions.search("active", question.getCategory(), "item_1", 0).getContent()).hasSize(1);
         assertThat(questions.search("active", question.getCategory(), "item\\2", 0).getContent()).hasSize(1);
         assertThat(questions.search("active", question.getCategory(), "20_", 0).getContent()).isEmpty();
+    }
+    @Test void longUnicodeQuestionTextCanBeReloadedSearchedAndSnapshotted() {
+        String text = "ಅ".repeat(19980) + " MixedCase 20%_end";
+        question.setQuestionText(text);
+        bank.saveAndFlush(question);
+        entityManager.clear();
+        assertThat(bank.findById(question.getId()).orElseThrow().getQuestionText()).isEqualTo(text);
+        assertThat(questions.search("active", question.getCategory(), "mixedcase", 0).getContent())
+            .extracting(Question::getId).containsExactly(question.getId());
+        assertThat(questions.search("active", question.getCategory(), "20%_end", 0).getContent())
+            .extracting(Question::getId).containsExactly(question.getId());
+
+        TestAttempt attempt = start();
+        entityManager.flush();
+        entityManager.clear();
+        assertThat(items.findByAttemptIdAndPosition(attempt.getId(), 1).orElseThrow().getQuestionText())
+            .isEqualTo(text);
     }
     @Test void databaseProtectsReferencedQuestionsFromDeletion() {
         start();
