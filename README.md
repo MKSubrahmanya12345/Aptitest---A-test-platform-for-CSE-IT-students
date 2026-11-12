@@ -26,7 +26,7 @@ To create your administrator, first register your own account, then run the foll
 
 ```sql
 UPDATE aptitest_java.at_users
-SET role = 'ADMIN', enabled = 1, email_verified = 1,
+SET role = 'ADMIN', enabled = 1,
     credentials_version = credentials_version + 1, version = version + 1
 WHERE email = 'your@email.com';
 ```
@@ -44,16 +44,14 @@ Windows: use `.\mvnw.cmd clean verify`. Keep the `config` folder beside the dire
 
 ## Features
 
-- Student/admin authentication, immediate student registration, password recovery, profile management and session revocation.
+- Student/admin authentication, immediate student registration, profile management and session revocation.
 - Timed tests, category filters, saved answers, resume, review flags, server-side expiry and automatic grading.
 - Ten question types, result explanations, reattempts, solved-question bank, history, analytics and rankings.
 - Administrator question creation, editing, review, JSON import, template management and student access control.
 - **238 questions:** 187 active and 51 awaiting review; five test templates, including 30/60-question practice.
 - Responsive JSP interface, light/dark themes and printable results.
 
-## Email and payments
-
-The default **email outbox** is administrator-only. Only password-recovery requests need account links; registration is immediate. The administrator opens **Email outbox** to assist with recovery. To deliver messages externally, configure SendGrid as described in [deployment](docs/DEPLOYMENT.md).
+## Payments
 
 Online checkout is disabled until Razorpay credentials are configured. There is **no simulated-payment or free-unlock endpoint**. Four practice templates are free; the paid template requires a verified captured payment. Private payment secrets stay on the server.
 

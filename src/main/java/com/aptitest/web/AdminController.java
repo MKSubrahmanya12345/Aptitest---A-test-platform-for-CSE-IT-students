@@ -26,12 +26,11 @@ public class AdminController {
     private final AttemptRepository attempts;
     private final AttemptService tests;
     private final AnalyticsService analytics;
-    private final MailService mail;
     public AdminController(QuestionService questions, QuestionRepository questionRepository, TemplateService templates,
             TemplateRepository templateRepository, AccountService accounts, UserRepository users, AttemptRepository attempts,
-            AttemptService tests, AnalyticsService analytics, MailService mail) {
+            AttemptService tests, AnalyticsService analytics) {
         this.questions = questions; this.questionRepository = questionRepository; this.templates = templates; this.templateRepository = templateRepository;
-        this.accounts = accounts; this.users = users; this.attempts = attempts; this.tests = tests; this.analytics = analytics; this.mail = mail;
+        this.accounts = accounts; this.users = users; this.attempts = attempts; this.tests = tests; this.analytics = analytics;
     }
     @GetMapping public String dashboard(Model model) { model.addAttribute("stats", analytics.adminSummary()); return "admin-dashboard"; }
     @GetMapping({"/manage-questions", "/questions"}) public String questions(@RequestParam(defaultValue = "pending") String status,
@@ -111,9 +110,5 @@ public class AdminController {
         TestAttempt a = attempts.findById(id).orElseThrow(() -> new BusinessException("Test not found."));
         if (!a.isCompleted()) throw new BusinessException("This student has not submitted the test yet.");
         model.addAttribute("attempt", a); model.addAttribute("items", tests.questions(id)); model.addAttribute("backUrl", "/admin/view-students/" + a.getUserId()); return "result";
-    }
-    @GetMapping("/mail") public String outbox(Model model) {
-        if (!"outbox".equals(mail.getMode())) throw new BusinessException("Email is delivered through the configured provider.");
-        model.addAttribute("messages", mail.getOutbox()); return "admin-mail";
     }
 }

@@ -27,25 +27,5 @@ public class AuthController {
             return "redirect:/login";
         } catch (BusinessException e) { model.addAttribute("errors", e.getMessage()); return "signup"; }
     }
-    @GetMapping("/verify-email") public String verify(@RequestParam(defaultValue = "") String token, RedirectAttributes flash) {
-        try { accounts.verifyEmail(token); flash.addFlashAttribute("success", "Email verified. You can now sign in."); }
-        catch (BusinessException e) { flash.addFlashAttribute("error", e.getMessage()); }
-        return "redirect:/login";
-    }
-    @GetMapping("/forgot-password") public String forgot() { return "forgot-password"; }
-    @PostMapping("/forgot-password") public String forgot(@RequestParam(defaultValue = "") String email, Model model) {
-        if (email.length() > 254 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) { model.addAttribute("errors", "Enter a valid email address."); return "forgot-password"; }
-        accounts.requestReset(email);
-        model.addAttribute("success", "If a verified, active account exists for this email, a password-reset link has been sent.");
-        return "forgot-password";
-    }
-    @GetMapping("/reset-password") public String reset(@RequestParam(defaultValue = "") String token, Model model) { model.addAttribute("token", token); return "reset-password"; }
-    @PostMapping("/reset-password") public String reset(@RequestParam(defaultValue = "") String token, @RequestParam(defaultValue = "") String password,
-            @RequestParam(defaultValue = "") String confirmPassword, Model model, RedirectAttributes flash) {
-        try {
-            accounts.resetPassword(token, password, confirmPassword);
-            flash.addFlashAttribute("success", "Password reset successfully. Sign in with your new password."); return "redirect:/login";
-        } catch (BusinessException e) { model.addAttribute("token", token); model.addAttribute("errors", e.getMessage()); return "reset-password"; }
-    }
     public static String errors(BindingResult binding) { return String.join(" · ", binding.getAllErrors().stream().map(e -> e.getDefaultMessage()).toList()); }
 }

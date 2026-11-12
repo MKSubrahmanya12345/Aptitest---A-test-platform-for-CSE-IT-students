@@ -51,7 +51,7 @@ public class AnalyticsService {
     public List<Map<String, Object>> rankings(String sort) {
         List<Map<String, Object>> rows = new ArrayList<>();
         for (AppUser user : users.findByRoleOrderByNameAsc(Role.STUDENT)) {
-            if (!user.isEnabled() || !user.isEmailVerified()) continue;
+            if (!user.isEnabled()) continue;
             List<TestAttempt> list = counted(user.getId());
             int correct = list.stream().mapToInt(TestAttempt::getCorrectCount).sum();
             int answered = list.stream().mapToInt(a -> a.getCorrectCount() + a.getWrongCount()).sum();

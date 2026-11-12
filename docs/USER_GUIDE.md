@@ -21,13 +21,12 @@ Four initial templates are free. A paid template can be unlocked only when onlin
 - **Question bank:** search/filter questions, create/edit content, approve or reject pending rows, and import JSON.
 - **Templates:** configure question counts, categories, difficulty and duration; archive unused templates.
 - **Students:** review results/statistics and enable/disable accounts.
-- **Email outbox:** when outbox delivery is enabled, open password-recovery messages. This page is restricted to administrators.
 
 Question imports are atomic: an invalid row rejects the entire upload. Use the example file at `src/main/resources/static/examples/questions.json`. Imported questions remain pending until reviewed.
 
-## Registration and recovery
+## Registration
 
-Registration immediately activates a student account; no email verification or administrator approval is required. Administrator privileges are assigned only through the manual MySQL promotion command, never by public signup. Password-recovery links expire after 30 minutes and work only once. Password changes and account disabling revoke old sessions.
+Registration immediately activates a student account; no email verification or administrator approval is required. Administrator privileges are assigned only through the manual MySQL promotion command, never by public signup. Password changes and account disabling revoke old sessions. There are no account-email or password-recovery features.
 
 ## Submission
 

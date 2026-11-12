@@ -100,7 +100,7 @@ def run(base):
     for path, marker in [('/admin/manage-questions', 'Your question bank'), ('/admin/questions/new', 'Create a question'),
                          ('/admin/test-templates', 'Build the right kind of test'), ('/admin/test-templates/new', 'Create a test template'),
                          ('/admin/view-students', 'Your student community'), ('/admin/rankings', 'leaderboard'),
-                         ('/admin/mail', 'Email outbox'), ('/profile', 'Personal details')]:
+                         ('/profile', 'Personal details')]:
         text, _, _ = admin.request(path)
         expect(marker in text, path + ' compiles and renders')
     question = dict(category='Smoke Check', subcategory='Addition', difficulty='basic', questionType='numeric',
@@ -167,7 +167,7 @@ def run(base):
     new.request('/signup')
     email = 'submission-smoke@example.com'
     text, page, _ = new.request('/signup', {'name': 'Smoke Student', 'email': email, 'password': 'Smoke@12345', 'confirmPassword': 'Smoke@12345', 'role': 'ADMIN'})
-    expect('/verify-email?token=' not in text, 'registration does not expose a verification token')
+    expect('Account created. You can sign in immediately.' in text, 'registration completes immediately')
     new.login(email, 'Smoke@12345', '/dashboard')
     new.request('/admin', expected=403)
     expect(True, 'registration cannot elevate its role through form tampering')
@@ -175,21 +175,6 @@ def run(base):
     expect(True, 'a different student cannot read another student’s result')
     text, _, _ = new.request('/profile', {'name': 'Updated Smoke Student'})
     expect('Profile updated.' in text, 'profile changes persist')
-    anonymous = Browser(base)
-    anonymous.request('/forgot-password')
-    text, _, _ = anonymous.request('/forgot-password', {'email': email})
-    expect('If a verified, active account exists' in text and '/reset-password?token=' not in text, 'password reset does not expose account existence or tokens')
-    text, page, _ = admin.request('/admin/mail')
-    reset = next(link for link in page.links if '/reset-password?token=' in link)
-    text, page, _ = anonymous.request(reset)
-    token = page.value('token')
-    text, _, _ = anonymous.request('/reset-password', {'token': token, 'password': 'Changed@12345', 'confirmPassword': 'Changed@12345'})
-    expect('Password reset successfully.' in text, 'password-reset JSP and token completion work')
-    text, _, url = new.request('/dashboard')
-    expect('/login' in url, 'password reset revokes an existing logged-in session')
-    new.login(email, 'Changed@12345', '/dashboard')
-    text, _, _ = anonymous.request('/reset-password', {'token': token, 'password': 'Another@12345', 'confirmPassword': 'Another@12345'})
-    expect('Invalid or expired reset link.' in text, 'reset token cannot be reused')
     text, page, _ = admin.request('/admin/view-students?search=' + urllib.parse.quote(email))
     new_id = next(re.search(r'/admin/view-students/(\d+)', link).group(1) for link in page.links if re.search(r'/admin/view-students/(\d+)', link))
     admin.request(f'/admin/view-students/{new_id}/status', {'enabled': 'false'})
@@ -217,7 +202,7 @@ def main():
             process = subprocess.Popen(['java', '-jar', str(args.war.resolve()), '--server.port=18080',
                                         '--spring.datasource.url=jdbc:mysql://localhost:3306/aptitest_acceptance?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC',
                                         '--spring.jpa.hibernate.ddl-auto=create-drop', '--spring.profiles.active=test', '--app.initial-accounts-enabled=true', '--app.seed-enabled=true',
-                                        '--app.payment-mode=disabled', '--app.mail-mode=outbox'], cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
+                                        '--app.payment-mode=disabled'], cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
             base = 'http://127.0.0.1:18080'
             deadline = time.monotonic() + 100
             while True:

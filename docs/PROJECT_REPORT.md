@@ -5,7 +5,7 @@
 
 AptiTest supports structured aptitude and technical practice with immediate post-test feedback. Students take timed tests, resume saved work, review explanations, track topic performance, and compare progress. Administrators curate questions, publish configurable templates, inspect results, and manage student access. This version migrates the original JavaScript application to a layered Java MVC application packaged as an executable WAR.
 
-The default deployment is self-contained: embedded Tomcat/Jasper serves JSP pages and MySQL stores the application data. An initial question bank makes the platform ready for practice after database setup. SendGrid and Razorpay can be configured for external email and payment processing.
+The default deployment is self-contained: embedded Tomcat/Jasper serves JSP pages and MySQL stores the application data. An initial question bank makes the platform ready for practice after database setup. Razorpay can be configured for payment processing.
 
 ## 1. Problem statement and objectives
 
@@ -31,7 +31,7 @@ Objectives:
 | Security | Spring Security, BCrypt, CSRF, server-side sessions |
 | Persistence | Spring Data JPA / Hibernate; MySQL 8+; H2 for automated tests only |
 | Container | Embedded Tomcat 10.1 + Jasper; executable WAR |
-| Email/payment | Administrator email outbox / SendGrid REST; optional Razorpay |
+| Payments | Optional Razorpay |
 | Build/test | Maven Wrapper, JUnit 5, Spring Boot Test, MockMvc, black-box HTTP smoke suite |
 
 ## 3. Architecture
@@ -46,7 +46,7 @@ flowchart LR
     MVC --> Views[JSP views + layout / CSRF / icon tags]
     Views --> Browser
     Job[Scheduled expired-attempt safety net] --> Services
-    Services -. optional HTTPS .-> Providers[SendGrid / Razorpay]
+    Services -. optional HTTPS .-> Providers[Razorpay]
 ```
 
 Controllers handle request binding, authorization context, redirects, and presentation models. Services own validation and transactional business rules. Repositories provide persistence and row locking. JSPs render escaped data and forms; they contain no SQL or Java scriptlets. JavaScript enhances autosave, timers, theme, and navigation but never decides scores or permissions.
@@ -68,7 +68,6 @@ Controllers handle request binding, authorization context, redirects, and presen
 - Question search/filter, create/edit, review approval/rejection, deactivate, and atomic JSON import.
 - Template question-count/time/difficulty/category/type/subcategory settings; free/paid configuration; archive.
 - Student search, detailed performance/history/results, and enable/disable with session revocation.
-- Administrator-only email outbox for account verification and recovery.
 
 ## 5. Data model
 
@@ -87,10 +86,7 @@ erDiagram
         string password_hash
         string role
         boolean enabled
-        boolean email_verified
         int credentials_version
-        string verification_hash
-        string reset_hash
     }
     AT_QUESTIONS {
         bigint id PK
@@ -195,14 +191,14 @@ The old hosted database was not available as an export in the repository, so no 
 ## 9. Implementation highlights
 
 - Spring Security protects server routes, not just menu links.
-- Password/token data are never stored in browser localStorage; only theme preference is.
+- Passwords are never stored in browser localStorage; only theme preference is.
 - BCrypt input limits account for UTF-8 bytes.
-- Bans/password resets revoke previously issued sessions.
+- Bans/password changes revoke previously issued sessions.
 - Escaped plain-text question rendering prevents imported HTML from becoming executable content.
 - Atomic imports roll back on any invalid row.
 - Source references make seed initialization repeatable without overwriting edits.
 - Template archiving and immutable question snapshots preserve history.
-- Account links are administrator-only when outbox delivery is configured; online payments require a configured and verified gateway.
+- Public registration creates only students; administrators are assigned manually in MySQL. Online payments require a configured and verified gateway.
 - WAR packaging deliberately accommodates JSP, with both executable and servlet-initializer entry points.
 
 ## 10. Verification and screenshots

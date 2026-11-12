@@ -25,3 +25,7 @@ The resulting bank has 238 questions, 187 active and 51 pending. Five templates 
 Sign in as administrator and upload a UTF-8 JSON array through Question bank. The import accepts up to 500 rows / 2 MB. Use the example at `src/main/resources/static/examples/questions.json`.
 
 All imported rows require review. Invalid rows roll back the entire upload. Keep the original question IDs in an external mapping if migrating related records. Never grant a payment entitlement solely from a browser callback or an unverified historic status.
+
+## Existing Java account tables
+
+No account deletion or table reset is required. Account-email and password-recovery features have been removed. Authentication checks the password, role and enabled status only. The old NOT NULL `email_verified` column is still written with a compatibility value on new inserts, but is never read as an authentication gate. Old nullable token columns may remain unused in existing databases; no token fields or endpoints exist in the application.

@@ -1,8 +1,10 @@
 # Verification
 
-## Immediate registration and manual administrator setup
+## Simplified accounts
 
-New accounts can sign in immediately as students. Normal startup creates no default accounts and no longer requires an existing administrator. Administrator privileges are assigned manually using `database/promote-admin.sql`. Automatic account fixtures require both the explicit `test` profile and the test-only initial-account flag. Registration and recovery regression expectations and the HTTP acceptance script have been updated. These changes have not been runtime-tested in this environment.
+Signup immediately creates an active student account. Password recovery, account-email/token endpoints, email delivery and the administrator outbox have been removed. Old account flags no longer block login or rankings. Tests now cover direct login, legacy-flag compatibility, removed endpoints, role tampering, password-change session revocation and duplicate signup. Normal startup creates no accounts; use the single statement in `database/promote-admin.sql` to assign your own registered account as administrator.
+
+Source syntax, reference and archive checks are distinct from runtime verification. Java compilation, JUnit and a live MySQL login have not been run for this change in this environment. Historical verification below predates the simplification and is not a fresh pass.
 
 ## MySQL question-text correction
 

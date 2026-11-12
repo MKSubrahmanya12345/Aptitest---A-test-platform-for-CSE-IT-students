@@ -29,7 +29,6 @@ Use `.\mvnw.cmd` on Windows. Spring Boot includes Tomcat and compiles the JSP pa
 | `DB_PASSWORD` | Your private MySQL password |
 | `PORT` | `8080` |
 | `APP_SEED_ENABLED` | `true`; load the initial question bank and templates |
-| `APP_BASE_URL` | External application URL for account links |
 
 The local connection URL enables database creation and public-key retrieval and disables TLS for localhost. For a remote database, supply a URL with TLS and certificate verification. Restrict database access and use least-privilege credentials. The application uses separate `at_*` tables and does not overwrite the old application's tables.
 
@@ -42,12 +41,6 @@ Register your own student account at `/signup`, then run `database/promote-admin
 Hibernate creates/updates the six `at_*` tables, including foreign keys. The seed loader inserts 238 questions and five templates once per source reference. Editing questions or changing passwords is not undone by a restart.
 
 For controlled production releases, use versioned database migrations and change `spring.jpa.hibernate.ddl-auto` to `validate` after provisioning. Back up the database before schema changes. Do not run acceptance checks against student data: the test utility uses the separate `aptitest_acceptance` database.
-
-## Email
-
-`APP_MAIL_MODE=outbox` keeps the latest 50 account messages in an administrator-only in-memory outbox. These messages are not emailed externally and disappear on restart. Password-reset token hashes and expiry times persist in MySQL. New registrations are active immediately and do not create verification links. Administrators should act on a requested account link before restarting, or request a new link afterward.
-
-For external delivery, set `APP_MAIL_MODE=sendgrid`, `SENDGRID_API_KEY`, `APP_MAIL_FROM` and `APP_BASE_URL`. The sender must be verified with the provider. The application uses SendGrid's HTTPS endpoint, not SMTP. Anonymous pages never expose account tokens.
 
 ## Payments
 

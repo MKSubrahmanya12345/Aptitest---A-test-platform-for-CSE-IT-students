@@ -53,7 +53,6 @@
         <a class="nav-link ${fn:contains(requestPath,'test-templates') ? 'active' : ''}" href="${contextPath}/admin/test-templates"><t:icon name="check"/>Test templates</a>
         <a class="nav-link ${fn:contains(requestPath,'view-students') ? 'active' : ''}" href="${contextPath}/admin/view-students"><t:icon name="users"/>Students</a>
         <a class="nav-link ${fn:contains(requestPath,'rankings') ? 'active' : ''}" href="${contextPath}/admin/rankings"><t:icon name="trophy"/>Rankings</a>
-        <c:if test="${outboxEnabled}"><a class="nav-link ${requestPath == '/admin/mail' ? 'active' : ''}" href="${contextPath}/admin/mail"><t:icon name="book"/>Email outbox</a></c:if>
         </c:when><c:otherwise>
         <a class="nav-link ${requestPath == '/dashboard' ? 'active' : ''}" href="${contextPath}/dashboard"><t:icon name="home"/>Overview</a>
         <a class="nav-link ${fn:startsWith(requestPath,'/tests') ? 'active' : ''}" href="${contextPath}/dashboard#practice"><t:icon name="book"/>Practice tests</a>

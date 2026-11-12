@@ -20,16 +20,12 @@ public class AppUser {
     private Role role = Role.STUDENT;
     @Column(nullable = false)
     private boolean enabled = true;
-    @Column(nullable = false)
-    private boolean emailVerified = false;
+    // Retained only for existing MySQL schemas with a NOT NULL legacy column.
+    // This value is not used for authentication or account approval.
+    @Column(name = "email_verified", nullable = false)
+    private boolean legacyAccountFlag = true;
     @Column(nullable = false)
     private int credentialsVersion = 0;
-    @Column(length = 64)
-    private String verificationHash;
-    private Instant verificationExpires;
-    @Column(length = 64)
-    private String resetHash;
-    private Instant resetExpires;
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -44,18 +40,8 @@ public class AppUser {
     public void setRole(Role role) { this.role = role; }
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
-    public boolean isEmailVerified() { return emailVerified; }
-    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
     public int getCredentialsVersion() { return credentialsVersion; }
     public void setCredentialsVersion(int credentialsVersion) { this.credentialsVersion = credentialsVersion; }
-    public String getVerificationHash() { return verificationHash; }
-    public void setVerificationHash(String verificationHash) { this.verificationHash = verificationHash; }
-    public Instant getVerificationExpires() { return verificationExpires; }
-    public void setVerificationExpires(Instant verificationExpires) { this.verificationExpires = verificationExpires; }
-    public String getResetHash() { return resetHash; }
-    public void setResetHash(String resetHash) { this.resetHash = resetHash; }
-    public Instant getResetExpires() { return resetExpires; }
-    public void setResetExpires(Instant resetExpires) { this.resetExpires = resetExpires; }
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

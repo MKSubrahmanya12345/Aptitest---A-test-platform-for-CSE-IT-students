@@ -61,7 +61,7 @@ public class SeedDataLoader implements ApplicationRunner {
     private void createUser(String name, String email, String password, Role role) {
         if (users.existsByEmailIgnoreCase(email)) return;
         AppUser user = new AppUser(); user.setName(name); user.setEmail(email.trim().toLowerCase(Locale.ROOT));
-        user.setPasswordHash(encoder.encode(password)); user.setRole(role); user.setEmailVerified(true); users.save(user);
+        user.setPasswordHash(encoder.encode(password)); user.setRole(role); users.save(user);
     }
     private void template(String name, String description, String difficulty, int count, int minutes, boolean paid) {
         if (templates.existsByName(name)) return;

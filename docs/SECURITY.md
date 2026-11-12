@@ -2,10 +2,8 @@
 
 - Spring Security enforces administrator/student roles, ownership and CSRF protection.
 - Passwords use BCrypt cost 12; input is limited to 72 UTF-8 bytes.
-- Verification/reset tokens are random, stored as SHA-256 hashes, expiring and single-use.
-- Password changes, password resets and account disabling invalidate older sessions.
-- Public signup always creates an immediately active student account; it cannot request an administrator role. Email ownership is not verified during registration. The legacy `email_verified` field is used as an account activation flag.
-- Outbox account links are visible only to administrators. Configure external email delivery for password recovery; registration does not verify email ownership.
+- Password changes and account disabling invalidate older sessions.
+- Public signup always creates an immediately active student account; it cannot request an administrator role. Email ownership is not verified during registration. The old database flag is ignored by authentication; it cannot block login. Account-email and password-recovery features are removed.
 - Question text and answers are escaped; active test pages do not expose solutions or answer keys.
 - The server controls deadlines and scoring, locks concurrent changes, and makes submission idempotent.
 - Attempt snapshots preserve the question and answer used for grading even if the bank is edited later.

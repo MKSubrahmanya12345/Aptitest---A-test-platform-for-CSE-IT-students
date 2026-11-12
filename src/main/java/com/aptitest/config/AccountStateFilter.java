@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/** A ban or password reset also revokes already authenticated sessions. */
+/** A ban or password change also revokes already authenticated sessions. */
 public class AccountStateFilter extends OncePerRequestFilter {
     private final UserRepository users;
     public AccountStateFilter(UserRepository users) { this.users = users; }
@@ -17,7 +17,7 @@ public class AccountStateFilter extends OncePerRequestFilter {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof AppPrincipal principal) {
             var user = users.findById(principal.getId());
-            if (user.isEmpty() || !user.get().isEnabled() || !user.get().isEmailVerified()
+            if (user.isEmpty() || !user.get().isEnabled()
                     || user.get().getCredentialsVersion() != principal.getCredentialsVersion()) {
                 SecurityContextHolder.clearContext();
                 if (request.getSession(false) != null) request.getSession(false).invalidate();

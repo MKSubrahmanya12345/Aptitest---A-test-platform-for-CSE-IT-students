@@ -17,7 +17,7 @@ public class AppPrincipal implements UserDetails {
 
     public AppPrincipal(AppUser user) {
         id = user.getId(); email = user.getEmail(); password = user.getPasswordHash();
-        role = user.getRole().name(); enabled = user.isEnabled() && user.isEmailVerified();
+        role = user.getRole().name(); enabled = user.isEnabled();
         credentialsVersion = user.getCredentialsVersion();
     }
     public Long getId() { return id; }
