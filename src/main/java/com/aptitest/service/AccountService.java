@@ -24,7 +24,7 @@ public class AccountService {
     public AppUser get(Long id) { return users.findById(id).orElseThrow(() -> new BusinessException("Account not found.")); }
 
     @Transactional
-    public String signup(SignupForm form) {
+    public AppUser signup(SignupForm form) {
         validatePassword(form.getPassword());
         if (!form.getPassword().equals(form.getConfirmPassword())) throw new BusinessException("Passwords do not match.");
         String email = form.getEmail().trim().toLowerCase(Locale.ROOT);
@@ -32,12 +32,9 @@ public class AccountService {
         AppUser user = new AppUser();
         user.setName(form.getName().trim()); user.setEmail(email); user.setPasswordHash(passwords.encode(form.getPassword()));
         user.setRole(Role.STUDENT);
-        String token = token();
-        user.setVerificationHash(hash(token)); user.setVerificationExpires(Instant.now().plus(Duration.ofHours(24)));
-        users.saveAndFlush(user);
-        String path = "/verify-email?token=" + token;
-        mail.sendLink(email, "Verify your AptiTest email", path);
-        return path;
+        user.setEnabled(true);
+        user.setEmailVerified(true);
+        return users.saveAndFlush(user);
     }
     @Transactional
     public void verifyEmail(String token) {

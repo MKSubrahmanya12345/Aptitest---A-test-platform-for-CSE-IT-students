@@ -55,7 +55,7 @@ Controllers handle request binding, authorization context, redirects, and presen
 
 ### Student
 
-- Verified registration, sign in/out, profile and password management.
+- Immediate student registration, sign in/out, profile and password management.
 - Free/paid template selection and optional category/repeat filters.
 - Timed tests with random, non-duplicate question selection; unseen-question filtering.
 - Saved answers, resume, review flags, navigation, and automatic submission.

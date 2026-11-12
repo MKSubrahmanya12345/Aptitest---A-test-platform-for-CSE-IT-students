@@ -1,5 +1,9 @@
 # Verification
 
+## Immediate registration and manual administrator setup
+
+New accounts can sign in immediately as students. Normal startup creates no default accounts and no longer requires an existing administrator. Administrator privileges are assigned manually using `database/promote-admin.sql`. Automatic account fixtures require both the explicit `test` profile and the test-only initial-account flag. Registration and recovery regression expectations and the HTTP acceptance script have been updated. These changes have not been runtime-tested in this environment.
+
 ## MySQL question-text correction
 
 `Question.questionText` now explicitly uses `LONGTEXT NOT NULL` rather than a 20,000-character `VARCHAR`. This avoids the MySQL column-size error when the database uses `utf8mb4`, including when the connection and table character sets differ. Its existing string JDBC mapping is retained so case-insensitive question search remains supported.

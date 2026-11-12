@@ -168,9 +168,6 @@ def run(base):
     email = 'submission-smoke@example.com'
     text, page, _ = new.request('/signup', {'name': 'Smoke Student', 'email': email, 'password': 'Smoke@12345', 'confirmPassword': 'Smoke@12345', 'role': 'ADMIN'})
     expect('/verify-email?token=' not in text, 'registration does not expose a verification token')
-    _, mail_page, _ = admin.request('/admin/mail')
-    verify = next(link for link in mail_page.links if '/verify-email?token=' in link)
-    new.request(verify)
     new.login(email, 'Smoke@12345', '/dashboard')
     new.request('/admin', expected=403)
     expect(True, 'registration cannot elevate its role through form tampering')
@@ -219,7 +216,7 @@ def main():
             stream = log.open('w')
             process = subprocess.Popen(['java', '-jar', str(args.war.resolve()), '--server.port=18080',
                                         '--spring.datasource.url=jdbc:mysql://localhost:3306/aptitest_acceptance?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC',
-                                        '--spring.jpa.hibernate.ddl-auto=create-drop', '--app.initial-accounts-enabled=true', '--app.seed-enabled=true',
+                                        '--spring.jpa.hibernate.ddl-auto=create-drop', '--spring.profiles.active=test', '--app.initial-accounts-enabled=true', '--app.seed-enabled=true',
                                         '--app.payment-mode=disabled', '--app.mail-mode=outbox'], cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
             base = 'http://127.0.0.1:18080'
             deadline = time.monotonic() + 100

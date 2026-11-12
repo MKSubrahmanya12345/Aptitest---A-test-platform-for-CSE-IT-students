@@ -2,7 +2,7 @@
 
 ## Local setup
 
-Requirements: JDK 17/21 and MySQL 8+. Maven dependencies download during the first build.
+Requirements: JDK 17/21/25 and MySQL 8+. Maven dependencies download during the first build.
 
 1. Start MySQL.
 2. Execute `database/setup.sql` in MySQL Workbench or the MySQL client. It creates `aptitest_java` using UTF-8.
@@ -29,11 +29,13 @@ Use `.\mvnw.cmd` on Windows. Spring Boot includes Tomcat and compiles the JSP pa
 | `DB_PASSWORD` | Your private MySQL password |
 | `PORT` | `8080` |
 | `APP_SEED_ENABLED` | `true`; load the initial question bank and templates |
-| `APP_INITIAL_ACCOUNTS_ENABLED` | `true`; provision the initial administrator/student |
-| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Provision a private administrator |
 | `APP_BASE_URL` | External application URL for account links |
 
 The local connection URL enables database creation and public-key retrieval and disables TLS for localhost. For a remote database, supply a URL with TLS and certificate verification. Restrict database access and use least-privilege credentials. The application uses separate `at_*` tables and does not overwrite the old application's tables.
+
+## Administrator setup
+
+Register your own student account at `/signup`, then run `database/promote-admin.sql` after replacing its placeholder email. Sign out and sign in again. Normal startup creates no accounts and does not require an administrator to exist. Test account fixtures require both the explicit `test` profile and `app.initial-accounts-enabled=true`.
 
 ## Schema and data
 
@@ -43,7 +45,7 @@ For controlled production releases, use versioned database migrations and change
 
 ## Email
 
-`APP_MAIL_MODE=outbox` keeps the latest 50 account messages in an administrator-only in-memory outbox. These messages are not emailed externally and disappear on restart. Verification/reset token hashes and expiry times persist in MySQL. Administrators should act on a requested account link before restarting, or request a new link afterward.
+`APP_MAIL_MODE=outbox` keeps the latest 50 account messages in an administrator-only in-memory outbox. These messages are not emailed externally and disappear on restart. Password-reset token hashes and expiry times persist in MySQL. New registrations are active immediately and do not create verification links. Administrators should act on a requested account link before restarting, or request a new link afterward.
 
 For external delivery, set `APP_MAIL_MODE=sendgrid`, `SENDGRID_API_KEY`, `APP_MAIL_FROM` and `APP_BASE_URL`. The sender must be verified with the provider. The application uses SendGrid's HTTPS endpoint, not SMTP. Anonymous pages never expose account tokens.
 
@@ -55,7 +57,7 @@ Refunds and webhook reconciliation are not implemented. Use provider test creden
 
 ## Hosting
 
-Run the executable WAR on Java 17+ or deploy it to Tomcat 10.1 / Jakarta Servlet 6. Tomcat 9 is not compatible. Use HTTPS, secure HttpOnly cookies, private initial credentials, restricted database access and backups. Disable initial account provisioning for real users. `GET /api/health` returns success only after initialization and a database check.
+Run the executable WAR on Java 17+ or deploy it to Tomcat 10.1 / Jakarta Servlet 6. Tomcat 9 is not compatible. Use HTTPS, secure HttpOnly cookies, private initial credentials, restricted database access and backups. Assign administrator privileges manually in MySQL; do not enable test account fixtures for real users. `GET /api/health` returns success only after initialization and a database check.
 
 ## Common problems
 

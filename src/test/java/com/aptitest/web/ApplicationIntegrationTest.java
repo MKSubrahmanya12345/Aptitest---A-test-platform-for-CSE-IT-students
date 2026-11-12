@@ -171,21 +171,24 @@ class ApplicationIntegrationTest {
         }
         assertThat(properties.getProperty("spring.datasource.url")).contains("jdbc:mysql:").doesNotContain("jdbc:h2:");
         assertThat(properties.getProperty("spring.datasource.driver-class-name")).isEqualTo("com.mysql.cj.jdbc.Driver");
+        assertThat(properties.getProperty("app.initial-accounts-enabled")).endsWith(":false}");
     }
     @Test void flaggedMcqWithoutOptionsCannotBeApproved() {
         var pending = bank.findByStatus("pending").stream().filter(q -> q.getQuestionType().equals("mcq_single")).findFirst().orElseThrow();
         assertThatThrownBy(() -> questions.review(pending.getId(), true)).isInstanceOf(BusinessException.class).hasMessageContaining("MCQs need");
         assertThat(pending.getStatus()).isEqualTo("pending");
     }
-    @Test void verificationIsHashedExpiringAndSingleUse() {
-        var f = registration(); String path = accounts.signup(f); String token = path.substring(path.indexOf("token=") + 6);
-        var user = users.findByEmailIgnoreCase(f.getEmail()).orElseThrow();
-        assertThat(user.getRole()).isEqualTo(Role.STUDENT); assertThat(user.isEmailVerified()).isFalse(); assertThat(user.getVerificationHash()).isNotEqualTo(token);
-        accounts.verifyEmail(token); assertThat(user.isEmailVerified()).isTrue();
-        assertThatThrownBy(() -> accounts.verifyEmail(token)).isInstanceOf(BusinessException.class);
+    @Test void registrationAllowsImmediateStudentLoginWithoutEmailApproval() throws Exception {
+        var f = registration(); var registered = accounts.signup(f);
+        assertThat(registered.getRole()).isEqualTo(Role.STUDENT);
+        assertThat(registered.isEnabled()).isTrue(); assertThat(registered.isEmailVerified()).isTrue();
+        assertThat(registered.getVerificationHash()).isNull(); assertThat(registered.getVerificationExpires()).isNull();
+        assertThat(mail.getOutbox()).noneMatch(message -> message.recipient().equals(f.getEmail()));
+        mvc.perform(formLogin().user("email", f.getEmail()).password(f.getPassword()))
+            .andExpect(redirectedUrl("/dashboard"));
     }
     @Test void passwordResetIsHashedSingleUseAndRevokesSessions() {
-        var f = registration(); String path = accounts.signup(f); accounts.verifyEmail(path.substring(path.indexOf("token=")+6));
+        var f = registration(); accounts.signup(f);
         accounts.requestReset(f.getEmail());
         var message = mail.getOutbox().stream().filter(m -> m.recipient().equals(f.getEmail()) && m.path().startsWith("/reset-password")).findFirst().orElseThrow();
         String token = message.path().substring(message.path().indexOf("token=")+6);
@@ -193,10 +196,11 @@ class ApplicationIntegrationTest {
         accounts.resetPassword(token, "NewPassword123", "NewPassword123"); assertThat(u.getCredentialsVersion()).isEqualTo(1);
         assertThatThrownBy(() -> accounts.resetPassword(token, "NewPassword456", "NewPassword456")).isInstanceOf(BusinessException.class);
     }
-    @Test void expiredVerificationTokenIsRejected() {
-        var f = registration(); String path = accounts.signup(f);
-        var u = users.findByEmailIgnoreCase(f.getEmail()).orElseThrow(); u.setVerificationExpires(Instant.now().minusSeconds(1));
-        assertThatThrownBy(() -> accounts.verifyEmail(path.substring(path.indexOf("token=")+6))).isInstanceOf(BusinessException.class);
+    @Test void duplicateRegistrationCannotChangeAnExistingAccountsRole() {
+        var f = registration(); accounts.signup(f);
+        f.setEmail(f.getEmail().toUpperCase(java.util.Locale.ROOT));
+        assertThatThrownBy(() -> accounts.signup(f)).isInstanceOf(BusinessException.class);
+        assertThat(users.findByEmailIgnoreCase(f.getEmail()).orElseThrow().getRole()).isEqualTo(Role.STUDENT);
     }
     @Test void passwordsRespectBcryptUtf8Limit() {
         assertThatThrownBy(() -> AccountService.validatePassword("é".repeat(40))).isInstanceOf(BusinessException.class);

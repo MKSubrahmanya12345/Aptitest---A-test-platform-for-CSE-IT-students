@@ -4,7 +4,6 @@ import com.aptitest.config.AppPrincipal;
 import com.aptitest.service.*;
 import com.aptitest.web.form.SignupForm;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AuthController {
     private final AccountService accounts;
-    @Value("${app.mail-mode}") private String mailMode;
     public AuthController(AccountService accounts) { this.accounts = accounts; }
 
     @GetMapping("/") public String home(@AuthenticationPrincipal AppPrincipal p) { return "redirect:" + (p == null ? "/login" : "ADMIN".equals(p.getRole()) ? "/admin" : "/dashboard"); }
@@ -25,9 +23,7 @@ public class AuthController {
         if (binding.hasErrors()) { model.addAttribute("errors", errors(binding)); return "signup"; }
         try {
             accounts.signup(form);
-            flash.addFlashAttribute("success", "outbox".equals(mailMode)
-                ? "Account created. Contact the administrator to activate your account."
-                : "Account created. Check your email to verify your account before signing in.");
+            flash.addFlashAttribute("success", "Account created. You can sign in immediately.");
             return "redirect:/login";
         } catch (BusinessException e) { model.addAttribute("errors", e.getMessage()); return "signup"; }
     }

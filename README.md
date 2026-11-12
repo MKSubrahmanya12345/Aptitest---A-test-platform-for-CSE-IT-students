@@ -4,7 +4,7 @@ An aptitude and technical practice platform for CSE and IT students, built with 
 
 ## Run in Eclipse
 
-1. Install **JDK 17 or 21** and **MySQL 8+**. Start the MySQL service.
+1. Install **JDK 17, 21 or 25** and **MySQL 8+**. Start the MySQL service.
 2. Open `database/setup.sql` in MySQL Workbench and run it.
 3. Copy `config/application-local.properties.example` to **`config/application-local.properties`**. Enter your MySQL username and password in the copied file:
    ```properties
@@ -18,14 +18,20 @@ An aptitude and technical practice platform for CSE and IT students, built with 
 
 The application creates its `at_*` tables in **`aptitest_java`** and loads the question bank on the first startup. Questions, accounts, answers, attempts and results are stored in MySQL and survive restarts. No Node, Bun, React build or separate Tomcat installation is required.
 
-## Initial accounts
+## Accounts and administrator
 
-| Role | Email | Password |
-|---|---|---|
-| Student | student@aptitest.com | Student@12345 |
-| Administrator | admin@aptitest.com | Admin@12345 |
+Anyone can register a student account at `/signup` and sign in immediately. No email verification or administrator approval is required. Public signup always creates a student, never an administrator. Normal startup creates no default accounts and works before an administrator exists.
 
-Change these passwords after setup. Set `APP_INITIAL_ACCOUNTS_ENABLED=false` to stop creating initial accounts; use `ADMIN_EMAIL` and `ADMIN_PASSWORD` to provision a private administrator instead. Existing passwords are never overwritten on restart.
+To create your administrator, first register your own account, then run the following in MySQL Workbench, replacing the email with that account's email:
+
+```sql
+UPDATE aptitest_java.at_users
+SET role = 'ADMIN', enabled = 1, email_verified = 1,
+    credentials_version = credentials_version + 1, version = version + 1
+WHERE email = 'your@email.com';
+```
+
+Sign out and sign in again using the same password. The administrator role persists in MySQL. See `database/promote-admin.sql`. Existing accounts are not deleted or demoted automatically.
 
 ## Build from a terminal
 
@@ -38,7 +44,7 @@ Windows: use `.\mvnw.cmd clean verify`. Keep the `config` folder beside the dire
 
 ## Features
 
-- Student/admin authentication, verified accounts, password recovery, profile management and session revocation.
+- Student/admin authentication, immediate student registration, password recovery, profile management and session revocation.
 - Timed tests, category filters, saved answers, resume, review flags, server-side expiry and automatic grading.
 - Ten question types, result explanations, reattempts, solved-question bank, history, analytics and rankings.
 - Administrator question creation, editing, review, JSON import, template management and student access control.
@@ -47,7 +53,7 @@ Windows: use `.\mvnw.cmd clean verify`. Keep the `config` folder beside the dire
 
 ## Email and payments
 
-The default **email outbox** is administrator-only. New registrations and recovery requests create account links there, not in a public page. The administrator opens **Email outbox** to activate an account or assist with recovery. To deliver messages externally, configure SendGrid as described in [deployment](docs/DEPLOYMENT.md).
+The default **email outbox** is administrator-only. Only password-recovery requests need account links; registration is immediate. The administrator opens **Email outbox** to assist with recovery. To deliver messages externally, configure SendGrid as described in [deployment](docs/DEPLOYMENT.md).
 
 Online checkout is disabled until Razorpay credentials are configured. There is **no simulated-payment or free-unlock endpoint**. Four practice templates are free; the paid template requires a verified captured payment. Private payment secrets stay on the server.
 

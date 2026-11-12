@@ -8,6 +8,6 @@
         <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" value="<c:out value='${form.email}'/>" required></div>
         <div class="field"><label for="password">Password</label><div class="password-wrap"><input id="password" name="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" placeholder="At least 8 characters" required><button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show or hide password">Show</button></div></div>
         <div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" name="confirmPassword" type="password" minlength="8" maxlength="72" autocomplete="new-password" placeholder="One more time" required></div>
-        <p class="field-help">We will send you a verification link. Only student accounts can be created here.</p><button class="btn btn-block" type="submit">Create account <t:icon name="arrow"/></button>
+        <p class="field-help">Sign in immediately after registering. Only student accounts can be created here.</p><button class="btn btn-block" type="submit">Create account <t:icon name="arrow"/></button>
     </form><p class="auth-switch">Already have an account? <a href="${ctx}/login">Sign in</a></p>
 </t:layout>
