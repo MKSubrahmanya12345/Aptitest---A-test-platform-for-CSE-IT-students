@@ -1,0 +1,70 @@
+name: Capture actual AptiTest dashboard
+on:
+  push:
+    branches:
+      - arena/371b32b7-aptitest-a-test-platform-for-c
+    paths:
+      - .github/workflows/dashboard-capture.yml
+      - .github/scripts/capture-dashboard.py
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: capture-local-only
+          MYSQL_ROOT_HOST: '%'
+          MYSQL_DATABASE: aptitest_java
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pcapture-local-only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    env:
+      DB_URL: jdbc:mysql://127.0.0.1:3306/aptitest_java?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      DB_USERNAME: root
+      DB_PASSWORD: capture-local-only
+      APP_INITIAL_ACCOUNTS_ENABLED: 'false'
+      APP_PAYMENT_MODE: disabled
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: arena/371b32b7-aptitest-a-test-platform-for-c
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Build actual application
+        run: ./mvnw -B --no-transfer-progress -DskipTests package
+      - name: Install capture browser
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Run actual application and take authenticated screenshot
+        run: |
+          java -jar target/aptitest.war > target/dashboard-server.log 2>&1 &
+          python3 .github/scripts/capture-dashboard.py
+      - name: Commit only the screenshot to this working branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dashboard.png
+          git commit -m 'Capture authenticated AptiTest dashboard from running app'
+          git push origin arena/371b32b7-aptitest-a-test-platform-for-c
+      - name: Preserve capture diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-capture-diagnostics
+          path: |
+            target/dashboard-server.log
+            target/dashboard-capture-error.png
+            dashboard.png
+          retention-days: 3
